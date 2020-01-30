@@ -22,7 +22,7 @@ class ListViewModel : ViewModel() {
                 API_KEY,
                 "json",
                 "release_date:asc",
-                "release_date:2020-01-06|2020-06-01",
+                "release_date:2020-01-17|2020-06-01",
                 "id,deck,description,game,game_rating,image,maximum_players,minimum_players,platform,region,release_date,expected_release_day,expected_release_month,expected_release_year,expected_release_quarter"
             )
 

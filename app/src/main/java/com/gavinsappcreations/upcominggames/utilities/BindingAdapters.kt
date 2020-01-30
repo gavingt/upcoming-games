@@ -15,6 +15,7 @@ fun bindImage(imgView: ImageView, imgUrl: String?) {
         val imgUri = imgUrl.toUri().buildUpon().scheme("https").build()
         Glide.with(imgView.context)
             .load(imgUri)
+                //TODO: put placeholder back in
 /*            .apply(
                 RequestOptions()
                     .placeholder(R.drawable.loading_animation)
