@@ -1,5 +1,6 @@
 package com.gavinsappcreations.upcominggames.network
 
+import com.gavinsappcreations.upcominggames.domain.GameRelease
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -56,7 +57,7 @@ data class NetworkReleasesContainer(
     @Json(name = "number_of_page_results") val numberOfPageResults: Int,
     @Json(name = "number_of_total_results") val numberOfTotalResults: Int,
     @Json(name = "status_code") val statusCode: Int,
-    @Json(name="results") val releases: List<NetworkGameRelease>
+    @Json(name = "results") val releases: List<NetworkGameRelease>
 )
 
 
@@ -73,53 +74,78 @@ data class NetworkGameRelease(
     val platform: NetworkPlatform,
     val region: NetworkRegion,
     @Json(name = "release_date") val releaseDate: String?,
-    @Json(name="expected_release_day") val expectedReleaseDay: Int?,
-    @Json(name="expected_release_month") val expectedReleaseMonth: Int?,
-    @Json(name="expected_release_year") val expectedReleaseYear: Int?,
-    @Json(name="expected_release_quarter") val expectedReleaseQuarter: Int?
-    )
+    @Json(name = "expected_release_day") val expectedReleaseDay: Int?,
+    @Json(name = "expected_release_month") val expectedReleaseMonth: Int?,
+    @Json(name = "expected_release_year") val expectedReleaseYear: Int?,
+    @Json(name = "expected_release_quarter") val expectedReleaseQuarter: Int?
+)
+
+
+
 
 
 @JsonClass(generateAdapter = true)
 data class NetworkGame(
     @Json(name = "api_detail_url") val apiDetailUrl: String,
     val id: String,
-    val name: String
+    @Json(name="name") val gameName: String
 )
 
 @JsonClass(generateAdapter = true)
 data class NetworkRating(
     @Json(name = "api_detail_url") val apiDetailUrl: String,
     val id: String,
-    val name: String
+    @Json(name="name") val ratingName: String
 )
 
 @JsonClass(generateAdapter = true)
 data class NetworkImage(
     @Json(name = "icon_url") val iconUrl: String,
-    @Json(name="medium_url") val mediumUrl: String,
-    @Json(name="screen_url") val screenUrl: String,
-    @Json(name="screen_large_url") val screenLargeUrl: String,
-    @Json(name="small_url") val smallUrl: String,
-    @Json(name="super_url") val superUrl: String,
-    @Json(name="thumb_url") val thumbUrl: String,
-    @Json(name="tiny_url") val tinyUrl: String,
-    @Json(name="original_url") val originalUrl: String,
-    @Json(name="image_tags") val imageTags: String
+    @Json(name = "medium_url") val mediumUrl: String,
+    @Json(name = "screen_url") val screenUrl: String,
+    @Json(name = "screen_large_url") val screenLargeUrl: String,
+    @Json(name = "small_url") val smallUrl: String,
+    @Json(name = "super_url") val superUrl: String,
+    @Json(name = "thumb_url") val thumbUrl: String,
+    @Json(name = "tiny_url") val tinyUrl: String,
+    @Json(name = "original_url") val originalUrl: String,
+    @Json(name = "image_tags") val imageTags: String
 )
-
 
 @JsonClass(generateAdapter = true)
 data class NetworkPlatform(
-    @Json(name="api_detail_url") val apiDetailUrl: String,
-    @Json(name="id") val platformId: Int,
-    @Json(name="name") val platformName: String
+    @Json(name = "api_detail_url") val apiDetailUrl: String,
+    @Json(name = "id") val platformId: Int,
+    @Json(name = "name") val platformName: String
 )
-
 
 @JsonClass(generateAdapter = true)
 data class NetworkRegion(
-    @Json(name="api_detail_url") val apiDetailUrl: String,
-    @Json(name="id") val regionId: Int,
-    @Json(name="name") val regionName: String
+    @Json(name = "api_detail_url") val apiDetailUrl: String,
+    @Json(name = "id") val regionId: Int,
+    @Json(name = "name") val regionName: String
 )
+
+
+/**
+ * Convert Network results to domain objects that we can use in our app
+ */
+fun NetworkGameRelease.asDomainModel(): GameRelease {
+    return GameRelease(
+        releaseId = this.releaseId,
+        deck = this.deck,
+        description = this.description,
+        gameName = this.game.gameName,
+        gameRating = this.gameRating?.ratingName,
+        image = this.image.originalUrl,
+        maximumPlayers = this.maximumPlayers,
+        minimumPlayers = this.minimumPlayers,
+        platform = this.platform.platformName,
+        region = this.region.regionName,
+        releaseDate = this.releaseDate,
+        expectedReleaseDay = this.expectedReleaseDay,
+        expectedReleaseMonth = this.expectedReleaseMonth,
+        expectedReleaseYear = this.expectedReleaseYear,
+        expectedReleaseQuarter = this.expectedReleaseQuarter
+    )
+}
