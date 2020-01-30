@@ -137,7 +137,7 @@ fun NetworkGameRelease.asDomainModel(): GameRelease {
         description = this.description,
         gameName = this.game.gameName,
         gameRating = this.gameRating?.ratingName,
-        image = this.image.originalUrl,
+        imageUrl = this.image.smallUrl,
         maximumPlayers = this.maximumPlayers,
         minimumPlayers = this.minimumPlayers,
         platform = this.platform.platformName,

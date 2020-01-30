@@ -8,6 +8,13 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
+
+//TODO: do filters like this?
+/*
+enum class MarsApiFilter(val value: String) { SHOW_RENT("rent"), SHOW_BUY("buy"), SHOW_ALL("all") }
+*/
+
+
 /**
  * A retrofit service to fetch game release date.
  */

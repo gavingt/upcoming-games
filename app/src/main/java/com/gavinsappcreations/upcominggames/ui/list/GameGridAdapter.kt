@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.gavinsappcreations.upcominggames.databinding.GridViewItemBinding
+import com.gavinsappcreations.upcominggames.domain.GameRelease
 
-/*
 class GameGridAdapter(val onClickListener: OnClickListener) :
     ListAdapter<GameRelease, GameGridAdapter.GameReleaseViewHolder>(DiffCallback) {
 
@@ -40,7 +40,7 @@ class GameGridAdapter(val onClickListener: OnClickListener) :
         }
 
         override fun areContentsTheSame(oldItem: GameRelease, newItem: GameRelease): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.releaseId == newItem.releaseId
         }
     }
 
@@ -49,7 +49,6 @@ class GameGridAdapter(val onClickListener: OnClickListener) :
     }
 
 }
-*/
 
 
 

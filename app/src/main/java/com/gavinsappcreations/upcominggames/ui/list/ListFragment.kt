@@ -28,10 +28,10 @@ class ListFragment : Fragment() {
         // Giving the binding access to the GameListViewModel
         binding.viewModel = viewModel
 
-/*        binding.photosGrid.adapter = GameGridAdapter(GameGridAdapter.OnClickListener {
+        binding.gameRecyclerView.adapter = GameGridAdapter(GameGridAdapter.OnClickListener {
+            //TODO: call method in viewModel that takes us to DetailFragment.
             //viewModel.displayPropertyDetails(it)
-            it.imgSrcUrl
-        })*/
+        })
 
         binding.filterImageButton.setOnClickListener {
             findNavController(this).navigate(ListFragmentDirections.actionListFragmentToSortFragment())

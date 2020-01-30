@@ -7,17 +7,17 @@
     <data>
         <variable
             name="gameRelease"
-            type="com.gavinsappcreations.upcominggames.network.NetworkGameRelease" />
+            type="com.gavinsappcreations.upcominggames.domain.GameRelease" />
     </data>
 
     <ImageView
         android:contentDescription="@string/game_release"
-        android:id="@+id/mars_image"
-        android:layout_width="match_parent"
-        android:layout_height="170dp"
-        android:scaleType="centerCrop"
-        android:adjustViewBounds="true"
-
+        android:id="@+id/release_imageView"
+        android:layout_width="150dp"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="false"
+        imageUrl="@{gameRelease.imageUrl}"
         android:padding="2dp"
         tools:src="@tools:sample/backgrounds/scenic"/>
 </layout>

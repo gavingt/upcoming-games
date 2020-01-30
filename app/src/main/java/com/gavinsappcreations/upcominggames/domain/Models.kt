@@ -6,7 +6,7 @@ data class GameRelease(
     val description: String?,
     val gameName: String,
     val gameRating: String?,
-    val image: String,
+    val imageUrl: String,
     val maximumPlayers: Int?,
     val minimumPlayers: Int?,
     val platform: String,
