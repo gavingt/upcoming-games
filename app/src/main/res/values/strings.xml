@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">UpcomingGames</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="recent">Recent</string>
+    <string name="search">Search</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="filter">filter</string>
+    <string name="search_all_games">Search all games</string>
+    <string name="game_release">game release</string>
+    <string name="game_cover">game cover</string>
+</resources>

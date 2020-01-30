@@ -1,0 +1,25 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="CommonTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorBackground">@color/colorBackground</item>
+        <item name="colorBackgroundVariant">@color/colorBackgroundVariant</item>
+        <item name="colorOnBackgroundHighContrast">@color/colorOnBackgroundHighContrast</item>
+        <item name="colorOnBackgroundMediumContrast">@color/colorOnBackgroundMediumContrast</item>
+        <item name="colorOnBackgroundLowContrast">@color/colorOnBackgroundLowContrast</item>
+
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="AppTheme" parent="CommonTheme" />
+
+
+    <style name="BottomNavigationTheme" parent="Widget.MaterialComponents.BottomNavigationView">
+    </style>
+
+
+</resources>

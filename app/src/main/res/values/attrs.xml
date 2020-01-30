@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="colorBackgroundVariant" format="color" />
+    <attr name="colorOnBackgroundVariant" format="color" />
+    <attr name="colorOnBackgroundHighContrast" format="color" />
+    <attr name="colorOnBackgroundMediumContrast" format="color" />
+    <attr name="colorOnBackgroundLowContrast" format="color" />
+
+</resources>
+
