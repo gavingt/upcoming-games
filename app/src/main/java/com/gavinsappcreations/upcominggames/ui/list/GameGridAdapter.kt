@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.gavinsappcreations.upcominggames.databinding.GridViewItemBinding
-import com.gavinsappcreations.upcominggames.network.GameRelease
 
+/*
 class GameGridAdapter(val onClickListener: OnClickListener) :
     ListAdapter<GameRelease, GameGridAdapter.GameReleaseViewHolder>(DiffCallback) {
 
@@ -49,6 +49,7 @@ class GameGridAdapter(val onClickListener: OnClickListener) :
     }
 
 }
+*/
 
 
 

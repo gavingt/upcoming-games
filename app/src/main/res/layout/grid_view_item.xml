@@ -7,7 +7,7 @@
     <data>
         <variable
             name="gameRelease"
-            type="com.gavinsappcreations.upcominggames.network.GameRelease" />
+            type="com.gavinsappcreations.upcominggames.network.NetworkGameRelease" />
     </data>
 
     <ImageView
@@ -17,7 +17,7 @@
         android:layout_height="170dp"
         android:scaleType="centerCrop"
         android:adjustViewBounds="true"
-        imageUrl="@{gameRelease.imgSrcUrl}"
+
         android:padding="2dp"
         tools:src="@tools:sample/backgrounds/scenic"/>
 </layout>

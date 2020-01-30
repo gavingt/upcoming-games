@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.gavinsappcreations.upcominggames.databinding.FragmentListBinding
+import com.gavinsappcreations.upcominggames.network.GameNetwork
 
 class ListFragment : Fragment() {
 
@@ -27,10 +28,10 @@ class ListFragment : Fragment() {
         // Giving the binding access to the GameListViewModel
         binding.viewModel = viewModel
 
-        binding.photosGrid.adapter = GameGridAdapter(GameGridAdapter.OnClickListener {
+/*        binding.photosGrid.adapter = GameGridAdapter(GameGridAdapter.OnClickListener {
             //viewModel.displayPropertyDetails(it)
             it.imgSrcUrl
-        })
+        })*/
 
         binding.filterImageButton.setOnClickListener {
             findNavController(this).navigate(ListFragmentDirections.actionListFragmentToSortFragment())
