@@ -21,6 +21,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            android:paddingBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@id/game_recyclerView"
             app:cardElevation="4dp"
             app:contentPadding="4dp"
             app:layout_constraintTop_toTopOf="parent">

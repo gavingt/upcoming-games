@@ -1,8 +1,12 @@
 package com.gavinsappcreations.upcominggames.network
 
-import com.gavinsappcreations.upcominggames.domain.GameRelease
+import com.gavinsappcreations.upcominggames.App.Companion.applicationContext
+import com.gavinsappcreations.upcominggames.R
+import com.gavinsappcreations.upcominggames.domain.Game
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 /*"error":"OK",
@@ -50,52 +54,38 @@ import com.squareup.moshi.JsonClass
 
 
 @JsonClass(generateAdapter = true)
-data class NetworkReleasesContainer(
+data class NetworkGamesContainer(
     val error: String,
     val limit: Int,
     val offset: Int,
     @Json(name = "number_of_page_results") val numberOfPageResults: Int,
     @Json(name = "number_of_total_results") val numberOfTotalResults: Int,
     @Json(name = "status_code") val statusCode: Int,
-    @Json(name = "results") val releases: List<NetworkGameRelease>
+    @Json(name = "results") val games: List<NetworkGame>
 )
-
-
-@JsonClass(generateAdapter = true)
-data class NetworkGameRelease(
-    @Json(name = "id") val releaseId: Int,
-    val deck: String?,
-    val description: String?,
-    val game: NetworkGame,
-    @Json(name = "game_rating") val gameRating: NetworkRating?,
-    val image: NetworkImage,
-    @Json(name = "maximum_players") val maximumPlayers: Int?,
-    @Json(name = "minimum_players") val minimumPlayers: Int,
-    val platform: NetworkPlatform,
-    val region: NetworkRegion,
-    @Json(name = "release_date") val releaseDate: String?,
-    @Json(name = "expected_release_day") val expectedReleaseDay: Int?,
-    @Json(name = "expected_release_month") val expectedReleaseMonth: Int?,
-    @Json(name = "expected_release_year") val expectedReleaseYear: Int?,
-    @Json(name = "expected_release_quarter") val expectedReleaseQuarter: Int?
-)
-
-
-
 
 
 @JsonClass(generateAdapter = true)
 data class NetworkGame(
-    @Json(name = "api_detail_url") val apiDetailUrl: String,
-    val id: String,
-    @Json(name="name") val gameName: String
+    @Json(name = "id") val gameId: Int,
+    val deck: String?,
+    val description: String?,
+    @Json(name = "name") val gameName: String,
+    @Json(name = "original_game_rating") val originalGameRating: List<NetworkRating>?,
+    val image: NetworkImage,
+    val platforms: List<NetworkPlatform>?,
+    @Json(name = "original_release_date") val originalReleaseDate: String?,
+    @Json(name = "expected_release_day") val expectedReleaseDay: Int?,
+    @Json(name = "expected_release_month") val expectedReleaseMonth: Int?,
+    @Json(name = "expected_release_year") val expectedReleaseYear: Int?
 )
+
 
 @JsonClass(generateAdapter = true)
 data class NetworkRating(
     @Json(name = "api_detail_url") val apiDetailUrl: String,
     val id: String,
-    @Json(name="name") val ratingName: String
+    @Json(name = "name") val ratingName: String
 )
 
 @JsonClass(generateAdapter = true)
@@ -109,43 +99,53 @@ data class NetworkImage(
     @Json(name = "thumb_url") val thumbUrl: String,
     @Json(name = "tiny_url") val tinyUrl: String,
     @Json(name = "original_url") val originalUrl: String,
-    @Json(name = "image_tags") val imageTags: String
+    @Json(name = "image_tags") val imageTags: String?
 )
 
 @JsonClass(generateAdapter = true)
 data class NetworkPlatform(
     @Json(name = "api_detail_url") val apiDetailUrl: String,
     @Json(name = "id") val platformId: Int,
-    @Json(name = "name") val platformName: String
-)
-
-@JsonClass(generateAdapter = true)
-data class NetworkRegion(
-    @Json(name = "api_detail_url") val apiDetailUrl: String,
-    @Json(name = "id") val regionId: Int,
-    @Json(name = "name") val regionName: String
+    @Json(name = "name") val platformName: String,
+    @Json(name = "site_detail_url") val sideDetailUrl: String,
+    val abbreviation: String
 )
 
 
 /**
  * Convert Network results to domain objects that we can use in our app
  */
-fun NetworkGameRelease.asDomainModel(): GameRelease {
-    return GameRelease(
-        releaseId = this.releaseId,
+fun NetworkGame.asDomainModel(): Game {
+    return Game(
+        releaseId = this.gameId,
         deck = this.deck,
         description = this.description,
-        gameName = this.game.gameName,
-        gameRating = this.gameRating?.ratingName,
+        gameName = this.gameName,
+        originalGameRating = this.originalGameRating?.get(0)?.ratingName,
         imageUrl = this.image.smallUrl.replace("scale", "square"),
-        maximumPlayers = this.maximumPlayers,
-        minimumPlayers = this.minimumPlayers,
-        platform = this.platform.platformName,
-        region = this.region.regionName,
-        releaseDate = this.releaseDate,
-        expectedReleaseDay = this.expectedReleaseDay,
-        expectedReleaseMonth = this.expectedReleaseMonth,
-        expectedReleaseYear = this.expectedReleaseYear,
-        expectedReleaseQuarter = this.expectedReleaseQuarter
+        platforms = this.platforms?.map {
+            it.abbreviation
+        },
+        releaseDate = formatReleaseDate(this)
     )
 }
+
+
+
+fun formatReleaseDate(networkGame: NetworkGame): String {
+    if (networkGame.originalReleaseDate != null) {
+        return networkGame.originalReleaseDate
+    }
+
+    val releaseDay = networkGame.expectedReleaseDay ?: return applicationContext.getString(R.string.unknown_date)
+    val releaseMonth = networkGame.expectedReleaseMonth?.minus(1) ?: return applicationContext.getString(R.string.unknown_date)
+    val releaseYear = networkGame.expectedReleaseYear ?: return applicationContext.getString(R.string.unknown_date)
+
+    val calendar: Calendar = Calendar.getInstance()
+    val formatter = SimpleDateFormat("MMMM d, yyyy", Locale.US)
+
+    calendar.set(releaseYear, releaseMonth, releaseDay)
+    return formatter.format(calendar.time)
+}
+
+

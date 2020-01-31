@@ -19,14 +19,14 @@ enum class MarsApiFilter(val value: String) { SHOW_RENT("rent"), SHOW_BUY("buy")
  * A retrofit service to fetch game release date.
  */
 interface GameService {
-    @GET("releases")
+    @GET("games")
     suspend fun getGameData(
         @Query("api_key") apiKey: String,
         @Query("format") format: String,
         @Query("sort") sort: String,
         @Query("filter") filter: String,
         @Query("field_list") fieldList: String
-    ): Response<NetworkReleasesContainer>
+    ): Response<NetworkGamesContainer>
 }
 
 /**

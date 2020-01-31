@@ -1,19 +1,12 @@
 package com.gavinsappcreations.upcominggames.domain
 
-data class GameRelease(
+data class Game(
     val releaseId: Int,
     val deck: String?,
     val description: String?,
     val gameName: String,
-    val gameRating: String?,
+    val originalGameRating: String?,
     val imageUrl: String,
-    val maximumPlayers: Int?,
-    val minimumPlayers: Int?,
-    val platform: String,
-    val region: String,
-    val releaseDate: String?,
-    val expectedReleaseDay: Int?,
-    val expectedReleaseMonth: Int?,
-    val expectedReleaseYear: Int?,
-    val expectedReleaseQuarter: Int?
+    val platforms: List<String>?,
+    val releaseDate: String
 )

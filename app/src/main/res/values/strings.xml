@@ -10,4 +10,5 @@
     <string name="search_all_games">Search all games</string>
     <string name="game_release">game release</string>
     <string name="game_cover">game cover</string>
+    <string name="unknown_date">Unknown date</string>
 </resources>

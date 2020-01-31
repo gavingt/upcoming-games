@@ -6,10 +6,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.gavinsappcreations.upcominggames.databinding.GridViewItemBinding
-import com.gavinsappcreations.upcominggames.domain.GameRelease
+import com.gavinsappcreations.upcominggames.domain.Game
 
 class GameGridAdapter(val onClickListener: OnClickListener) :
-    ListAdapter<GameRelease, GameGridAdapter.GameReleaseViewHolder>(DiffCallback) {
+    ListAdapter<Game, GameGridAdapter.GameReleaseViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameReleaseViewHolder {
         return GameReleaseViewHolder(GridViewItemBinding.inflate(LayoutInflater.from(parent.context)))
@@ -27,25 +27,25 @@ class GameGridAdapter(val onClickListener: OnClickListener) :
     class GameReleaseViewHolder(private var binding: GridViewItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(gameRelease: GameRelease) {
-            binding.gameRelease = gameRelease
+        fun bind(game: Game) {
+            binding.game = game
             binding.executePendingBindings()
         }
     }
 
 
-    companion object DiffCallback : DiffUtil.ItemCallback<GameRelease>() {
-        override fun areItemsTheSame(oldItem: GameRelease, newItem: GameRelease): Boolean {
+    companion object DiffCallback : DiffUtil.ItemCallback<Game>() {
+        override fun areItemsTheSame(oldItem: Game, newItem: Game): Boolean {
             return oldItem === newItem
         }
 
-        override fun areContentsTheSame(oldItem: GameRelease, newItem: GameRelease): Boolean {
+        override fun areContentsTheSame(oldItem: Game, newItem: Game): Boolean {
             return oldItem.releaseId == newItem.releaseId
         }
     }
 
-    class OnClickListener(val clickListener: (gameRelease: GameRelease) -> Unit) {
-        fun onClick(gameRelease: GameRelease) = clickListener(gameRelease)
+    class OnClickListener(val clickListener: (game: Game) -> Unit) {
+        fun onClick(game: Game) = clickListener(game)
     }
 
 }
