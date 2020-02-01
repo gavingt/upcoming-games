@@ -1,5 +1,6 @@
 package com.gavinsappcreations.upcominggames.ui.list
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -7,8 +8,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.gavinsappcreations.upcominggames.databinding.GridViewItemBinding
 import com.gavinsappcreations.upcominggames.domain.Game
+import com.google.android.material.chip.Chip
 
-class GameGridAdapter(val onClickListener: OnClickListener) :
+
+
+
+class GameGridAdapter(private val onClickListener: OnClickListener) :
     ListAdapter<Game, GameGridAdapter.GameReleaseViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameReleaseViewHolder {
@@ -29,6 +34,16 @@ class GameGridAdapter(val onClickListener: OnClickListener) :
 
         fun bind(game: Game) {
             binding.game = game
+
+            if (game.platforms != null) {
+                val chipGroup = binding.platformChipGroup
+                for (platform in game.platforms) {
+                    val chip = Chip(binding.root.context)
+                    chip.text = platform
+                    chipGroup.addView(chip)
+                }
+            }
+
             binding.executePendingBindings()
         }
     }

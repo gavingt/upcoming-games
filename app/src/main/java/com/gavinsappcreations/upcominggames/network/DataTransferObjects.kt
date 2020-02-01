@@ -3,6 +3,7 @@ package com.gavinsappcreations.upcominggames.network
 import com.gavinsappcreations.upcominggames.App.Companion.applicationContext
 import com.gavinsappcreations.upcominggames.R
 import com.gavinsappcreations.upcominggames.domain.Game
+import com.gavinsappcreations.upcominggames.utilities.formatReleaseDate
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import java.text.SimpleDateFormat
@@ -126,26 +127,9 @@ fun NetworkGame.asDomainModel(): Game {
         platforms = this.platforms?.map {
             it.abbreviation
         },
-        releaseDate = formatReleaseDate(this)
+        releaseDate = this.formatReleaseDate()
     )
 }
 
-
-
-fun formatReleaseDate(networkGame: NetworkGame): String {
-    if (networkGame.originalReleaseDate != null) {
-        return networkGame.originalReleaseDate
-    }
-
-    val releaseDay = networkGame.expectedReleaseDay ?: return applicationContext.getString(R.string.unknown_date)
-    val releaseMonth = networkGame.expectedReleaseMonth?.minus(1) ?: return applicationContext.getString(R.string.unknown_date)
-    val releaseYear = networkGame.expectedReleaseYear ?: return applicationContext.getString(R.string.unknown_date)
-
-    val calendar: Calendar = Calendar.getInstance()
-    val formatter = SimpleDateFormat("MMMM d, yyyy", Locale.US)
-
-    calendar.set(releaseYear, releaseMonth, releaseDay)
-    return formatter.format(calendar.time)
-}
 
 
