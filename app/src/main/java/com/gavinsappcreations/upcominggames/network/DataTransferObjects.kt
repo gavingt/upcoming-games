@@ -123,7 +123,7 @@ fun NetworkGame.asDomainModel(): Game {
         description = this.description,
         gameName = this.gameName,
         originalGameRating = this.originalGameRating?.get(0)?.ratingName,
-        imageUrl = this.image.smallUrl.replace("scale", "square"),
+        imageUrl = this.image.smallUrl,
         platforms = this.platforms?.map {
             it.abbreviation
         },

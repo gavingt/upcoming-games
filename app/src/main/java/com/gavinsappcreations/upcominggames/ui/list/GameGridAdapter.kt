@@ -1,6 +1,5 @@
 package com.gavinsappcreations.upcominggames.ui.list
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -8,9 +7,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.gavinsappcreations.upcominggames.databinding.GridViewItemBinding
 import com.gavinsappcreations.upcominggames.domain.Game
+import com.gavinsappcreations.upcominggames.ui.utilities.platforms
 import com.google.android.material.chip.Chip
-
-
 
 
 class GameGridAdapter(private val onClickListener: OnClickListener) :
@@ -34,17 +32,26 @@ class GameGridAdapter(private val onClickListener: OnClickListener) :
 
         fun bind(game: Game) {
             binding.game = game
+            binding.executePendingBindings()
 
             if (game.platforms != null) {
                 val chipGroup = binding.platformChipGroup
+
+                //Since ViewHolders are reused, we need to remove the previously added ones first.
+                chipGroup.removeAllViews()
+
+                val platformsInCurrentSort = platforms.keys
+                val platformsForCurrentGame = game.platforms
+                val platformsToShow = platformsInCurrentSort.intersect(platformsForCurrentGame)
+
                 for (platform in game.platforms) {
-                    val chip = Chip(binding.root.context)
-                    chip.text = platform
-                    chipGroup.addView(chip)
+                    if (platformsToShow.contains(platform)) {
+                        val chip = Chip(binding.root.context)
+                        chip.text = platform
+                        chipGroup.addView(chip)
+                    }
                 }
             }
-
-            binding.executePendingBindings()
         }
     }
 
