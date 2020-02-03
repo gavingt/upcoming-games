@@ -20,21 +20,25 @@
         android:paddingRight="12dp"
         android:paddingBottom="24dp">
 
-        <!--        TODO: can i somehow not squash any images but have them
-                          all take up the same amount of space? -->
-
-        <ImageView
-            android:id="@+id/game_imageView"
-            imageUrl="@{game.imageUrl}"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:adjustViewBounds="true"
-            app:layout_constraintDimensionRatio="1:1"
-            android:contentDescription="@string/game_cover"
-            android:scaleType="fitXY"
-            app:layout_constraintBottom_toTopOf="@id/name_textView"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/image_cardView"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@tools:sample/backgrounds/scenic" />
+            android:layout_width="match_parent"
+            app:cardElevation="0dp"
+            app:layout_constraintDimensionRatio="1:1"
+            android:layout_height="0dp">
+
+            <ImageView
+                android:id="@+id/game_imageView"
+                imageUrl="@{game.imageUrl}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/game_cover"
+                android:scaleType="fitXY"
+                tools:src="@tools:sample/backgrounds/scenic" />
+
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
             android:id="@+id/name_textView"
@@ -44,9 +48,8 @@
             android:text="@{game.gameName}"
             android:textSize="15sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/release_date_textView"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/game_imageView"
+            app:layout_constraintTop_toBottomOf="@id/image_cardView"
             tools:text="Cyberpunk 2077" />
 
         <TextView
@@ -55,19 +58,26 @@
             android:layout_height="wrap_content"
             android:text="@{game.releaseDate}"
             android:textSize="13sp"
-            app:layout_constraintBottom_toTopOf="@id/platform_chipGroup"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/name_textView"
             tools:text="September 19, 2020" />
 
-        <com.google.android.material.chip.ChipGroup
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/platform_flexboxLayout"
+            app:layout_constraintTop_toBottomOf="@id/release_date_textView"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:flexWrap="wrap"
+            app:flexDirection="row"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+<!--        <com.google.android.material.chip.ChipGroup
             android:id="@+id/platform_chipGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/release_date_textView"
-            app:singleLine="false" />
+            app:singleLine="false" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
