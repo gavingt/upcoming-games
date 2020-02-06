@@ -11,7 +11,7 @@ buildscript {
         version_material = "1.2.0-alpha04"
         version_glide = "4.11.0"
         version_recyclerview = "1.0.0"
-
+        version_room = "2.2.3"
     }
     repositories {
         google()

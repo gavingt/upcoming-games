@@ -9,8 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gavinsappcreations.upcominggames.R
 import com.gavinsappcreations.upcominggames.databinding.GridViewItemBinding
 import com.gavinsappcreations.upcominggames.domain.Game
-import com.gavinsappcreations.upcominggames.ui.utilities.platforms
-
+import com.gavinsappcreations.upcominggames.utilities.Platform
 
 class GameGridAdapter(private val onClickListener: OnClickListener) :
     ListAdapter<Game, GameGridAdapter.GameReleaseViewHolder>(DiffCallback) {
@@ -35,56 +34,31 @@ class GameGridAdapter(private val onClickListener: OnClickListener) :
             binding.game = game
             binding.executePendingBindings()
 
-/*            if (game.platforms != null) {
-                val chipGroup = binding.platformChipGroup
+            if (game.platforms == null) {
+                return
+            }
 
-                //Since ViewHolders are reused, we need to remove the previously added ones first.
-                chipGroup.removeAllViews()
+            val flexboxLayout = binding.platformFlexboxLayout
 
-                val platformsInCurrentSort = platforms.keys
-                val platformsForCurrentGame = game.platforms
-                val platformsToShow = platformsInCurrentSort.intersect(platformsForCurrentGame)
+            //Since ViewHolders are reused, we need to remove the previously added ones first.
+            flexboxLayout.removeAllViews()
 
-                for (platform in game.platforms) {
-                    if (platformsToShow.contains(platform)) {
+            val platformsInCurrentSort = mutableListOf<String>()
+            for (platform in Platform.values()) {
+                platformsInCurrentSort.add(platform.name)
+            }
+            val platformsForCurrentGame = game.platforms
 
-                        val chip = Chip(binding.root.context)
-                        val sam = ShapeAppearanceModel()
+            val platformsToShow = platformsInCurrentSort.intersect(platformsForCurrentGame)
 
-                        chip.shapeAppearanceModel = sam
-                        //chip.setEnsureMinTouchTargetSize(false)
+            for (platform in platformsToShow) {
+                val textView = LayoutInflater.from(binding.root.context).inflate(
+                    R.layout.platform_textview_layout,
+                    flexboxLayout, false
+                ) as TextView
 
-                        //chip.chipBackgroundColor = binding.root.context.getColorStateList(android.R.color.black)
-                        chip.setPadding(0,0,0,0)
-                        chip.text = platform
-                        chipGroup.addView(chip)
-                    }
-                }
-            }*/
-
-            if (game.platforms != null) {
-                val flexboxLayout = binding.platformFlexboxLayout
-
-                //Since ViewHolders are reused, we need to remove the previously added ones first.
-                flexboxLayout.removeAllViews()
-
-                val platformsInCurrentSort = platforms.keys
-                val platformsForCurrentGame = game.platforms
-                val platformsToShow = platformsInCurrentSort.intersect(platformsForCurrentGame)
-
-                for (platform in game.platforms) {
-                    if (platformsToShow.contains(platform)) {
-
-                        val textView = LayoutInflater.from(binding.root.context).inflate(
-                            R.layout.platform_textview_layout,
-                            flexboxLayout, false
-                        ) as TextView
-
-                        //val textView = TextView(binding.root.context)
-                        textView.text = platform
-                        flexboxLayout.addView(textView)
-                    }
-                }
+                textView.text = platform
+                flexboxLayout.addView(textView)
             }
         }
     }

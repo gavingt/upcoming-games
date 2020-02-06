@@ -10,10 +10,10 @@ import java.util.*
 /**
  * If a Game doesn't contain an exact release date, just remove the Game from our List<Game> object.
  */
-fun List<Game>.removeBadGameData(): List<Game> {
+fun List<Game>.removeGamesWithoutReleaseDates(): List<Game> {
     val newList = mutableListOf<Game>()
     for (game in this) {
-        if (game.releaseDate != App.applicationContext.getString(R.string.unknown_date)) {
+        if (game.releaseDateString != App.applicationContext.getString(R.string.unknown_date)) {
             newList.add(game)
         }
     }
@@ -24,7 +24,7 @@ fun List<Game>.removeBadGameData(): List<Game> {
 /**
  * Takes the date returned by the API and returns it as a String formatted the way we want it.
  */
-fun NetworkGame.formatReleaseDate(): String {
+fun NetworkGame.formatReleaseDateString(): String {
     val calendar: Calendar = Calendar.getInstance()
     val desiredPatternFormatter = SimpleDateFormat("MMMM d, yyyy", Locale.US)
 
@@ -42,5 +42,6 @@ fun NetworkGame.formatReleaseDate(): String {
         expectedReleaseYear ?: return App.applicationContext.getString(R.string.unknown_date)
 
     calendar.set(releaseYear, releaseMonth, releaseDay)
+
     return desiredPatternFormatter.format(calendar.time)
 }

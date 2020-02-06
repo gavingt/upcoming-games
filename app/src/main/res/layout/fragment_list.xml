@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="com.gavinsappcreations.upcominggames.ui.list.ListViewModel" />
+            type="com.gavinsappcreations.upcominggames.viewmodels.ListViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -65,9 +65,8 @@
             android:id="@+id/game_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-
             android:padding="6dp"
-            listData="@{viewModel.releases}"
+            listData="@{viewModel.games}"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/search_cardView"

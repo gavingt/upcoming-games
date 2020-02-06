@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="com.gavinsappcreations.upcominggames.ui.sort.SortViewModel" />
+            type="com.gavinsappcreations.upcominggames.viewmodels.SortViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

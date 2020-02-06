@@ -8,12 +8,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.gavinsappcreations.upcominggames.databinding.FragmentListBinding
-import com.gavinsappcreations.upcominggames.network.GameNetwork
+import com.gavinsappcreations.upcominggames.viewmodels.ListViewModel
 
 class ListFragment : Fragment() {
 
     private val viewModel: ListViewModel by lazy {
-        ViewModelProvider(this).get(ListViewModel::class.java)
+        ViewModelProvider(this, ListViewModel.Factory(requireActivity().application)).get(
+            ListViewModel::class.java
+        )
     }
 
     override fun onCreateView(

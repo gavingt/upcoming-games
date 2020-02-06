@@ -1,57 +1,9 @@
 package com.gavinsappcreations.upcominggames.network
 
-import com.gavinsappcreations.upcominggames.App.Companion.applicationContext
-import com.gavinsappcreations.upcominggames.R
-import com.gavinsappcreations.upcominggames.domain.Game
-import com.gavinsappcreations.upcominggames.utilities.formatReleaseDate
+import com.gavinsappcreations.upcominggames.database.DatabaseGame
+import com.gavinsappcreations.upcominggames.utilities.formatReleaseDateString
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import java.text.SimpleDateFormat
-import java.util.*
-
-
-/*"error":"OK",
-"limit":100,
-"offset":0,
-"number_of_page_results":100,
-"number_of_total_results":"213",
-"status_code":1,
-"results":[
-{
-    "deck":null,
-    "description":null,
-    "game":{
-    "api_detail_url":"https:\/\/www.giantbomb.com\/api\/game\/3030-66595\/",
-    "id":66595,
-    "name":"Never Again"
-},
-    "image":{
-    "icon_url":"https:\/\/www.giantbomb.com\/api\/image\/square_avatar\/3150303-4147793550-cq5da.png",
-    "medium_url":"https:\/\/www.giantbomb.com\/api\/image\/scale_medium\/3150303-4147793550-cq5da.png",
-    "screen_url":"https:\/\/www.giantbomb.com\/api\/image\/screen_medium\/3150303-4147793550-cq5da.png",
-    "screen_large_url":"https:\/\/www.giantbomb.com\/api\/image\/screen_kubrick\/3150303-4147793550-cq5da.png",
-    "small_url":"https:\/\/www.giantbomb.com\/api\/image\/scale_small\/3150303-4147793550-cq5da.png",
-    "super_url":"https:\/\/www.giantbomb.com\/api\/image\/scale_large\/3150303-4147793550-cq5da.png",
-    "thumb_url":"https:\/\/www.giantbomb.com\/api\/image\/scale_avatar\/3150303-4147793550-cq5da.png",
-    "tiny_url":"https:\/\/www.giantbomb.com\/api\/image\/square_mini\/3150303-4147793550-cq5da.png",
-    "original_url":"https:\/\/www.giantbomb.com\/api\/image\/original\/3150303-4147793550-cq5da.png",
-    "image_tags":"All Images,Digital Switch Icons"
-},
-    "maximum_players":null,
-    "minimum_players":1,
-    "name":"Never Again (Digital)",
-    "platform":{
-    "api_detail_url":"https:\/\/www.giantbomb.com\/api\/platform\/3045-157\/",
-    "id":157,
-    "name":"Nintendo Switch"
-},
-    "region":{
-    "api_detail_url":"https:\/\/www.giantbomb.com\/api\/region\/3075-1\/",
-    "id":1,
-    "name":"United States"
-},
-    "release_date":"2020-01-20 00:00:00"
-},*/
 
 
 @JsonClass(generateAdapter = true)
@@ -114,21 +66,26 @@ data class NetworkPlatform(
 
 
 /**
- * Convert Network results to domain objects that we can use in our app
+ * Convert Network results to database objects that we can store in our database
  */
-fun NetworkGame.asDomainModel(): Game {
-    return Game(
-        releaseId = this.gameId,
-        deck = this.deck,
-        description = this.description,
-        gameName = this.gameName,
-        originalGameRating = this.originalGameRating?.get(0)?.ratingName,
-        imageUrl = this.image.smallUrl,
-        platforms = this.platforms?.map {
-            it.abbreviation
-        },
-        releaseDate = this.formatReleaseDate()
-    )
+fun List<NetworkGame>.asDatabaseModel(): List<DatabaseGame> {
+    return map { networkGame ->
+
+        
+
+        DatabaseGame(
+            releaseId = networkGame.gameId,
+            deck = networkGame.deck,
+            description = networkGame.description,
+            gameName = networkGame.gameName,
+            originalGameRating = networkGame.originalGameRating?.get(0)?.ratingName,
+            imageUrl = networkGame.image.smallUrl,
+            platforms = networkGame.platforms?.map {
+                it.abbreviation
+            },
+            releaseDateString = networkGame.formatReleaseDateString()
+        )
+    }
 }
 
 
