@@ -1,7 +1,7 @@
 package com.gavinsappcreations.upcominggames.network
 
 import com.gavinsappcreations.upcominggames.database.DatabaseGame
-import com.gavinsappcreations.upcominggames.utilities.formatReleaseDateString
+import com.gavinsappcreations.upcominggames.utilities.fetchReleaseDateInMillis
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -71,8 +71,6 @@ data class NetworkPlatform(
 fun List<NetworkGame>.asDatabaseModel(): List<DatabaseGame> {
     return map { networkGame ->
 
-        
-
         DatabaseGame(
             releaseId = networkGame.gameId,
             deck = networkGame.deck,
@@ -83,7 +81,7 @@ fun List<NetworkGame>.asDatabaseModel(): List<DatabaseGame> {
             platforms = networkGame.platforms?.map {
                 it.abbreviation
             },
-            releaseDateString = networkGame.formatReleaseDateString()
+            releaseDateInMillis = networkGame.fetchReleaseDateInMillis()
         )
     }
 }

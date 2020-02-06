@@ -13,7 +13,7 @@ import java.util.*
 fun List<Game>.removeGamesWithoutReleaseDates(): List<Game> {
     val newList = mutableListOf<Game>()
     for (game in this) {
-        if (game.releaseDateString != App.applicationContext.getString(R.string.unknown_date)) {
+        if (game.releaseDateInMillis != null) {
             newList.add(game)
         }
     }
@@ -21,27 +21,23 @@ fun List<Game>.removeGamesWithoutReleaseDates(): List<Game> {
 }
 
 
+
 /**
- * Takes the date returned by the API and returns it as a String formatted the way we want it.
+ * Takes the date returned by the API and turns it into a time in millis
  */
-fun NetworkGame.formatReleaseDateString(): String {
+fun NetworkGame.fetchReleaseDateInMillis(): Long? {
     val calendar: Calendar = Calendar.getInstance()
-    val desiredPatternFormatter = SimpleDateFormat("MMMM d, yyyy", Locale.US)
 
     if (originalReleaseDate != null) {
         val apiPatternFormatter = SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.US)
         val date = apiPatternFormatter.parse(originalReleaseDate)
-        return desiredPatternFormatter.format(date!!)
+        calendar.time = date!!
+        return calendar.timeInMillis
     }
 
-    val releaseDay =
-        expectedReleaseDay ?: return App.applicationContext.getString(R.string.unknown_date)
-    val releaseMonth = expectedReleaseMonth?.minus(1)
-        ?: return App.applicationContext.getString(R.string.unknown_date)
-    val releaseYear =
-        expectedReleaseYear ?: return App.applicationContext.getString(R.string.unknown_date)
-
+    val releaseDay = expectedReleaseDay ?: return null
+    val releaseMonth = expectedReleaseMonth?.minus(1) ?: return null
+    val releaseYear = expectedReleaseYear ?: return null
     calendar.set(releaseYear, releaseMonth, releaseDay)
-
-    return desiredPatternFormatter.format(calendar.time)
+    return calendar.timeInMillis
 }

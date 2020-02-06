@@ -8,6 +8,5 @@ data class Game(
     val originalGameRating: String?,
     val imageUrl: String,
     val platforms: List<String>?,
-    val releaseDateString: String,
-    val releaseDateInMillis: Long
+    val releaseDateInMillis: Long?
 )

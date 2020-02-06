@@ -14,8 +14,7 @@ data class DatabaseGame constructor(
     val originalGameRating: String?,
     val imageUrl: String,
     val platforms: List<String>?,
-    val releaseDateString: String,
-    val releaseDateInMillis: Long
+    val releaseDateInMillis: Long?
 )
 
 
@@ -29,7 +28,6 @@ fun List<DatabaseGame>.asDomainModel(): List<Game> {
             originalGameRating = it.originalGameRating,
             imageUrl = it.imageUrl,
             platforms = it.platforms,
-            releaseDateString = it.releaseDateString,
             releaseDateInMillis = it.releaseDateInMillis
         )
     }

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.gavinsappcreations.upcominggames.databinding.FragmentListBinding
 import com.gavinsappcreations.upcominggames.viewmodels.ListViewModel
 
@@ -35,6 +36,7 @@ class ListFragment : Fragment() {
             //viewModel.displayPropertyDetails(it)
         })
 
+
         binding.filterImageButton.setOnClickListener {
             findNavController(this).navigate(ListFragmentDirections.actionListFragmentToSortFragment())
         }
@@ -47,3 +49,5 @@ class ListFragment : Fragment() {
     }
 
 }
+
+

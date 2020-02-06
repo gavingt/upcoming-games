@@ -39,7 +39,7 @@ class GamesRepository(application: Application) {
 
 
         withContext(Dispatchers.IO) {
-            database.gameDao.insertAll(gameList.asDatabaseModel())
+            database.gameDao.insertOrUpdate(gameList.asDatabaseModel())
         }
 
     }
