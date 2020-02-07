@@ -81,4 +81,8 @@ dependencies {
     // Room database
     implementation "androidx.room:room-runtime:$version_room"
     kapt "androidx.room:room-compiler:$version_room"
+
+    //Guava
+    implementation("com.google.guava:guava:28.2-android")
+
 }

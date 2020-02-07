@@ -2,11 +2,13 @@ package com.gavinsappcreations.upcominggames.network
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
+
 
 /**
  * A retrofit service to fetch game info.
@@ -34,11 +36,18 @@ private val moshi = Moshi.Builder()
  * Main entry point for network access. Call like `GameNetwork.gameData.getGameData()`
  */
 object GameNetwork {
-    // Configure retrofit to parse JSON and use coroutines
+    // Build our own okHttp client that implements rate limiting.
+    var okHttpClient: OkHttpClient = OkHttpClient()
+        .newBuilder()
+        .addNetworkInterceptor(GameApiRateLimitInterceptor())
+        .build()
+
+    // Configure Retrofit to parse JSON, use our rate-limiting okHttp, and use coroutines
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://www.giantbomb.com/api/")
+        .client(okHttpClient)
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build()
 
-    val gameData = retrofit.create(GameService::class.java)
+    val gameData: GameService = retrofit.create(GameService::class.java)
 }

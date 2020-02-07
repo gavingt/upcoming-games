@@ -14,6 +14,8 @@ import kotlinx.coroutines.withContext
 
 class GamesRepository(application: Application) {
 
+    //TODO: implement paging library
+
     private val database = getDatabase(application)
 
     /**
