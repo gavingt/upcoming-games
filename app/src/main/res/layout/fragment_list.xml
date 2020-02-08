@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="com.gavinsappcreations.upcominggames.viewmodels.ListViewModel" />
+            type="com.gavinsappcreations.upcominggames.ui.list.ListViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -36,7 +36,7 @@ fun ImageView.bindImage(imgUrl: String?) {
 fun RecyclerView.bindRecyclerView(data: List<Game>?) {
     val adapter = adapter as GameGridAdapter
     // This disables the fade-in animation that would otherwise occur when the database gets updated
-    itemAnimator = null
+    //itemAnimator = null
     adapter.submitList(data)
 }
 

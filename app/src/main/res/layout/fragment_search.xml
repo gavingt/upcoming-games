@@ -7,7 +7,7 @@
 
             <variable
                 name="viewModel"
-                type="com.gavinsappcreations.upcominggames.viewmodels.SearchViewModel" />
+                type="com.gavinsappcreations.upcominggames.ui.search.SearchViewModel" />
         </data>
 
     <FrameLayout

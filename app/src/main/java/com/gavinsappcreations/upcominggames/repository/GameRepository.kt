@@ -18,13 +18,16 @@ class GamesRepository(application: Application) {
 
     private val database = getDatabase(application)
 
+
     /**
      * A list of games that can be shown on the screen.
      */
     val games: LiveData<List<Game>> =
-        Transformations.map(database.gameDao.getGames()) {
+        Transformations.map(database.gameDao.getGames())
+        {
             it.asDomainModel().removeGamesWithoutReleaseDates()
         }
+
 
     suspend fun downloadGameData() {
         val gameList = GameNetwork.gameData.getGameData(

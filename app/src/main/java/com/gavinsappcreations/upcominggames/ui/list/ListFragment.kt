@@ -1,15 +1,15 @@
 package com.gavinsappcreations.upcominggames.ui.list
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
-import androidx.recyclerview.widget.SimpleItemAnimator
 import com.gavinsappcreations.upcominggames.databinding.FragmentListBinding
-import com.gavinsappcreations.upcominggames.viewmodels.ListViewModel
 
 class ListFragment : Fragment() {
 
@@ -35,7 +35,6 @@ class ListFragment : Fragment() {
             //TODO: call method in viewModel that takes us to DetailFragment.
             //viewModel.displayPropertyDetails(it)
         })
-
 
         binding.filterImageButton.setOnClickListener {
             findNavController(this).navigate(ListFragmentDirections.actionListFragmentToSortFragment())

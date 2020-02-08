@@ -37,8 +37,7 @@ private val moshi = Moshi.Builder()
  */
 object GameNetwork {
     // Build our own okHttp client that implements rate limiting.
-    var okHttpClient: OkHttpClient = OkHttpClient()
-        .newBuilder()
+    var okHttpClient: OkHttpClient = OkHttpClient.Builder()
         .addNetworkInterceptor(GameApiRateLimitInterceptor())
         .build()
 

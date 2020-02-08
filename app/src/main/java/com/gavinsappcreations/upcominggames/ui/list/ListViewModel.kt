@@ -1,4 +1,4 @@
-package com.gavinsappcreations.upcominggames.viewmodels
+package com.gavinsappcreations.upcominggames.ui.list
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -26,7 +26,9 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(ListViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
-                return ListViewModel(application) as T
+                return ListViewModel(
+                    application
+                ) as T
             }
             throw IllegalArgumentException("Unable to construct viewmodel")
         }

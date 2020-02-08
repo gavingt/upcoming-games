@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.gavinsappcreations.upcominggames.databinding.FragmentSortBinding
-import com.gavinsappcreations.upcominggames.viewmodels.SortViewModel
 
 class SortFragment : Fragment() {
 

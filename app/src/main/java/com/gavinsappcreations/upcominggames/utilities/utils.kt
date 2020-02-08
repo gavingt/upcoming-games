@@ -27,6 +27,11 @@ fun List<Game>.removeGamesWithoutReleaseDates(): List<Game> {
  */
 fun NetworkGame.fetchReleaseDateInMillis(): Long? {
     val calendar: Calendar = Calendar.getInstance()
+    /**
+     * Set calendar.timeInMillis to 0 because we're translating a day, month, and year into a time
+     * in millis, and we always want to retrieve the same timeInMillis when we do this.
+     */
+    calendar.timeInMillis = 0
 
     if (originalReleaseDate != null) {
         val apiPatternFormatter = SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.US)

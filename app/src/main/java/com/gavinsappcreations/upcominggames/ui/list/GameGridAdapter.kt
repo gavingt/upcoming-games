@@ -10,6 +10,7 @@ import com.gavinsappcreations.upcominggames.R
 import com.gavinsappcreations.upcominggames.databinding.GridViewItemBinding
 import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.utilities.Platform
+import kotlinx.coroutines.newFixedThreadPoolContext
 
 class GameGridAdapter(private val onClickListener: OnClickListener) :
     ListAdapter<Game, GameGridAdapter.GameReleaseViewHolder>(DiffCallback) {
@@ -66,7 +67,7 @@ class GameGridAdapter(private val onClickListener: OnClickListener) :
 
     companion object DiffCallback : DiffUtil.ItemCallback<Game>() {
         override fun areItemsTheSame(oldItem: Game, newItem: Game): Boolean {
-            return oldItem === newItem
+            return oldItem == newItem
         }
 
         override fun areContentsTheSame(oldItem: Game, newItem: Game): Boolean {
