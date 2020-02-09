@@ -67,11 +67,11 @@ class GameGridAdapter(private val onClickListener: OnClickListener) :
 
     companion object DiffCallback : DiffUtil.ItemCallback<Game>() {
         override fun areItemsTheSame(oldItem: Game, newItem: Game): Boolean {
-            return oldItem == newItem
+            return oldItem.releaseId == newItem.releaseId
         }
 
         override fun areContentsTheSame(oldItem: Game, newItem: Game): Boolean {
-            return oldItem.releaseId == newItem.releaseId
+            return oldItem == newItem
         }
     }
 
