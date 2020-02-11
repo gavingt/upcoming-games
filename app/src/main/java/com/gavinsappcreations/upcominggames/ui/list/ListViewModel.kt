@@ -1,10 +1,8 @@
 package com.gavinsappcreations.upcominggames.ui.list
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import com.gavinsappcreations.upcominggames.database.asDomainModel
 import com.gavinsappcreations.upcominggames.repository.GamesRepository
 import kotlinx.coroutines.launch
 
@@ -14,11 +12,11 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         viewModelScope.launch {
-            gamesRepository.downloadGameData()
+            gamesRepository.downloadGameData(0)
         }
     }
 
-    val games = gamesRepository.games
+    val games = gamesRepository.getGameList()
 
 
     //Factory for constructing ListViewModel with Application parameter.

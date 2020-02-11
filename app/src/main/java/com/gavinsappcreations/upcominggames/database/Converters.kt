@@ -6,7 +6,7 @@ import androidx.room.TypeConverter
 class Converters {
 
     @TypeConverter
-    fun ListToString(list: List<String>): String {
+    fun listToString(list: List<String>): String {
         val stringBuilder = StringBuilder()
         for (item in list) {
             stringBuilder.append(item).append(",")
@@ -15,7 +15,7 @@ class Converters {
     }
 
     @TypeConverter
-    fun StringToList(string: String): List<String> {
+    fun stringToList(string: String): List<String> {
         return string.split(",")
     }
 }

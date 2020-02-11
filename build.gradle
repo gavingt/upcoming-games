@@ -12,6 +12,7 @@ buildscript {
         version_glide = "4.11.0"
         version_recyclerview = "1.0.0"
         version_room = "2.2.3"
+        archPagingVersion = "1.0.1"
     }
     repositories {
         google()

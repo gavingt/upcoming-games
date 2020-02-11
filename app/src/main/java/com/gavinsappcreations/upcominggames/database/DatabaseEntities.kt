@@ -33,3 +33,15 @@ fun List<DatabaseGame>.asDomainModel(): List<Game> {
     }
 }
 
+fun DatabaseGame.asDomainModel(): Game {
+    return Game(
+            releaseId = this.releaseId,
+            deck = this.deck,
+            description = this.description,
+            gameName = this.gameName,
+            originalGameRating = this.originalGameRating,
+            imageUrl = this.imageUrl,
+            platforms = this.platforms,
+            releaseDateInMillis = this.releaseDateInMillis
+        )
+}

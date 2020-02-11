@@ -20,7 +20,8 @@ interface GameService {
         @Query("format") format: String,
         @Query("sort") sort: String,
         @Query("filter") filter: String,
-        @Query("field_list") fieldList: String
+        @Query("field_list") fieldList: String,
+        @Query("offset") offset: Int
     ): Response<NetworkGamesContainer>
 }
 
@@ -37,7 +38,7 @@ private val moshi = Moshi.Builder()
  */
 object GameNetwork {
     // Build our own okHttp client that implements rate limiting.
-    var okHttpClient: OkHttpClient = OkHttpClient.Builder()
+    private var okHttpClient: OkHttpClient = OkHttpClient.Builder()
         .addNetworkInterceptor(GameApiRateLimitInterceptor())
         .build()
 

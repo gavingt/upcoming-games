@@ -87,4 +87,3 @@ fun List<NetworkGame>.asDatabaseModel(): List<DatabaseGame> {
 }
 
 
-

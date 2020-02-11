@@ -28,8 +28,10 @@ fun List<Game>.removeGamesWithoutReleaseDates(): List<Game> {
 fun NetworkGame.fetchReleaseDateInMillis(): Long? {
     val calendar: Calendar = Calendar.getInstance()
     /**
-     * Set calendar.timeInMillis to 0 because we're translating a day, month, and year into a time
-     * in millis, and we always want to retrieve the same timeInMillis when we do this.
+     * When we call Calendar.getInstance(), this sets values for hours, minutes, seconds, and
+     * milliseconds that we don't want. We want to create a Calendar object that contains only
+     * the day, month, and year. So setting timeInMillis = 0 makes it so the current time doesn't
+     * affect the timeInMillis value we're ultimately returning.
      */
     calendar.timeInMillis = 0
 

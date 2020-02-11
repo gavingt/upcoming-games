@@ -5,10 +5,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.gavinsappcreations.upcominggames.R
+import com.gavinsappcreations.upcominggames.database.DatabaseGame
 import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.ui.list.GameGridAdapter
 import java.text.SimpleDateFormat
@@ -33,10 +35,8 @@ fun ImageView.bindImage(imgUrl: String?) {
 
 //This BindingAdapter function gets called automatically whenever "data" changes, since BindingAdapters are equivalent to Observers
 @BindingAdapter("listData")
-fun RecyclerView.bindRecyclerView(data: List<Game>?) {
+fun RecyclerView.bindRecyclerView(data: PagedList<DatabaseGame>?) {
     val adapter = adapter as GameGridAdapter
-    // This disables the fade-in animation that would otherwise occur when the database gets updated
-    //itemAnimator = null
     adapter.submitList(data)
 }
 

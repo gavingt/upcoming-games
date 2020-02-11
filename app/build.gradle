@@ -7,7 +7,7 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.0"
+    buildToolsVersion "29.0.2"
     dataBinding {
         enabled = true
     }
@@ -85,4 +85,6 @@ dependencies {
     //Guava
     implementation("com.google.guava:guava:28.2-android")
 
+    //Paging
+    implementation "android.arch.paging:runtime:$archPagingVersion"
 }
