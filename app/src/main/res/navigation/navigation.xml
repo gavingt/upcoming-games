@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/listFragment">
+    app:startDestination="@id/listFragment"
+    tools:ignore="UnusedNavigation">
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.gavinsappcreations.upcominggames.ui.search.SearchFragment"
@@ -18,10 +19,22 @@
         <action
             android:id="@+id/action_listFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_listFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
     </fragment>
     <fragment
         android:id="@+id/sortFragment"
         android:name="com.gavinsappcreations.upcominggames.ui.sort.SortFragment"
         android:label="fragment_sort" />
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.gavinsappcreations.upcominggames.ui.detail.DetailFragment"
+        android:label="fragment_detail"
+        tools:layout="@layout/fragment_detail" >
+        <argument
+            android:name="game"
+            app:argType="com.gavinsappcreations.upcominggames.domain.Game" />
+    </fragment>
 
 </navigation>

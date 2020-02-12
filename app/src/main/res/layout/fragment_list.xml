@@ -23,9 +23,9 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:paddingBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@id/game_recyclerView"
             app:cardElevation="4dp"
             app:contentPadding="4dp"
+            app:layout_constraintBottom_toTopOf="@id/game_recyclerView"
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
@@ -36,9 +36,9 @@
                 <TextView
                     android:id="@+id/search_textView"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
                     android:drawableStart="@drawable/search"
                     android:drawablePadding="16dp"
                     android:drawableTint="?attr/colorOnBackgroundHighContrast"
@@ -51,9 +51,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:padding="4dp"
                     android:background="?attr/selectableItemBackground"
                     android:contentDescription="@string/filter"
+                    android:padding="4dp"
                     android:src="@drawable/filter"
                     android:tint="?attr/colorOnBackgroundHighContrast" />
 
@@ -63,23 +63,23 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/game_recyclerView"
+            listData="@{viewModel.games}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:clipToPadding="false"
             android:padding="6dp"
-            listData="@{viewModel.games}"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/search_cardView"
-            android:clipToPadding="false"
             app:spanCount="2"
             tools:itemCount="16"
             tools:listitem="@layout/grid_view_item" />
 
         <ImageView
             android:id="@+id/game_cover_imageView"
-            android:contentDescription="@string/game_cover"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/game_cover"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

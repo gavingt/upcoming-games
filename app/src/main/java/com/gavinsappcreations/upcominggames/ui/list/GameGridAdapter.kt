@@ -5,17 +5,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.gavinsappcreations.upcominggames.R
-import com.gavinsappcreations.upcominggames.database.DatabaseGame
 import com.gavinsappcreations.upcominggames.databinding.GridViewItemBinding
 import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.utilities.Platform
-import kotlinx.coroutines.newFixedThreadPoolContext
 
 class GameGridAdapter(private val onClickListener: OnClickListener) :
-    PagedListAdapter<DatabaseGame, GameGridAdapter.GameReleaseViewHolder>(DiffCallback) {
+    PagedListAdapter<Game, GameGridAdapter.GameReleaseViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameReleaseViewHolder {
         return GameReleaseViewHolder(GridViewItemBinding.inflate(LayoutInflater.from(parent.context)))
@@ -36,7 +33,7 @@ class GameGridAdapter(private val onClickListener: OnClickListener) :
     class GameReleaseViewHolder(private var binding: GridViewItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(game: DatabaseGame) {
+        fun bind(game: Game) {
             binding.game = game
             binding.executePendingBindings()
 
@@ -70,18 +67,18 @@ class GameGridAdapter(private val onClickListener: OnClickListener) :
     }
 
 
-    companion object DiffCallback : DiffUtil.ItemCallback<DatabaseGame>() {
-        override fun areItemsTheSame(oldItem: DatabaseGame, newItem: DatabaseGame): Boolean {
-            return oldItem.releaseId == newItem.releaseId
+    companion object DiffCallback : DiffUtil.ItemCallback<Game>() {
+        override fun areItemsTheSame(oldItem: Game, newItem: Game): Boolean {
+            return oldItem.gameId == newItem.gameId
         }
 
-        override fun areContentsTheSame(oldItem: DatabaseGame, newItem: DatabaseGame): Boolean {
+        override fun areContentsTheSame(oldItem: Game, newItem: Game): Boolean {
             return oldItem == newItem
         }
     }
 
-    class OnClickListener(val clickListener: (game: DatabaseGame) -> Unit) {
-        fun onClick(game: DatabaseGame) = clickListener(game)
+    class OnClickListener(val clickListener: (game: Game) -> Unit) {
+        fun onClick(game: Game) = clickListener(game)
     }
 
 }

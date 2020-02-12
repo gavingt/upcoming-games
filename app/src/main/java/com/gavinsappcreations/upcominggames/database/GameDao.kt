@@ -1,22 +1,21 @@
 package com.gavinsappcreations.upcominggames.database
 
 import android.content.Context
-import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
 import androidx.room.*
+import com.gavinsappcreations.upcominggames.domain.Game
 
 @Dao
 interface GameDao {
 
-    @Query("SELECT * FROM DatabaseGame WHERE releaseDateInMillis IS NOT NULL ORDER BY DatabaseGame.releaseDateInMillis")
-    fun getGames(): DataSource.Factory<Int, DatabaseGame>
+    @Query("SELECT * FROM Game WHERE releaseDateInMillis IS NOT NULL ORDER BY Game.releaseDateInMillis")
+    fun getGames(): DataSource.Factory<Int, Game>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(games: List<DatabaseGame>)
+    fun insertAll(games: List<Game>)
 }
 
-@Database(entities = [DatabaseGame::class], version = 1)
+@Database(entities = [Game::class], version = 1)
 @TypeConverters(Converters::class)
 abstract class GamesDatabase : RoomDatabase() {
     abstract val gameDao: GameDao

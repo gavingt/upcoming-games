@@ -3,11 +3,8 @@ package com.gavinsappcreations.upcominggames.repository
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.gavinsappcreations.upcominggames.database.DatabaseGame
-import com.gavinsappcreations.upcominggames.database.asDomainModel
 import com.gavinsappcreations.upcominggames.database.getDatabase
 import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.network.GameBoundaryCallback
@@ -19,29 +16,16 @@ import kotlinx.coroutines.withContext
 
 class GamesRepository(application: Application) {
 
-    //TODO: implement paging library
-
-    //TODO: remove games without release dates via SQLite query, not a method
+    companion object {
+        private const val DATABASE_PAGE_SIZE = 20
+    }
 
     private val database = getDatabase(application)
 
-    /**
-     * A list of games that can be shown on the screen.
-     */
-/*    val games: LiveData<List<Game>> =
-        Transformations.map(database.gameDao.getGames())
-        {
-            it.asDomainModel()
-        }*/
 
-
-    fun getGameList(): LiveData<PagedList<DatabaseGame>> {
+    fun getGameList(): LiveData<PagedList<Game>> {
         // Get data source factory from the local cache
         val dataSourceFactory = database.gameDao.getGames()
-
-/*        dataSourceFactory.map {
-            it.asDomainModel()
-        }*/
 
         // every new query creates a new BoundaryCallback
         // The BoundaryCallback will observe when the user reaches to the edges of
@@ -59,12 +43,8 @@ class GamesRepository(application: Application) {
         return data
     }
 
-    companion object {
-        private const val DATABASE_PAGE_SIZE = 20
-    }
 
-
-    suspend fun downloadGameData(currentPage: Int) {
+    suspend fun downloadGameData(offset: Int) {
         val gameList = GameNetwork.gameData.getGameData(
             API_KEY,
             "json",
@@ -75,7 +55,7 @@ class GamesRepository(application: Application) {
             "id,deck,description,name,original_game_rating,image,platforms," +
                     "original_release_date,expected_release_day,expected_release_month," +
                     "expected_release_year",
-            currentPage*100
+            offset
         ).body()!!.games
 
 

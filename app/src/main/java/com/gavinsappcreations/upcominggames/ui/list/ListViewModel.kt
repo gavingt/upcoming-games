@@ -2,7 +2,6 @@ package com.gavinsappcreations.upcominggames.ui.list
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.gavinsappcreations.upcominggames.database.asDomainModel
 import com.gavinsappcreations.upcominggames.repository.GamesRepository
 import kotlinx.coroutines.launch
 

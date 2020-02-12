@@ -1,6 +1,6 @@
 package com.gavinsappcreations.upcominggames.network
 
-import com.gavinsappcreations.upcominggames.database.DatabaseGame
+import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.utilities.fetchReleaseDateInMillis
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -20,7 +20,7 @@ data class NetworkGamesContainer(
 
 @JsonClass(generateAdapter = true)
 data class NetworkGame(
-    @Json(name = "id") val gameId: Int,
+    @Json(name = "id") val gameId: Long,
     val deck: String?,
     val description: String?,
     @Json(name = "name") val gameName: String,
@@ -68,11 +68,11 @@ data class NetworkPlatform(
 /**
  * Convert Network results to database objects that we can store in our database
  */
-fun List<NetworkGame>.asDatabaseModel(): List<DatabaseGame> {
+fun List<NetworkGame>.asDatabaseModel(): List<Game> {
     return map { networkGame ->
 
-        DatabaseGame(
-            releaseId = networkGame.gameId,
+        Game(
+            gameId = networkGame.gameId,
             deck = networkGame.deck,
             description = networkGame.description,
             gameName = networkGame.gameName,

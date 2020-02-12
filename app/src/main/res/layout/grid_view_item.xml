@@ -8,7 +8,7 @@
 
         <variable
             name="game"
-            type="com.gavinsappcreations.upcominggames.database.DatabaseGame" />
+            type="com.gavinsappcreations.upcominggames.domain.Game" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -1,12 +1,10 @@
 package com.gavinsappcreations.upcominggames.ui.list
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.gavinsappcreations.upcominggames.databinding.FragmentListBinding
@@ -32,8 +30,7 @@ class ListFragment : Fragment() {
         binding.viewModel = viewModel
 
         binding.gameRecyclerView.adapter = GameGridAdapter(GameGridAdapter.OnClickListener {
-            //TODO: call method in viewModel that takes us to DetailFragment.
-            //viewModel.displayPropertyDetails(it)
+            findNavController(this).navigate(ListFragmentDirections.actionListFragmentToDetailFragment(it))
         })
 
         binding.filterImageButton.setOnClickListener {
