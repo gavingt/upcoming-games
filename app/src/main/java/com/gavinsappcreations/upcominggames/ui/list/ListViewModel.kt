@@ -2,16 +2,17 @@ package com.gavinsappcreations.upcominggames.ui.list
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.gavinsappcreations.upcominggames.repository.GamesRepository
+import com.gavinsappcreations.upcominggames.repository.GameRepository
 import kotlinx.coroutines.launch
 
 class ListViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val gamesRepository = GamesRepository(application)
+    private val gamesRepository = GameRepository(application)
 
     init {
         viewModelScope.launch {
-            gamesRepository.downloadGameData(0)
+            //TODO: fill in all new database items before showing app for very first time
+            //gamesRepository.downloadGameListData()
         }
     }
 

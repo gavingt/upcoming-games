@@ -7,13 +7,17 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.gavinsappcreations.upcominggames.databinding.FragmentDetailBinding
-import com.gavinsappcreations.upcominggames.databinding.FragmentSearchBinding
-import com.gavinsappcreations.upcominggames.ui.list.ListViewModel
 
 class DetailFragment : Fragment() {
 
     private val viewModel: DetailViewModel by lazy {
-        ViewModelProvider(this, DetailViewModel.Factory(requireActivity().application)).get(
+        ViewModelProvider(
+            this,
+            DetailViewModel.Factory(
+                requireActivity().application,
+                DetailFragmentArgs.fromBundle(arguments!!).guid
+            )
+        ).get(
             DetailViewModel::class.java
         )
     }
@@ -23,10 +27,6 @@ class DetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val binding = FragmentDetailBinding.inflate(inflater)
-
-        val arguments = DetailFragmentArgs.fromBundle(arguments!!)
-        binding.textTextView.text = arguments.game.gameName
-
 
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
         binding.lifecycleOwner = this

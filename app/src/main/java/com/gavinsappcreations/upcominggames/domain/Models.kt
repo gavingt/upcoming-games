@@ -3,10 +3,11 @@ package com.gavinsappcreations.upcominggames.domain
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.gavinsappcreations.upcominggames.utilities.DateFormat
 import kotlinx.android.parcel.Parcelize
 
 /**
- * Class that holds all the info for a single game.
+ * Class that holds all the info for a single game. Holds data from the "games" endpoint of the API.
  *
  * This class also defines the Room "game" table. We couldn't define a separate DatabaseGame
  * class, because Android's paging library requires that the UI consume the same class that is
@@ -14,15 +15,30 @@ import kotlinx.android.parcel.Parcelize
  */
 
 @Entity
-@Parcelize
 data class Game(
     @PrimaryKey
     val gameId: Long,
-    val deck: String?,
-    val description: String?,
     val gameName: String,
-    val originalGameRating: String?,
-    val imageUrl: String,
+    val mainImageUrl: String,
     val platforms: List<String>?,
-    val releaseDateInMillis: Long?
-) : Parcelable
+    val releaseDateInMillis: Long?,
+    val dateFormat: Int,
+    val guid: String
+)
+
+
+data class GameDetail (
+    val gameId: Long,
+    val guid: String,
+    val gameName: String,
+    val mainImageUrl: String,
+    val images: List<String>?,
+    val platforms: List<String>?,
+    val releaseDateInMillis: Long?,
+    val dateFormat: Int,
+    val developers: List<String>?,
+    val publishers: List<String>?,
+    val genres: List<String>?,
+    val deck: String?,
+    val description: String?
+    )

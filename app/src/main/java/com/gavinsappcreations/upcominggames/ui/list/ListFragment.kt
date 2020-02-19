@@ -30,7 +30,7 @@ class ListFragment : Fragment() {
         binding.viewModel = viewModel
 
         binding.gameRecyclerView.adapter = GameGridAdapter(GameGridAdapter.OnClickListener {
-            findNavController(this).navigate(ListFragmentDirections.actionListFragmentToDetailFragment(it))
+            findNavController(this).navigate(ListFragmentDirections.actionListFragmentToDetailFragment(it.guid))
         })
 
         binding.filterImageButton.setOnClickListener {

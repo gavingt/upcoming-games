@@ -1,16 +1,17 @@
 package com.gavinsappcreations.upcominggames.utilities
 
-import com.gavinsappcreations.upcominggames.App
-import com.gavinsappcreations.upcominggames.R
-import com.gavinsappcreations.upcominggames.network.NetworkGame
 import java.text.SimpleDateFormat
 import java.util.*
 
+//TODO: rescrape database, saving date format: exact, month, quarter, year
 
 /**
  * Takes the date returned by the API and turns it into a time in millis
  */
-fun NetworkGame.fetchReleaseDateInMillis(): Long? {
+fun fetchReleaseDateInMillis(
+    originalReleaseDate: String?, expectedReleaseYear: Int?, expectedReleaseQuarter: Int?,
+    expectedReleaseMonth: Int?, expectedReleaseDay: Int?
+): List<Any?> {
     val calendar: Calendar = Calendar.getInstance()
     /**
      * When we call Calendar.getInstance(), this sets values for hours, minutes, seconds, and
@@ -21,15 +22,41 @@ fun NetworkGame.fetchReleaseDateInMillis(): Long? {
     calendar.timeInMillis = 0
 
     if (originalReleaseDate != null) {
-        val apiPatternFormatter = SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.US)
+        val apiPatternFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
         val date = apiPatternFormatter.parse(originalReleaseDate)
         calendar.time = date!!
-        return calendar.timeInMillis
+        return listOf(calendar.timeInMillis, DateFormat.Exact)
     }
 
-    val releaseDay = expectedReleaseDay ?: return null
-    val releaseMonth = expectedReleaseMonth?.minus(1) ?: return null
-    val releaseYear = expectedReleaseYear ?: return null
-    calendar.set(releaseYear, releaseMonth, releaseDay)
-    return calendar.timeInMillis
+    var releaseMonth = expectedReleaseMonth?.minus(1)
+    var releaseDay = expectedReleaseDay
+
+    when {
+        releaseDay != null -> {
+            calendar.set(expectedReleaseYear!!, releaseMonth!!, releaseDay)
+            return listOf(calendar.timeInMillis, DateFormat.Exact)
+        }
+        releaseMonth != null -> {
+            // Temporarily set day to 1
+            calendar.set(expectedReleaseYear!!, releaseMonth, 1)
+            // Find maximum day in month
+            releaseDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+            // Re-set calendar with maximum day
+            calendar.set(expectedReleaseYear, releaseMonth, releaseDay)
+            return listOf(calendar.timeInMillis, DateFormat.Month)
+        }
+        expectedReleaseQuarter != null -> {
+            releaseMonth = (expectedReleaseQuarter * 3) - 1
+            calendar.set(expectedReleaseYear!!, releaseMonth, 1)
+            releaseDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+            calendar.set(expectedReleaseYear, releaseMonth, releaseDay)
+            return listOf(calendar.timeInMillis, DateFormat.Quarter)
+        }
+        expectedReleaseYear != null -> {
+            calendar.set(expectedReleaseYear, 11, 31)
+            return listOf(calendar.timeInMillis, DateFormat.Year)
+        }
+        else -> return listOf(null, DateFormat.None)
+    }
+
 }

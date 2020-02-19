@@ -6,7 +6,12 @@ import androidx.room.TypeConverter
 class Converters {
 
     @TypeConverter
-    fun listToString(list: List<String>): String {
+    fun listToString(list: List<String>?): String {
+
+        if (list == null) {
+            return "no platforms"
+        }
+
         val stringBuilder = StringBuilder()
         for (item in list) {
             stringBuilder.append(item).append(",")

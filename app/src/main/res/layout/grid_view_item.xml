@@ -30,7 +30,7 @@
 
             <ImageView
                 android:id="@+id/game_imageView"
-                imageUrl="@{game.imageUrl}"
+                imageUrl="@{game.mainImageUrl}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
@@ -41,11 +41,13 @@
         </com.google.android.material.card.MaterialCardView>
 
         <TextView
-            android:id="@+id/name_textView"
+            android:id="@+id/title_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="2dp"
             android:text="@{game.gameName}"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -56,10 +58,12 @@
             android:id="@+id/release_date_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            releaseDate="@{game.releaseDateInMillis}"
+            releaseDateInMillis="@{game.releaseDateInMillis}"
+            dateFormat="@{game.dateFormat}"
+            includePrefix="@{false}"
             android:textSize="13sp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/name_textView"
+            app:layout_constraintTop_toBottomOf="@id/title_textView"
             tools:text="September 19, 2020" />
 
         <com.google.android.flexbox.FlexboxLayout

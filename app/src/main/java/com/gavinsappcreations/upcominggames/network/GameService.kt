@@ -7,7 +7,9 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 
 /**
@@ -15,14 +17,23 @@ import retrofit2.http.Query
  */
 interface GameService {
     @GET("games")
-    suspend fun getGameData(
+    suspend fun getGameListData(
         @Query("api_key") apiKey: String,
         @Query("format") format: String,
         @Query("sort") sort: String,
         @Query("filter") filter: String,
         @Query("field_list") fieldList: String,
         @Query("offset") offset: Int
-    ): Response<NetworkGamesContainer>
+    ): Response<NetworkGameContainer>
+
+    @GET("game/{guid}")
+    suspend fun getGameDetailData(
+        @Path("guid") guid: String,
+        @Query("api_key") apiKey: String,
+        @Query("format") format: String,
+        @Query("field_list") fieldList: String
+
+    ): Response<NetworkGameDetailContainer>
 }
 
 /**

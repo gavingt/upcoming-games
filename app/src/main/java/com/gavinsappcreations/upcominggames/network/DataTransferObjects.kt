@@ -1,13 +1,14 @@
 package com.gavinsappcreations.upcominggames.network
 
 import com.gavinsappcreations.upcominggames.domain.Game
+import com.gavinsappcreations.upcominggames.domain.GameDetail
+import com.gavinsappcreations.upcominggames.utilities.DateFormat
 import com.gavinsappcreations.upcominggames.utilities.fetchReleaseDateInMillis
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
-
 @JsonClass(generateAdapter = true)
-data class NetworkGamesContainer(
+data class NetworkGameContainer(
     val error: String,
     val limit: Int,
     val offset: Int,
@@ -21,16 +22,15 @@ data class NetworkGamesContainer(
 @JsonClass(generateAdapter = true)
 data class NetworkGame(
     @Json(name = "id") val gameId: Long,
-    val deck: String?,
-    val description: String?,
+    val guid: String,
     @Json(name = "name") val gameName: String,
-    @Json(name = "original_game_rating") val originalGameRating: List<NetworkRating>?,
-    val image: NetworkImage,
+    @Json(name = "image") val mainImage: NetworkMainImage,
     val platforms: List<NetworkPlatform>?,
     @Json(name = "original_release_date") val originalReleaseDate: String?,
-    @Json(name = "expected_release_day") val expectedReleaseDay: Int?,
+    @Json(name = "expected_release_year") val expectedReleaseYear: Int?,
+    @Json(name = "expected_release_quarter") val expectedReleaseQuarter: Int?,
     @Json(name = "expected_release_month") val expectedReleaseMonth: Int?,
-    @Json(name = "expected_release_year") val expectedReleaseYear: Int?
+    @Json(name = "expected_release_day") val expectedReleaseDay: Int?
 )
 
 
@@ -42,7 +42,7 @@ data class NetworkRating(
 )
 
 @JsonClass(generateAdapter = true)
-data class NetworkImage(
+data class NetworkMainImage(
     @Json(name = "icon_url") val iconUrl: String,
     @Json(name = "medium_url") val mediumUrl: String,
     @Json(name = "screen_url") val screenUrl: String,
@@ -65,25 +65,125 @@ data class NetworkPlatform(
 )
 
 
+@JsonClass(generateAdapter = true)
+data class NetworkGameDetailContainer(
+    val error: String,
+    val limit: Int,
+    val offset: Int,
+    @Json(name = "number_of_page_results") val numberOfPageResults: Int,
+    @Json(name = "number_of_total_results") val numberOfTotalResults: Int,
+    @Json(name = "status_code") val statusCode: Int,
+    @Json(name = "results") val gameDetails: NetworkGameDetail
+)
+
+
+@JsonClass(generateAdapter = true)
+data class NetworkGameDetail(
+    @Json(name = "id") val gameId: Long,
+    val guid: String,
+    @Json(name = "name") val gameName: String,
+    @Json(name = "image") val mainImageUrl: NetworkMainImage,
+    val images: List<NetworkImage>?,
+    val platforms: List<NetworkPlatform>?,
+    @Json(name = "original_release_date") val originalReleaseDate: String?,
+    @Json(name = "expected_release_year") val expectedReleaseYear: Int?,
+    @Json(name = "expected_release_quarter") val expectedReleaseQuarter: Int?,
+    @Json(name = "expected_release_month") val expectedReleaseMonth: Int?,
+    @Json(name = "expected_release_day") val expectedReleaseDay: Int?,
+    @Json(name = "original_game_rating") val originalGameRating: List<NetworkRating>?,
+    val developers: List<GenericContainer>?,
+    val publishers: List<GenericContainer>?,
+    val genres: List<GenericContainer>?,
+    val deck: String?,
+    val description: String?
+)
+
+
+@JsonClass(generateAdapter = true)
+data class GenericContainer(
+    @Json(name = "api_detail_url") val apiDetailUrl: String,
+    val id: Int,
+    val name: String,
+    @Json(name = "site_detail_url") val sideDetailUrl: String
+)
+
+
+@JsonClass(generateAdapter = true)
+data class NetworkImage(
+    @Json(name = "icon_url") val iconUrl: String,
+    @Json(name = "medium_url") val mediumUrl: String,
+    @Json(name = "screen_url") val screenUrl: String,
+    @Json(name = "small_url") val smallUrl: String,
+    @Json(name = "super_url") val superUrl: String,
+    @Json(name = "thumb_url") val thumbUrl: String,
+    @Json(name = "tiny_url") val tinyUrl: String,
+    val original: String,
+    val tags: String?
+)
+
+
 /**
  * Convert Network results to database objects that we can store in our database
  */
 fun List<NetworkGame>.asDatabaseModel(): List<Game> {
+
     return map { networkGame ->
+
+        val releaseDateArray = fetchReleaseDateInMillis(
+            networkGame.originalReleaseDate,
+            networkGame.expectedReleaseYear,
+            networkGame.expectedReleaseQuarter,
+            networkGame.expectedReleaseMonth,
+            networkGame.expectedReleaseDay
+        )
 
         Game(
             gameId = networkGame.gameId,
-            deck = networkGame.deck,
-            description = networkGame.description,
             gameName = networkGame.gameName,
-            originalGameRating = networkGame.originalGameRating?.get(0)?.ratingName,
-            imageUrl = networkGame.image.smallUrl,
+            mainImageUrl = networkGame.mainImage.smallUrl,
             platforms = networkGame.platforms?.map {
                 it.abbreviation
             },
-            releaseDateInMillis = networkGame.fetchReleaseDateInMillis()
+            releaseDateInMillis = releaseDateArray[0] as Long?,
+            dateFormat = (releaseDateArray[1] as DateFormat).formatCode,
+            guid = networkGame.guid
         )
     }
 }
 
+fun NetworkGameDetail.asDomainModel(): GameDetail {
 
+    val releaseDateArray = fetchReleaseDateInMillis(
+        this.originalReleaseDate,
+        this.expectedReleaseYear,
+        this.expectedReleaseQuarter,
+        this.expectedReleaseMonth,
+        this.expectedReleaseDay
+    )
+
+    return GameDetail(
+        gameId = this.gameId,
+        guid = this.guid,
+        gameName = this.gameName,
+        mainImageUrl = this.mainImageUrl.smallUrl,
+        images = this.images?.map {
+            it.smallUrl
+        },
+        platforms = this.platforms?.map {
+            it.platformName
+        },
+        releaseDateInMillis = releaseDateArray[0] as Long?,
+        dateFormat = (releaseDateArray[1] as DateFormat).formatCode,
+        developers = this.developers?.map {
+            it.name
+        },
+        publishers = this.publishers?.map {
+            it.name
+        },
+        genres = this.genres?.map {
+            it.name
+        },
+        deck = this.deck,
+        description = this.description
+    )
+}

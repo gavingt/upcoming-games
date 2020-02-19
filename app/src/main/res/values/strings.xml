@@ -4,11 +4,15 @@
     <string name="recent">Recent</string>
     <string name="search">Search</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="filter">filter</string>
     <string name="search_all_games">Search all games</string>
     <string name="game_release">game release</string>
     <string name="game_cover">game cover</string>
     <string name="unknown_date">Unknown date</string>
+    <string name="no_release_date">No release date</string>
+    <string name="release_date">Release date:\u0020 %1$s</string>
+    <string name="quarter_release_date">Q%1d %2$s</string>
+
+
 </resources>

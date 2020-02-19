@@ -8,7 +8,7 @@ import com.gavinsappcreations.upcominggames.domain.Game
 @Dao
 interface GameDao {
 
-    @Query("SELECT * FROM Game WHERE releaseDateInMillis IS NOT NULL ORDER BY Game.releaseDateInMillis")
+    @Query("SELECT * FROM Game ORDER BY Game.releaseDateInMillis ASC")
     fun getGames(): DataSource.Factory<Int, Game>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -30,7 +30,7 @@ fun getDatabase(context: Context): GamesDatabase {
                 context.applicationContext,
                 GamesDatabase::class.java,
                 "games"
-            ).build()
+            ).createFromAsset("database/games.db").build()
         }
     }
     return INSTANCE

@@ -3,7 +3,8 @@ package com.gavinsappcreations.upcominggames.network
 import android.util.Log
 import androidx.paging.PagedList
 import com.gavinsappcreations.upcominggames.domain.Game
-import com.gavinsappcreations.upcominggames.repository.GamesRepository
+import com.gavinsappcreations.upcominggames.repository.GameRepository
+import com.gavinsappcreations.upcominggames.utilities.NETWORK_PAGE_SIZE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -13,12 +14,9 @@ import kotlinx.coroutines.launch
  * the database cannot provide any more data.
  **/
 class GameBoundaryCallback(
-    private val repository: GamesRepository
+    private val repository: GameRepository
 ) : PagedList.BoundaryCallback<Game>() {
 
-    companion object {
-        private const val NETWORK_PAGE_SIZE = 100
-    }
 
     // keep the last requested page. When the request is successful, increment the page number.
     private var lastRequestedPage = 0
@@ -39,6 +37,7 @@ class GameBoundaryCallback(
         requestAndSaveData()
     }
 
+
     /**
      * When all items in the database were loaded, we need to query the backend for more items.
      */
@@ -52,7 +51,7 @@ class GameBoundaryCallback(
         CoroutineScope(Dispatchers.Main).launch {
             lastRequestedPage++
             val offset = lastRequestedPage * NETWORK_PAGE_SIZE
-            repository.downloadGameData(offset)
+            repository.downloadGameListData(offset)
         }
 
 
