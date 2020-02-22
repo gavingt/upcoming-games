@@ -6,7 +6,7 @@
     <color name="colorAccent">#FF5722</color>
     <color name="textColorPrimary">#000000</color>
 
-    <color name="colorBackground">#FFFFFF</color>
+    <color name="colorBackground">#F0F0F0</color>
     <color name="colorBackgroundVariant">#FFFFFF</color>
     <color name="colorOnBackground">#000000</color>
     <color name="colorOnBackgroundHighContrast">#666666</color>

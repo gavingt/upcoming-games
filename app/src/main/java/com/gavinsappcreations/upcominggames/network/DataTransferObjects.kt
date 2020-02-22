@@ -6,6 +6,7 @@ import com.gavinsappcreations.upcominggames.utilities.DateFormat
 import com.gavinsappcreations.upcominggames.utilities.fetchReleaseDateInMillis
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import java.util.*
 
 @JsonClass(generateAdapter = true)
 data class NetworkGameContainer(
@@ -166,11 +167,9 @@ fun NetworkGameDetail.asDomainModel(): GameDetail {
         guid = this.guid,
         gameName = this.gameName,
         mainImageUrl = this.mainImageUrl.smallUrl,
-        images = this.images?.map {
-            it.smallUrl
-        },
+        images = this.images?.filterImagesByTag(),
         platforms = this.platforms?.map {
-            it.platformName
+            it.abbreviation
         },
         releaseDateInMillis = releaseDateArray[0] as Long?,
         dateFormat = (releaseDateArray[1] as DateFormat).formatCode,
@@ -183,7 +182,20 @@ fun NetworkGameDetail.asDomainModel(): GameDetail {
         genres = this.genres?.map {
             it.name
         },
-        deck = this.deck,
-        description = this.description
+        deck = this.deck
     )
+}
+
+
+fun List<NetworkImage>.filterImagesByTag(): List<String> {
+
+    val filteredList = mutableListOf<String>()
+
+    map {
+        if (it.tags!= null && it.tags.toLowerCase(Locale.getDefault()).contains("screenshot")) {
+            filteredList.add(it.thumbUrl)
+        }
+    }
+
+    return filteredList
 }

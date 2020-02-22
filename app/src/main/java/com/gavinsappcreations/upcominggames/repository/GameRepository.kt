@@ -71,7 +71,7 @@ class GameRepository(application: Application) {
             "id,guid,name,image,images,platforms," +
                     "original_release_date,expected_release_day,expected_release_month," +
                     "expected_release_year,expected_release_quarter,original_game_rating,developers,publishers,genres," +
-                    "deck,description"
+                    "deck"
         ).body()!!.gameDetails.asDomainModel()
     }
 

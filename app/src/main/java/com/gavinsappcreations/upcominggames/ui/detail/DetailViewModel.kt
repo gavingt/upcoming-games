@@ -20,9 +20,6 @@ class DetailViewModel(application: Application, guid: String) : AndroidViewModel
         }
     }
 
-
-
-
     //Factory for constructing DetailViewModel with Application parameter.
     class Factory(private val application: Application, private val guid: String) :
         ViewModelProvider.Factory {

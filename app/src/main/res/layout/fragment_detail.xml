@@ -5,13 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.view.View"/>
         <variable
             name="viewModel"
             type="com.gavinsappcreations.upcominggames.ui.detail.DetailViewModel" />
     </data>
 
-    <ScrollView
+    <com.gavinsappcreations.upcominggames.ui.detail.NestedScrollingParentScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -54,21 +54,242 @@
                 app:layout_constraintTop_toBottomOf="@id/main_image_cardView"
                 tools:text="Halo Infinite" />
 
-            <TextView
-                android:id="@+id/release_date_textView"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/details_cardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_normal"
+                app:cardBackgroundColor="?attr/colorBackgroundVariant"
+                app:layout_constraintTop_toBottomOf="@id/title_textView">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/margin_normal">
+
+                    <TextView
+                        android:id="@+id/details_header_textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/details"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                        android:textSize="18sp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/release_date_label_textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_normal"
+                        android:text="@string/release_date"
+                        android:textSize="15sp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/details_header_textView" />
+
+
+                    <TextView
+                        android:id="@+id/release_date_value_textView"
+                        dateFormat="@{viewModel.gameDetail.dateFormat}"
+                        inGameDetailFragment="@{true}"
+                        releaseDateInMillis="@{viewModel.gameDetail.releaseDateInMillis}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_large"
+                        android:textSize="15sp"
+                        app:layout_constraintLeft_toRightOf="@id/release_date_label_textView"
+                        app:layout_constraintTop_toTopOf="@id/release_date_label_textView"
+                        tools:text="September 19, 2020" />
+
+                    <TextView
+                        android:id="@+id/platforms_label_textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_12dp"
+                        android:text="@string/platforms"
+                        android:textSize="15sp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/release_date_value_textView" />
+
+                    <TextView
+                        android:id="@+id/platforms_value_textView"
+                        platformList="@{viewModel.gameDetail.platforms}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        app:layout_constraintLeft_toLeftOf="@id/release_date_value_textView"
+                        app:layout_constraintTop_toTopOf="@id/platforms_label_textView"
+                        tools:text="Xbox One\nPC\nNES" />
+
+                    <TextView
+                        android:id="@+id/developers_label_textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_12dp"
+                        android:text="@string/developers"
+                        android:textSize="15sp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/platforms_value_textView" />
+
+                    <TextView
+                        android:id="@+id/developers_value_textView"
+                        gameDetailList="@{viewModel.gameDetail.developers}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        app:layout_constraintLeft_toLeftOf="@id/release_date_value_textView"
+                        app:layout_constraintTop_toTopOf="@id/developers_label_textView"
+                        tools:text="Bungie\nBlizzard\nTurn10" />
+
+                    <TextView
+                        android:id="@+id/publishers_label_textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_12dp"
+                        android:text="@string/publishers"
+                        android:textSize="15sp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/developers_value_textView" />
+
+                    <TextView
+                        android:id="@+id/publishers_value_textView"
+                        gameDetailList="@{viewModel.gameDetail.publishers}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        app:layout_constraintLeft_toLeftOf="@id/release_date_value_textView"
+                        app:layout_constraintTop_toTopOf="@id/publishers_label_textView"
+                        tools:text="Microsoft\nSony\nActivision" />
+
+                    <TextView
+                        android:id="@+id/genres_label_textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_12dp"
+                        android:text="@string/genres"
+                        android:textSize="15sp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/publishers_value_textView" />
+
+                    <TextView
+                        android:id="@+id/genres_value_textView"
+                        gameDetailList="@{viewModel.gameDetail.genres}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        app:layout_constraintLeft_toLeftOf="@id/release_date_value_textView"
+                        app:layout_constraintTop_toTopOf="@id/genres_label_textView"
+                        tools:text="Microsoft\nSony\nActivision" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/summary_cardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="@{viewModel.gameDetail.deck == null ? View.GONE : View.VISIBLE}"
+                android:layout_marginTop="@dimen/margin_normal"
+                app:cardBackgroundColor="?attr/colorBackgroundVariant"
+                app:layout_constraintTop_toBottomOf="@id/details_cardView">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/margin_normal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/summary_header_textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/summary"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/summary_value_textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_normal"
+                        android:text="@{viewModel.gameDetail.deck}"
+                        android:textSize="15sp"
+                        tools:text="This is the summary" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+<!--            <TextView
+                android:id="@+id/screenshots_header_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                releaseDateInMillis="@{viewModel.gameDetail.releaseDateInMillis}"
-                dateFormat="@{viewModel.gameDetail.dateFormat}"
-                includePrefix="@{true}"
-                android:textSize="13sp"
+                android:text="@string/screenshots"
+                android:layout_marginTop="@dimen/margin_normal"
+                android:layout_marginLeft="@dimen/margin_normal"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/title_textView"
-                tools:text="September 19, 2020" />
+                app:layout_constraintTop_toBottomOf="@id/summary_cardView"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                android:textSize="18sp" />-->
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/screenshot_recyclerView"
+                screenshotData="@{viewModel.gameDetail.images}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_normal"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/summary_cardView"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:overScrollMode="never"
+                tools:itemCount="4"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/screenshot_item" />
+
+<!--            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/screenshots_cardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="@{viewModel.gameDetail.images.size() == 0 ? View.GONE : View.VISIBLE}"
+                android:layout_marginTop="@dimen/margin_normal"
+                android:layout_marginBottom="@dimen/margin_normal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:cardBackgroundColor="?attr/colorBackgroundVariant"
+                app:layout_constraintTop_toBottomOf="@id/summary_cardView">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/margin_normal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/screenshots_header_textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/screenshots"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                        android:textSize="18sp" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/screenshot_recyclerView"
+                        screenshotData="@{viewModel.gameDetail.images}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_normal"
+                        android:orientation="horizontal"
+                        android:overScrollMode="never"
+                        tools:itemCount="4"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:listitem="@layout/screenshot_item" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>-->
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </ScrollView>
+    </com.gavinsappcreations.upcominggames.ui.detail.NestedScrollingParentScrollView>
 
 </layout>

@@ -1,10 +1,7 @@
 package com.gavinsappcreations.upcominggames.domain
 
-import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.gavinsappcreations.upcominggames.utilities.DateFormat
-import kotlinx.android.parcel.Parcelize
 
 /**
  * Class that holds all the info for a single game. Holds data from the "games" endpoint of the API.
@@ -27,7 +24,7 @@ data class Game(
 )
 
 
-data class GameDetail (
+data class GameDetail(
     val gameId: Long,
     val guid: String,
     val gameName: String,
@@ -39,6 +36,7 @@ data class GameDetail (
     val developers: List<String>?,
     val publishers: List<String>?,
     val genres: List<String>?,
-    val deck: String?,
-    val description: String?
-    )
+    val deck: String?
+)
+
+data class Platform(val abbreviation: String, val fullName: String)

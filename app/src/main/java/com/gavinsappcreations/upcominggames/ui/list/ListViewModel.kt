@@ -11,7 +11,7 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         viewModelScope.launch {
-            //TODO: fill in all new database items before showing app for very first time
+            //TODO: on first load, update database (show loading indicator)
             //gamesRepository.downloadGameListData()
         }
     }

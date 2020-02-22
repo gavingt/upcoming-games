@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             releaseDateInMillis="@{game.releaseDateInMillis}"
             dateFormat="@{game.dateFormat}"
-            includePrefix="@{false}"
+            inGameDetailFragment="@{false}"
             android:textSize="13sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title_textView"

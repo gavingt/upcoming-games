@@ -12,6 +12,8 @@ class Converters {
             return "no platforms"
         }
 
+        //TODO: this is causing a trailing comma in platforms list
+
         val stringBuilder = StringBuilder()
         for (item in list) {
             stringBuilder.append(item).append(",")
@@ -21,6 +23,6 @@ class Converters {
 
     @TypeConverter
     fun stringToList(string: String): List<String> {
-        return string.split(",")
+        return string.substring(0, string.length - 1).split(",")
     }
 }

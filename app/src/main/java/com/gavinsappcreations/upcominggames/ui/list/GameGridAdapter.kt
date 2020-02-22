@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gavinsappcreations.upcominggames.R
 import com.gavinsappcreations.upcominggames.databinding.GridViewItemBinding
 import com.gavinsappcreations.upcominggames.domain.Game
-import com.gavinsappcreations.upcominggames.utilities.Platform
+import java.util.*
 
 class GameGridAdapter(private val onClickListener: OnClickListener) :
     PagedListAdapter<Game, GameGridAdapter.GameReleaseViewHolder>(DiffCallback) {
@@ -46,15 +46,7 @@ class GameGridAdapter(private val onClickListener: OnClickListener) :
             //Since ViewHolders are reused, we need to remove the previously added ones first.
             flexboxLayout.removeAllViews()
 
-            val platformsInCurrentSort = mutableListOf<String>()
-            for (platform in Platform.values()) {
-                platformsInCurrentSort.add(platform.name)
-            }
-            val platformsForCurrentGame = game.platforms
-
-            val platformsToShow = platformsInCurrentSort.intersect(platformsForCurrentGame)
-
-            for (platform in platformsToShow) {
+            for (platform in game.platforms) {
                 val textView = LayoutInflater.from(binding.root.context).inflate(
                     R.layout.platform_textview_layout,
                     flexboxLayout, false

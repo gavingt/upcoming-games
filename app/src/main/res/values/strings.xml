@@ -11,8 +11,18 @@
     <string name="game_cover">game cover</string>
     <string name="unknown_date">Unknown date</string>
     <string name="no_release_date">No release date</string>
-    <string name="release_date">Release date:\u0020 %1$s</string>
+    <string name="not_available">Not available</string>
+    <string name="release_date">Release date:</string>
     <string name="quarter_release_date">Q%1d %2$s</string>
+    <string name="platforms">Platforms</string>
+    <string name="developers">Developers</string>
+    <string name="publishers">Publishers</string>
+    <string name="genres">Genres</string>
+    <string name="summary">Summary</string>
+    <string name="description">Description</string>
+    <string name="game_screenshot">Game screenshot</string>
+    <string name="screenshots">Screenshots</string>
+    <string name="details">Details</string>
 
 
 </resources>

@@ -1,5 +1,7 @@
 package com.gavinsappcreations.upcominggames.utilities
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.net.toUri
@@ -10,17 +12,19 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.gavinsappcreations.upcominggames.R
 import com.gavinsappcreations.upcominggames.domain.Game
+import com.gavinsappcreations.upcominggames.ui.detail.ScreenshotAdapter
 import com.gavinsappcreations.upcominggames.ui.list.GameGridAdapter
+import com.google.android.material.card.MaterialCardView
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 @BindingAdapter("imageUrl")
-fun ImageView.bindImage(imgUrl: String?) {
+fun ImageView.bindCoverImage(imgUrl: String?) {
     imgUrl?.let {
         val imgUri = imgUrl.toUri().buildUpon().scheme("https").build()
         Glide.with(context)
-            .load(imgUri)
+            .load(if (imgUrl == NO_IMG_URL) R.drawable.ic_broken_image else imgUri)
+            //.override(500, 500)
             .apply(
                 RequestOptions()
                     .placeholder(R.drawable.loading_animation)
@@ -31,64 +35,113 @@ fun ImageView.bindImage(imgUrl: String?) {
 }
 
 
-@BindingAdapter("releaseDateInMillis", "dateFormat", "includePrefix")
+@BindingAdapter("screenshotUrl")
+fun ImageView.bindScreenshotImage(imgUrl: String?) {
+    imgUrl?.let {
+        val imgUri = imgUrl.toUri().buildUpon().scheme("https").build()
+        Glide.with(context)
+            .load(if (imgUrl == NO_IMG_URL) R.drawable.ic_broken_image else imgUri)
+            .fitCenter()
+            .apply(
+                RequestOptions()
+                    .placeholder(R.drawable.loading_animation)
+                    .error(R.drawable.ic_broken_image)
+            )
+            .into(this)
+    }
+}
+
+
+
+
+
+
+@BindingAdapter("releaseDateInMillis", "dateFormat", "inGameDetailFragment")
 fun TextView.formatReleaseDateString(
     releaseDateInMillis: Long?,
     dateFormat: Int,
-    includePrefix: Boolean
+    inGameDetailFragment: Boolean
 ) {
 
-    var releaseDateString: String? = null
+    val calendar: Calendar = Calendar.getInstance()
+    calendar.timeInMillis = releaseDateInMillis ?: -1
 
-    if (releaseDateInMillis == null) {
-        text = context.getString(R.string.no_release_date)
-    } else {
-
-        val calendar: Calendar = Calendar.getInstance()
-        calendar.timeInMillis = releaseDateInMillis
-
-        when (dateFormat) {
-            DateFormat.Exact.formatCode -> {
-                val desiredPatternFormatter = SimpleDateFormat("MMMM d, yyyy", Locale.US)
-                releaseDateString = desiredPatternFormatter.format(calendar.time)
-            }
-            DateFormat.Month.formatCode -> {
-                val desiredPatternFormatter = SimpleDateFormat("MMMM yyyy", Locale.US)
-                releaseDateString = desiredPatternFormatter.format(calendar.time)
-            }
-            DateFormat.Quarter.formatCode -> {
-                val quarter = (calendar.get(Calendar.MONTH) / 3) + 1
-                val desiredPatternFormatter = SimpleDateFormat("yyyy", Locale.US)
-                releaseDateString = context.getString(
-                    R.string.quarter_release_date,
-                    quarter,
-                    desiredPatternFormatter.format(calendar.time)
-                )
-            }
-            DateFormat.Year.formatCode -> {
-                val desiredPatternFormatter = SimpleDateFormat("yyyy", Locale.US)
-                releaseDateString = desiredPatternFormatter.format(calendar.time)
+    when (dateFormat) {
+        DateFormat.Exact.formatCode -> {
+            val desiredPatternFormatter = SimpleDateFormat("MMMM d, yyyy", Locale.US)
+            text = desiredPatternFormatter.format(calendar.time)
+        }
+        DateFormat.Month.formatCode -> {
+            val desiredPatternFormatter = SimpleDateFormat("MMMM yyyy", Locale.US)
+            text = desiredPatternFormatter.format(calendar.time)
+        }
+        DateFormat.Quarter.formatCode -> {
+            val quarter = (calendar.get(Calendar.MONTH) / 3) + 1
+            val desiredPatternFormatter = SimpleDateFormat("yyyy", Locale.US)
+            text = context.getString(
+                R.string.quarter_release_date,
+                quarter,
+                desiredPatternFormatter.format(calendar.time)
+            )
+        }
+        DateFormat.Year.formatCode -> {
+            val desiredPatternFormatter = SimpleDateFormat("yyyy", Locale.US)
+            text = desiredPatternFormatter.format(calendar.time)
+        }
+        DateFormat.None.formatCode -> {
+            text = if (inGameDetailFragment) {
+                context.getString(R.string.not_available)
+            } else {
+                context.getString(R.string.no_release_date)
             }
         }
-
-        text = if (includePrefix) {
-            context.getString(R.string.release_date, releaseDateString)
-        } else {
-            releaseDateString
-        }
-
     }
 }
 
 
 //This BindingAdapter function gets called automatically whenever "data" changes, since BindingAdapters are equivalent to Observers
 @BindingAdapter("listData")
-fun RecyclerView.bindRecyclerView(data: PagedList<Game>?) {
+fun RecyclerView.bindListRecyclerView(data: PagedList<Game>?) {
     val adapter = adapter as GameGridAdapter
-    // Don't animate items in grid because they don't play well with paging in games from API.
     adapter.submitList(data)
 }
 
 
+//This BindingAdapter function gets called automatically whenever "data" changes, since BindingAdapters are equivalent to Observers
+@BindingAdapter("screenshotData")
+fun RecyclerView.bindScreenshotRecyclerView(data: List<String>?) {
+    val adapter = adapter as ScreenshotAdapter
+    adapter.submitList(data)
+}
 
+
+@BindingAdapter("platformList")
+fun TextView.formatPlatformList(platforms: List<String>?) {
+    text = if (platforms != null) {
+        val builder = StringBuilder()
+        for (abbreviatedPlatform in platforms) {
+            val platformIndex = allPlatforms.indexOfFirst {
+                it.abbreviation == abbreviatedPlatform
+            }
+            builder.append(allPlatforms[platformIndex].fullName).append("\n")
+        }
+        builder.trim()
+    } else {
+        context.getString(R.string.not_available)
+    }
+}
+
+
+@BindingAdapter("gameDetailList")
+fun TextView.formatGameDetailList(items: List<String>?) {
+    text = if (items != null) {
+        val builder = StringBuilder()
+        for (item in items) {
+            builder.append(item).append("\n")
+        }
+        builder.trim()
+    } else {
+        context.getString(R.string.not_available)
+    }
+}
 
