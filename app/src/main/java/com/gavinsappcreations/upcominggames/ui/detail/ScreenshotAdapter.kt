@@ -15,14 +15,10 @@ class ScreenshotAdapter(private val onClickListener: OnClickListener) :
     }
 
     override fun onBindViewHolder(holder: ScreenshotViewHolder, position: Int) {
-        val gameRelease = getItem(position)
-
-        gameRelease?.let {
-            holder.itemView.setOnClickListener {
-                onClickListener.onClick(gameRelease)
-            }
-            holder.bind(gameRelease)
+        holder.itemView.setOnClickListener {
+            onClickListener.onClick(position)
         }
+        holder.bind(getItem(position))
     }
 
 
@@ -46,8 +42,8 @@ class ScreenshotAdapter(private val onClickListener: OnClickListener) :
         }
     }
 
-    class OnClickListener(val clickListener: (url: String) -> Unit) {
-        fun onClick(screenshotUrl: String) = clickListener(screenshotUrl)
+    class OnClickListener(val clickListener: (currentImageIndex: Int) -> Unit) {
+        fun onClick(imageIndex: Int) = clickListener(imageIndex)
     }
 
 }

@@ -4,13 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.gavinsappcreations.upcominggames.databinding.FragmentDetailBinding
-import com.gavinsappcreations.upcominggames.ui.list.GameGridAdapter
-import com.gavinsappcreations.upcominggames.ui.list.ListFragmentDirections
 
 class DetailFragment : Fragment() {
 
@@ -38,9 +35,18 @@ class DetailFragment : Fragment() {
         // Giving the binding access to the DetailListViewModel
         binding.viewModel = viewModel
 
-        binding.screenshotRecyclerView.adapter = ScreenshotAdapter(ScreenshotAdapter.OnClickListener {
-            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-        })
+        binding.screenshotRecyclerView.adapter =
+            ScreenshotAdapter(ScreenshotAdapter.OnClickListener { currentImageIndex ->
+                val images = viewModel.gameDetail.value?.images?.toTypedArray()
+                images?.let {
+                    findNavController().navigate(
+                        DetailFragmentDirections.actionDetailFragmentToImageViewerFragment(
+                            images,
+                            currentImageIndex
+                        )
+                    )
+                }
+            })
 
         return binding.root
     }

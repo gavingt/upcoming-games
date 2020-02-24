@@ -35,6 +35,21 @@
         <argument
             android:name="guid"
             app:argType="string" />
+        <action
+            android:id="@+id/action_detailFragment_to_imageViewerFragment"
+            app:destination="@id/imageViewerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/imageViewerFragment"
+        android:name="com.gavinsappcreations.upcominggames.ui.imageViewer.ImageViewerFragment"
+        android:label="image_viewer_fragment"
+        tools:layout="@layout/fragment_image_viewer" >
+        <argument
+            android:name="images"
+            app:argType="string[]" />
+        <argument
+            android:name="currentImageIndex"
+            app:argType="integer" />
     </fragment>
 
 </navigation>

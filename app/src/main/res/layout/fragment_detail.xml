@@ -221,18 +221,6 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-<!--            <TextView
-                android:id="@+id/screenshots_header_textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/screenshots"
-                android:layout_marginTop="@dimen/margin_normal"
-                android:layout_marginLeft="@dimen/margin_normal"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/summary_cardView"
-                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                android:textSize="18sp" />-->
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/screenshot_recyclerView"
                 screenshotData="@{viewModel.gameDetail.images}"
@@ -246,47 +234,6 @@
                 tools:itemCount="4"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/screenshot_item" />
-
-<!--            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/screenshots_cardView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="@{viewModel.gameDetail.images.size() == 0 ? View.GONE : View.VISIBLE}"
-                android:layout_marginTop="@dimen/margin_normal"
-                android:layout_marginBottom="@dimen/margin_normal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:cardBackgroundColor="?attr/colorBackgroundVariant"
-                app:layout_constraintTop_toBottomOf="@id/summary_cardView">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="@dimen/margin_normal"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/screenshots_header_textView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/screenshots"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                        android:textSize="18sp" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/screenshot_recyclerView"
-                        screenshotData="@{viewModel.gameDetail.images}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_normal"
-                        android:orientation="horizontal"
-                        android:overScrollMode="never"
-                        tools:itemCount="4"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        tools:listitem="@layout/screenshot_item" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>-->
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

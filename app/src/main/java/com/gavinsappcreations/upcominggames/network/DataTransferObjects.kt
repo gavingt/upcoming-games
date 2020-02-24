@@ -197,5 +197,13 @@ fun List<NetworkImage>.filterImagesByTag(): List<String> {
         }
     }
 
-    return filteredList
+    // If filteredList.size > 3, return it. Otherwise return the original list.
+    return if (filteredList.size > 3) {
+        filteredList
+    } else {
+        map {
+            it.thumbUrl
+        }
+    }
+
 }

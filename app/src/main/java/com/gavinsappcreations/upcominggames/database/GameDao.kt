@@ -8,7 +8,7 @@ import com.gavinsappcreations.upcominggames.domain.Game
 @Dao
 interface GameDao {
 
-    @Query("SELECT * FROM Game ORDER BY Game.releaseDateInMillis ASC")
+    @Query("SELECT * FROM Game ORDER BY Game.releaseDateInMillis DESC")
     fun getGames(): DataSource.Factory<Int, Game>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

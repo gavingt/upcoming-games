@@ -24,7 +24,6 @@ fun ImageView.bindCoverImage(imgUrl: String?) {
         val imgUri = imgUrl.toUri().buildUpon().scheme("https").build()
         Glide.with(context)
             .load(if (imgUrl == NO_IMG_URL) R.drawable.ic_broken_image else imgUri)
-            //.override(500, 500)
             .apply(
                 RequestOptions()
                     .placeholder(R.drawable.loading_animation)
