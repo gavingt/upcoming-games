@@ -113,9 +113,11 @@ fun RecyclerView.bindScreenshotRecyclerView(data: List<String>?) {
     adapter.submitList(data)
 }
 
+//TODO: sort platforms by order they're listed in allPlatforms
 
 @BindingAdapter("platformList")
 fun TextView.formatPlatformList(platforms: List<String>?) {
+
     text = if (platforms != null) {
         val builder = StringBuilder()
         for (abbreviatedPlatform in platforms) {

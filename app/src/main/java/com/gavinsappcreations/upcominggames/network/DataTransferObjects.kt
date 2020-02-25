@@ -3,6 +3,7 @@ package com.gavinsappcreations.upcominggames.network
 import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.domain.GameDetail
 import com.gavinsappcreations.upcominggames.utilities.DateFormat
+import com.gavinsappcreations.upcominggames.utilities.allPlatforms
 import com.gavinsappcreations.upcominggames.utilities.fetchReleaseDateInMillis
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -152,6 +153,7 @@ fun List<NetworkGame>.asDatabaseModel(): List<Game> {
     }
 }
 
+
 fun NetworkGameDetail.asDomainModel(): GameDetail {
 
     val releaseDateArray = fetchReleaseDateInMillis(
@@ -168,9 +170,7 @@ fun NetworkGameDetail.asDomainModel(): GameDetail {
         gameName = this.gameName,
         mainImageUrl = this.mainImageUrl.smallUrl,
         images = this.images?.filterImagesByTag(),
-        platforms = this.platforms?.map {
-            it.abbreviation
-        },
+        platforms = this.platforms?.sortPlatformNamesByRelevance(),
         releaseDateInMillis = releaseDateArray[0] as Long?,
         dateFormat = (releaseDateArray[1] as DateFormat).formatCode,
         developers = this.developers?.map {
@@ -182,6 +182,9 @@ fun NetworkGameDetail.asDomainModel(): GameDetail {
         genres = this.genres?.map {
             it.name
         },
+        gameRating = this.originalGameRating?.map {
+            it.ratingName
+        },
         deck = this.deck
     )
 }
@@ -192,7 +195,7 @@ fun List<NetworkImage>.filterImagesByTag(): List<String> {
     val filteredList = mutableListOf<String>()
 
     map {
-        if (it.tags!= null && it.tags.toLowerCase(Locale.getDefault()).contains("screenshot")) {
+        if (it.tags != null && it.tags.toLowerCase(Locale.getDefault()).contains("screenshot")) {
             filteredList.add(it.thumbUrl)
         }
     }
@@ -205,5 +208,40 @@ fun List<NetworkImage>.filterImagesByTag(): List<String> {
             it.thumbUrl
         }
     }
+}
 
+
+fun List<NetworkPlatform>.sortPlatformNamesByRelevance(): List<String> {
+
+    val abbreviatedPlatformsSorted = mutableListOf<String>()
+
+    for (possiblePlatform in allPlatforms) {
+
+        val abbreviatedPlatform = this.find {
+            it.abbreviation == possiblePlatform.abbreviation
+        }?.abbreviation
+
+        abbreviatedPlatform?.let {
+            abbreviatedPlatformsSorted.add(it)
+        }
+    }
+    return abbreviatedPlatformsSorted
+}
+
+
+fun List<String>.sortPlatformAbbreviationsByRelevance(): List<String> {
+
+    val abbreviatedPlatformsSorted = mutableListOf<String>()
+
+    for (possiblePlatform in allPlatforms) {
+
+        val abbreviatedPlatform = this.find {
+            it == possiblePlatform.abbreviation
+        }
+
+        abbreviatedPlatform?.let {
+            abbreviatedPlatformsSorted.add(it)
+        }
+    }
+    return abbreviatedPlatformsSorted
 }

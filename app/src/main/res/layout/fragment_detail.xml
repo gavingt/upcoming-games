@@ -181,6 +181,26 @@
                         app:layout_constraintTop_toTopOf="@id/genres_label_textView"
                         tools:text="Microsoft\nSony\nActivision" />
 
+                    <TextView
+                        android:id="@+id/ratings_label_textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_12dp"
+                        android:text="@string/ratings"
+                        android:textSize="15sp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/genres_value_textView" />
+
+                    <TextView
+                        android:id="@+id/ratings_value_textView"
+                        gameDetailList="@{viewModel.gameDetail.gameRating}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        app:layout_constraintLeft_toLeftOf="@id/release_date_value_textView"
+                        app:layout_constraintTop_toTopOf="@id/ratings_label_textView"
+                        tools:text="ESRB: T\nPEGI: 16" />
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </com.google.android.material.card.MaterialCardView>
