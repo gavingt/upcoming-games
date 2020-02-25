@@ -15,13 +15,19 @@
         android:label="fragment_list">
         <action
             android:id="@+id/action_listFragment_to_sortFragment"
-            app:destination="@id/sortFragment" />
+            app:destination="@id/sortFragment"
+            app:enterAnim="@anim/fade_in"
+            app:popEnterAnim="@anim/fade_in" />
         <action
             android:id="@+id/action_listFragment_to_searchFragment"
-            app:destination="@id/searchFragment" />
+            app:destination="@id/searchFragment"
+            app:enterAnim="@anim/fade_in"
+            app:popEnterAnim="@anim/fade_in" />
         <action
             android:id="@+id/action_listFragment_to_detailFragment"
-            app:destination="@id/detailFragment" />
+            app:destination="@id/detailFragment"
+            app:enterAnim="@anim/fade_in"
+            app:popEnterAnim="@anim/fade_in" />
     </fragment>
     <fragment
         android:id="@+id/sortFragment"
@@ -37,7 +43,9 @@
             app:argType="string" />
         <action
             android:id="@+id/action_detailFragment_to_imageViewerFragment"
-            app:destination="@id/imageViewerFragment" />
+            app:destination="@id/imageViewerFragment"
+            app:enterAnim="@anim/fade_in"
+            app:popEnterAnim="@anim/fade_in" />
     </fragment>
     <fragment
         android:id="@+id/imageViewerFragment"

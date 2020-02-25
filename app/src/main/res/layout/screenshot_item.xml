@@ -18,7 +18,7 @@
 
         <ImageView
             android:id="@+id/screenshot_imageView"
-            screenshotUrl="@{screenshotUrl}"
+            imageUrl="@{screenshotUrl}"
             android:layout_width="wrap_content"
             android:layout_height="130dp"
             android:adjustViewBounds="true"

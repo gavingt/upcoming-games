@@ -12,6 +12,7 @@
     </data>
 
     <com.gavinsappcreations.upcominggames.ui.detail.NestedScrollingParentScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -23,7 +24,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/main_image_cardView"
                 android:layout_width="wrap_content"
-                android:layout_height="170dp"
+                android:layout_height="wrap_content"
                 app:cardElevation="0dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -32,9 +33,10 @@
                 <ImageView
                     android:id="@+id/main_imageView"
                     imageUrl="@{viewModel.gameDetail.mainImageUrl}"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="170dp"
                     android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
                     android:contentDescription="@string/game_cover"
                     tools:src="@tools:sample/backgrounds/scenic" />
 

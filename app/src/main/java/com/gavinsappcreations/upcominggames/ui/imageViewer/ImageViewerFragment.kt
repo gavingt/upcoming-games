@@ -4,13 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
-import com.gavinsappcreations.upcominggames.R
 import com.gavinsappcreations.upcominggames.databinding.FragmentImageViewerBinding
+import com.ortiz.touchview.TouchImageView
 
 class ImageViewerFragment : Fragment() {
 
@@ -43,6 +40,32 @@ class ImageViewerFragment : Fragment() {
 
         binding.viewPager.adapter = TouchImageAdapter(images)
         binding.viewPager.currentItem = currentImageIndex
+
+        binding.viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {}
+
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {}
+
+            override fun onPageSelected(position: Int) {
+                /**
+                 * If we've previously visited one of the neighboring pages and zoomed in, this
+                 * will reset the zoom level before that page is made visible again.
+                 */
+                var currentView = binding.viewPager.getChildAt(position - 1)
+                currentView?.let {
+                    (it as TouchImageView).resetZoom()
+                }
+
+                currentView = binding.viewPager.getChildAt(position + 1)
+                currentView?.let {
+                    (it as TouchImageView).resetZoom()
+                }
+            }
+        })
 
 /*        viewModel.currentImageIndex.observe(viewLifecycleOwner, Observer {
 
