@@ -18,7 +18,9 @@
     <style name="AppTheme" parent="CommonTheme" />
 
 
-    <style name="BottomNavigationTheme" parent="Widget.MaterialComponents.BottomNavigationView">
+    <!-- Change ripple color on TextButtons -->
+    <style name="MyTextButtonTheme" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="rippleColor">@color/colorOnBackgroundMediumContrast</item>
     </style>
 
 

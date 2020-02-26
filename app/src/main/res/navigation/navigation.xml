@@ -49,9 +49,9 @@
     </fragment>
     <fragment
         android:id="@+id/imageViewerFragment"
-        android:name="com.gavinsappcreations.upcominggames.ui.imageViewer.ImageViewerFragment"
+        android:name="com.gavinsappcreations.upcominggames.ui.screenshot.ScreenshotFragment"
         android:label="image_viewer_fragment"
-        tools:layout="@layout/fragment_image_viewer" >
+        tools:layout="@layout/fragment_screenshot" >
         <argument
             android:name="images"
             app:argType="string[]" />

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -14,13 +14,112 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.upcoming.UpcomingFragment">
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/margin_normal">
+
+        <ImageButton
+            android:id="@+id/up_navigation_imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="?attr/actionBarSize"
+            android:contentDescription="@string/nav_app_bar_navigate_up_description"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:tint="?attr/colorOnBackground"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_left_arrow" />
 
         <TextView
+            app:layout_constraintLeft_toRightOf="@id/up_navigation_imageButton"
+            app:layout_constraintTop_toTopOf="@id/up_navigation_imageButton"
+            app:layout_constraintBottom_toBottomOf="@id/up_navigation_imageButton"
+            android:id="@+id/toolbar_title_textView"
+            android:text="@string/sort_options"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/apply_button"
+            style="@style/MyTextButtonTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginEnd="@dimen/margin_normal"
+            app:layout_constraintTop_toTopOf="@id/up_navigation_imageButton"
+            app:layout_constraintBottom_toBottomOf="@id/up_navigation_imageButton"
+            android:letterSpacing="0.07"
+            android:text="@string/apply"
+            android:textColor="?attr/colorAccent"
+            android:textSize="@dimen/text_button_size" />
+
+        <View
+            app:layout_constraintTop_toBottomOf="@id/up_navigation_imageButton"
+            android:id="@+id/horizontal_line_view"
+            android:layout_width="match_parent"
+            android:visibility="visible"
+            android:background="@drawable/drop_shadow"
+            android:layout_height="3dp"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/release_date_cardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sort"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_margin="@dimen/margin_normal"
+            app:cardBackgroundColor="?attr/colorBackgroundVariant"
+            app:layout_constraintTop_toBottomOf="@id/horizontal_line_view">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/margin_normal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/release_date_header_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/release_date_header"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                    android:textSize="18sp" />
+
+                <RadioGroup
+                    android:id="@+id/release_date_radioGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_normal">
+
+                    <RadioButton
+                        android:id="@+id/recent_and_upcoming_releases_radioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/radio_button_height"
+                        android:text="@string/recent_and_upcoming" />
+
+                    <RadioButton
+                        android:id="@+id/past_month_radioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/radio_button_height"
+                        android:text="@string/past_month" />
+
+                    <RadioButton
+                        android:id="@+id/past_year_radioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/radio_button_height"
+                        android:text="@string/past_year" />
+
+                    <RadioButton
+                        android:id="@+id/custom_date_range_radioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/radio_button_height"
+                        android:text="@string/custom_range" />
+
+                </RadioGroup>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

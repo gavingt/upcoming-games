@@ -1,4 +1,4 @@
-package com.gavinsappcreations.upcominggames.ui.imageViewer
+package com.gavinsappcreations.upcominggames.ui.screenshot
 
 import android.view.View
 import android.view.ViewGroup

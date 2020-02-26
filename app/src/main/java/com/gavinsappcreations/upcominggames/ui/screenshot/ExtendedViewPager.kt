@@ -1,4 +1,4 @@
-package com.gavinsappcreations.upcominggames.ui.imageViewer
+package com.gavinsappcreations.upcominggames.ui.screenshot
 
 import android.content.Context
 import android.util.AttributeSet

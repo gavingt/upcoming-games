@@ -24,6 +24,13 @@
     <string name="screenshots">Screenshots</string>
     <string name="details">Details</string>
     <string name="ratings">Ratings</string>
+    <string name="recent_and_upcoming">Recent and upcoming</string>
+    <string name="past_month">Past month</string>
+    <string name="past_year">Past year</string>
+    <string name="custom_range">Custom range...</string>
+    <string name="release_date_header">Release date</string>
+    <string name="apply">APPLY</string>
+    <string name="sort_options">Sort options</string>
 
 
 </resources>

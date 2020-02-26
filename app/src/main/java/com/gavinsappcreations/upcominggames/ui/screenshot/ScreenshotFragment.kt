@@ -1,4 +1,4 @@
-package com.gavinsappcreations.upcominggames.ui.imageViewer
+package com.gavinsappcreations.upcominggames.ui.screenshot
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
-import com.gavinsappcreations.upcominggames.databinding.FragmentImageViewerBinding
+import com.gavinsappcreations.upcominggames.databinding.FragmentScreenshotBinding
 import com.ortiz.touchview.TouchImageView
 
-class ImageViewerFragment : Fragment() {
+class ScreenshotFragment : Fragment() {
 
 /*    private val viewModel: ImageViewerViewModel by lazy {
         ViewModelProvider(
@@ -28,15 +28,15 @@ class ImageViewerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val binding = FragmentImageViewerBinding.inflate(inflater)
+        val binding = FragmentScreenshotBinding.inflate(inflater)
 
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
         binding.lifecycleOwner = this
 
-        val images = ImageViewerFragmentArgs.fromBundle(arguments!!).images.map {
+        val images = ScreenshotFragmentArgs.fromBundle(arguments!!).images.map {
             it.replace("scale_small", "scale_large")
         }
-        val currentImageIndex = ImageViewerFragmentArgs.fromBundle(arguments!!).currentImageIndex
+        val currentImageIndex = ScreenshotFragmentArgs.fromBundle(arguments!!).currentImageIndex
 
         binding.viewPager.adapter = TouchImageAdapter(images)
         binding.viewPager.currentItem = currentImageIndex

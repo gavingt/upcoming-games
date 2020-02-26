@@ -11,4 +11,6 @@
     <dimen name="margin_28dp">28dp</dimen>
     <dimen name="card_view_elevation">4dp</dimen>
     <dimen name="corner_radius">8dp</dimen>
+    <dimen name="text_button_size">17sp</dimen>
+    <dimen name="radio_button_height">36dp</dimen>
 </resources>

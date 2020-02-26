@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavHost
+import androidx.navigation.fragment.findNavController
 import com.gavinsappcreations.upcominggames.databinding.FragmentSortBinding
 
 class SortFragment : Fragment() {
@@ -26,6 +28,14 @@ class SortFragment : Fragment() {
         // Giving the binding access to the SortViewModel
         binding.viewModel = viewModel
 
+        binding.upNavigationImageButton.setOnClickListener {
+            // TODO: save SORT_OPTIONS to SharedPrefs
+            findNavController().popBackStack()
+        }
+
+        binding.applyButton.setOnClickListener {
+            findNavController().popBackStack()
+        }
 
         return binding.root
     }

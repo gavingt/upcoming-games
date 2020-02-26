@@ -57,15 +57,11 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.2.0'
 
     // Navigation
-    implementation "android.arch.navigation:navigation-fragment-ktx:1.0.0"
-    implementation "android.arch.navigation:navigation-ui-ktx:1.0.0"
+    implementation "androidx.navigation:navigation-fragment-ktx:$version_navigation"
+    implementation "androidx.navigation:navigation-ui-ktx:$version_navigation"
 
     //contains ViewModel and LiveData
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-
-    // Navigation
-    implementation "android.arch.navigation:navigation-fragment-ktx:$version_navigation"
-    implementation "android.arch.navigation:navigation-ui-ktx:$version_navigation"
 
     // Moshi for parsing the JSON format
     implementation "com.squareup.moshi:moshi:$version_moshi"
@@ -96,5 +92,5 @@ dependencies {
     implementation("com.google.guava:guava:28.2-android")
 
     //Paging
-    implementation "android.arch.paging:runtime:$archPagingVersion"
+    implementation "androidx.paging:paging-runtime:$paging_version"
 }
