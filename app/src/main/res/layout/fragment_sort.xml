@@ -17,6 +17,12 @@
         android:orientation="vertical"
         android:paddingBottom="@dimen/margin_normal">
 
+        <Button
+            android:id="@+id/test_button"
+            android:text="change sort direction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
         <ImageButton
             android:id="@+id/up_navigation_imageButton"
             android:layout_width="wrap_content"
@@ -88,6 +94,7 @@
                     android:id="@+id/release_date_radioGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    releaseDateSelection="@{viewModel.releaseDateSelection}"
                     android:layout_marginTop="@dimen/margin_normal">
 
                     <RadioButton

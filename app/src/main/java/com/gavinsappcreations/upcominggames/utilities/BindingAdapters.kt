@@ -3,6 +3,7 @@ package com.gavinsappcreations.upcominggames.utilities
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.widget.ImageView
+import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
@@ -127,3 +128,21 @@ fun TextView.formatGameDetailList(items: List<String>?) {
     }
 }
 
+
+@BindingAdapter("releaseDateSelection")
+fun RadioGroup.setReleaseDateSelection(selection: ReleaseDateSelection) {
+
+    val isInitializing = checkedRadioButtonId == -1
+
+    when (selection) {
+        ReleaseDateSelection.RecentAndUpcoming -> check(R.id.recent_and_upcoming_releases_radioButton)
+        ReleaseDateSelection.PastMonth -> check(R.id.past_month_radioButton)
+        ReleaseDateSelection.PastYear -> check(R.id.past_year_radioButton)
+        ReleaseDateSelection.CustomRange -> check(R.id.custom_date_range_radioButton)
+    }
+
+    // This prevents the animation from playing when SortFragment first opens
+    if (isInitializing) {
+        jumpDrawablesToCurrentState()
+    }
+}
