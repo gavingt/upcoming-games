@@ -86,6 +86,9 @@ fun TextView.formatReleaseDateString(
 fun RecyclerView.bindListRecyclerView(data: PagedList<Game>?) {
     val adapter = adapter as GameGridAdapter
     adapter.submitList(data)
+
+    // TODO: itemAnimator is making list not scroll to top when sort options are changed. Find out why it does this.
+    this.itemAnimator = null
 }
 
 

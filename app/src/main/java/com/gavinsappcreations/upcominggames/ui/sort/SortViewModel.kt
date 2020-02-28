@@ -7,14 +7,27 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.gavinsappcreations.upcominggames.R
+import com.gavinsappcreations.upcominggames.domain.SortOptions
+import com.gavinsappcreations.upcominggames.repository.GameRepository
 import com.gavinsappcreations.upcominggames.utilities.*
 
 class SortViewModel(application: Application) : ViewModel() {
 
+    private val gamesRepository = GameRepository.getInstance(application)
+
     private val prefs =
         application.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
 
-    private val _releaseDateSelection = MutableLiveData<ReleaseDateSelection>()
+
+    val sortOptions = gamesRepository.sortOptions
+
+
+    fun onSortDirectionChanged(sortOptions: SortOptions) {
+        gamesRepository.updateSortOptions(sortOptions)
+    }
+
+
+/*    private val _releaseDateSelection = MutableLiveData<ReleaseDateSelection>()
     val releaseDateSelection: LiveData<ReleaseDateSelection>
         get() = _releaseDateSelection
 
@@ -63,7 +76,7 @@ class SortViewModel(application: Application) : ViewModel() {
             R.id.past_year_radioButton -> ReleaseDateSelection.PastYear
             else -> ReleaseDateSelection.CustomRange
         }
-    }
+    }*/
 
 
     //Factory for constructing ListViewModel with Application parameter.

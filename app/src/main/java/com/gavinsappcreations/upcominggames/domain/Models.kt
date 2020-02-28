@@ -2,6 +2,8 @@ package com.gavinsappcreations.upcominggames.domain
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.gavinsappcreations.upcominggames.utilities.ReleaseDateSelection
+import com.gavinsappcreations.upcominggames.utilities.SortDirection
 
 /**
  * Class that holds all the info for a single game. Holds data from the "games" endpoint of the API.
@@ -38,6 +40,12 @@ data class GameDetail(
     val genres: List<String>?,
     val gameRating: List<String>?,
     val deck: String?
+)
+
+
+data class SortOptions(
+    //var releaseDateSelection: ReleaseDateSelection,
+    var sortDirectionSelection: SortDirection
 )
 
 data class Platform(val abbreviation: String, val fullName: String)

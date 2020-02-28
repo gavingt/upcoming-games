@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import com.gavinsappcreations.upcominggames.database.getDatabase
+import com.gavinsappcreations.upcominggames.domain.SortOptions
 import com.gavinsappcreations.upcominggames.network.GameBoundaryCallback
 import com.gavinsappcreations.upcominggames.repository.GameRepository
 import com.gavinsappcreations.upcominggames.utilities.DATABASE_PAGE_SIZE
@@ -11,7 +12,9 @@ import kotlinx.coroutines.launch
 
 class ListViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val gamesRepository = GameRepository(application)
+    private val gamesRepository = GameRepository.getInstance(application)
+
+    val sortOptions = gamesRepository.sortOptions
 
     init {
         viewModelScope.launch {
@@ -21,22 +24,25 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
-    val boolTest = MutableLiveData<Boolean>(true)
+    fun onSortDirectionChanged(sortOptions: SortOptions) {
+       gamesRepository.updateSortOptions(sortOptions)
+    }
+
 
     // TODO: Create my own MutableLiveData called sortOptions. Then whenever that value changes, do a switchMap to return "games".
 
-    val games = Transformations.switchMap(boolTest) {
+    val games = Transformations.switchMap(sortOptions) {
         gamesRepository.getGameList()
     }
 
 
-    // TODO: remove after add sortOptions to Repository
+/*    // TODO: remove after add sortOptions to Repository
     fun checkIfSortOptionsChanged() {
         // If sort options changed, invalidate the data source
         if (gamesRepository.fetchAndCompareSortOptions()) {
             boolTest.value = true
         }
-    }
+    }*/
 
 
     //Factory for constructing ListViewModel with Application parameter.

@@ -5,12 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.gavinsappcreations.upcominggames.R
 import com.gavinsappcreations.upcominggames.databinding.FragmentSortBinding
+import com.gavinsappcreations.upcominggames.domain.SortOptions
 import com.gavinsappcreations.upcominggames.ui.list.ListViewModel
+import com.gavinsappcreations.upcominggames.utilities.SortDirection
 import kotlinx.android.synthetic.main.fragment_sort.*
 
 
@@ -38,17 +42,24 @@ class SortFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        binding.releaseDateRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+/*        binding.releaseDateRadioGroup.setOnCheckedChangeListener { group, checkedId ->
             viewModel.onReleaseDateSelectionChanged(checkedId)
-        }
+        }*/
 
         binding.applyButton.setOnClickListener {
-            viewModel.saveSortOptions()
+            //viewModel.saveSortOptions()
             findNavController().popBackStack()
         }
 
         binding.testButton.setOnClickListener {
-            viewModel.onSortDirectionChanged()
+
+            val oldSortOptionsValue = viewModel.sortOptions.value!!.sortDirectionSelection
+
+            if (oldSortOptionsValue == SortDirection.Ascending) {
+                viewModel.onSortDirectionChanged(SortOptions(SortDirection.Descending))
+            } else {
+                viewModel.onSortDirectionChanged(SortOptions(SortDirection.Ascending))
+            }
         }
 
         return binding.root

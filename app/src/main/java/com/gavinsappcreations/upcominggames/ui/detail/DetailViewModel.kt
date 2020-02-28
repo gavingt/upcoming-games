@@ -8,7 +8,7 @@ import kotlinx.coroutines.launch
 
 class DetailViewModel(application: Application, guid: String) : AndroidViewModel(application) {
 
-    private val gamesRepository = GameRepository(application)
+    private val gamesRepository = GameRepository.getInstance(application)
 
     private val _gameDetail = MutableLiveData<GameDetail?>()
     val gameDetail: LiveData<GameDetail?>
