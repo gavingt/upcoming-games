@@ -2,7 +2,7 @@ package com.gavinsappcreations.upcominggames.domain
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.gavinsappcreations.upcominggames.utilities.ReleaseDateSelection
+import com.gavinsappcreations.upcominggames.utilities.ReleaseDateType
 import com.gavinsappcreations.upcominggames.utilities.SortDirection
 
 /**
@@ -44,8 +44,8 @@ data class GameDetail(
 
 
 data class SortOptions(
-    //var releaseDateSelection: ReleaseDateSelection,
-    var sortDirectionSelection: SortDirection
+    var releaseDateType: ReleaseDateType,
+    var sortDirection: SortDirection
 )
 
 data class Platform(val abbreviation: String, val fullName: String)

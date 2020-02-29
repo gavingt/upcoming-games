@@ -17,12 +17,6 @@
         android:orientation="vertical"
         android:paddingBottom="@dimen/margin_normal">
 
-        <Button
-            android:id="@+id/test_button"
-            android:text="change sort direction"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
         <ImageButton
             android:id="@+id/up_navigation_imageButton"
             android:layout_width="wrap_content"
@@ -46,19 +40,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/apply_button"
-            style="@style/MyTextButtonTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginEnd="@dimen/margin_normal"
-            app:layout_constraintTop_toTopOf="@id/up_navigation_imageButton"
-            app:layout_constraintBottom_toBottomOf="@id/up_navigation_imageButton"
-            android:letterSpacing="0.07"
-            android:text="@string/apply"
-            android:textColor="?attr/colorAccent"
-            android:textSize="@dimen/text_button_size" />
+<!--        <Button-->
+<!--            android:id="@+id/apply_button"-->
+<!--            style="@style/MyTextButtonTheme"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:layout_constraintRight_toRightOf="parent"-->
+<!--            android:layout_marginEnd="@dimen/margin_normal"-->
+<!--            app:layout_constraintTop_toTopOf="@id/up_navigation_imageButton"-->
+<!--            app:layout_constraintBottom_toBottomOf="@id/up_navigation_imageButton"-->
+<!--            android:letterSpacing="0.07"-->
+<!--            android:text="@string/apply"-->
+<!--            android:textColor="?attr/colorAccent"-->
+<!--            android:textSize="@dimen/text_button_size" />-->
 
         <View
             app:layout_constraintTop_toBottomOf="@id/up_navigation_imageButton"
@@ -66,7 +60,7 @@
             android:layout_width="match_parent"
             android:visibility="visible"
             android:background="@drawable/drop_shadow"
-            android:layout_height="3dp"/>
+            android:layout_height="4dp"/>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/release_date_cardView"
@@ -94,6 +88,7 @@
                     android:id="@+id/release_date_radioGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    releaseDateType="@={viewModel.sortOptions.releaseDateType}"
                     android:layout_marginTop="@dimen/margin_normal">
 
                     <RadioButton
@@ -119,6 +114,53 @@
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/radio_button_height"
                         android:text="@string/custom_range" />
+
+                </RadioGroup>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/sort_order_cardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_normal"
+            app:cardBackgroundColor="?attr/colorBackgroundVariant"
+            app:layout_constraintTop_toBottomOf="@id/release_date_cardView">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/margin_normal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/sort_direction_header_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sort_direction"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                    android:textSize="18sp" />
+
+                <RadioGroup
+                    android:id="@+id/sort_direction_radioGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    sortDirection="@={viewModel.sortOptions.sortDirection}"
+                    android:layout_marginTop="@dimen/margin_normal">
+
+                    <RadioButton
+                        android:id="@+id/sort_ascending_radioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/radio_button_height"
+                        android:text="Ascending" />
+
+                    <RadioButton
+                        android:id="@+id/sort_descending_radioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/radio_button_height"
+                        android:text="Descending" />
 
                 </RadioGroup>
 

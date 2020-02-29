@@ -27,10 +27,11 @@
     <string name="recent_and_upcoming">Recent and upcoming</string>
     <string name="past_month">Past month</string>
     <string name="past_year">Past year</string>
-    <string name="custom_range">Custom range...</string>
+    <string name="custom_range">Custom range…</string>
     <string name="release_date_header">Release date</string>
     <string name="apply">APPLY</string>
     <string name="sort_options">Sort options</string>
+    <string name="sort_direction">Sort direction</string>
 
 
 </resources>

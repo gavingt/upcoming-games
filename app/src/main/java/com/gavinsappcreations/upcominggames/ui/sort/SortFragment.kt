@@ -17,7 +17,6 @@ import com.gavinsappcreations.upcominggames.ui.list.ListViewModel
 import com.gavinsappcreations.upcominggames.utilities.SortDirection
 import kotlinx.android.synthetic.main.fragment_sort.*
 
-
 class SortFragment : Fragment() {
 
     private val viewModel: SortViewModel by lazy {
@@ -42,27 +41,19 @@ class SortFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-/*        binding.releaseDateRadioGroup.setOnCheckedChangeListener { group, checkedId ->
-            viewModel.onReleaseDateSelectionChanged(checkedId)
+/*        binding.applyButton.setOnClickListener {
+            viewModel.updateSortOptions()
+            findNavController().popBackStack()
         }*/
 
-        binding.applyButton.setOnClickListener {
-            //viewModel.saveSortOptions()
-            findNavController().popBackStack()
-        }
-
-        binding.testButton.setOnClickListener {
-
-            val oldSortOptionsValue = viewModel.sortOptions.value!!.sortDirectionSelection
-
-            if (oldSortOptionsValue == SortDirection.Ascending) {
-                viewModel.onSortDirectionChanged(SortOptions(SortDirection.Descending))
-            } else {
-                viewModel.onSortDirectionChanged(SortOptions(SortDirection.Ascending))
-            }
-        }
-
         return binding.root
+    }
+
+
+    // If user is leaving the Fragment, update sortOptions so changes are fed to ListFragment.
+    override fun onStop() {
+        super.onStop()
+        viewModel.updateSortOptions()
     }
 
 }

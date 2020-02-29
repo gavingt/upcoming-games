@@ -2,19 +2,12 @@ package com.gavinsappcreations.upcominggames.ui.list
 
 import android.app.Application
 import androidx.lifecycle.*
-import androidx.paging.LivePagedListBuilder
-import com.gavinsappcreations.upcominggames.database.getDatabase
-import com.gavinsappcreations.upcominggames.domain.SortOptions
-import com.gavinsappcreations.upcominggames.network.GameBoundaryCallback
 import com.gavinsappcreations.upcominggames.repository.GameRepository
-import com.gavinsappcreations.upcominggames.utilities.DATABASE_PAGE_SIZE
 import kotlinx.coroutines.launch
 
 class ListViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val gamesRepository = GameRepository.getInstance(application)
-
-    val sortOptions = gamesRepository.sortOptions
+    private val gameRepository = GameRepository.getInstance(application)
 
     init {
         viewModelScope.launch {
@@ -24,25 +17,10 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
-    fun onSortDirectionChanged(sortOptions: SortOptions) {
-       gamesRepository.updateSortOptions(sortOptions)
+    // When the sortOptions LiveData changes, switchMap sets games = gameRepository.getGameList().
+    val games = Transformations.switchMap(gameRepository.sortOptions) {
+        gameRepository.getGameList()
     }
-
-
-    // TODO: Create my own MutableLiveData called sortOptions. Then whenever that value changes, do a switchMap to return "games".
-
-    val games = Transformations.switchMap(sortOptions) {
-        gamesRepository.getGameList()
-    }
-
-
-/*    // TODO: remove after add sortOptions to Repository
-    fun checkIfSortOptionsChanged() {
-        // If sort options changed, invalidate the data source
-        if (gamesRepository.fetchAndCompareSortOptions()) {
-            boolTest.value = true
-        }
-    }*/
 
 
     //Factory for constructing ListViewModel with Application parameter.

@@ -1,24 +1,23 @@
 package com.gavinsappcreations.upcominggames.utilities
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.widget.ImageView
 import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
+import androidx.databinding.InverseBindingAdapter
+import androidx.databinding.InverseBindingListener
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.gavinsappcreations.upcominggames.R
 import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.ui.detail.ScreenshotAdapter
 import com.gavinsappcreations.upcominggames.ui.list.GameGridAdapter
-import com.google.android.material.card.MaterialCardView
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 @BindingAdapter("imageUrl")
 fun ImageView.bindImage(imgUrl: String?) {
@@ -35,7 +34,6 @@ fun ImageView.bindImage(imgUrl: String?) {
             .into(this)
     }
 }
-
 
 
 @BindingAdapter("releaseDateInMillis", "dateFormat", "inGameDetailFragment")
@@ -132,20 +130,93 @@ fun TextView.formatGameDetailList(items: List<String>?) {
 }
 
 
-@BindingAdapter("releaseDateSelection")
-fun RadioGroup.setReleaseDateSelection(selection: ReleaseDateSelection) {
+
+// This runs every time the LiveData value changes, and its job is to change the RadioGroup's checkedId.
+@BindingAdapter("releaseDateType")
+fun RadioGroup.setReleaseDateType(type: ReleaseDateType) {
 
     val isInitializing = checkedRadioButtonId == -1
 
-    when (selection) {
-        ReleaseDateSelection.RecentAndUpcoming -> check(R.id.recent_and_upcoming_releases_radioButton)
-        ReleaseDateSelection.PastMonth -> check(R.id.past_month_radioButton)
-        ReleaseDateSelection.PastYear -> check(R.id.past_year_radioButton)
-        ReleaseDateSelection.CustomRange -> check(R.id.custom_date_range_radioButton)
+    val newCheckedId = when (type) {
+        ReleaseDateType.RecentAndUpcoming -> R.id.recent_and_upcoming_releases_radioButton
+        ReleaseDateType.PastMonth -> R.id.past_month_radioButton
+        ReleaseDateType.PastYear -> R.id.past_year_radioButton
+        ReleaseDateType.CustomRange -> R.id.custom_date_range_radioButton
+    }
+
+    // Prevent infinite loops
+    if (checkedRadioButtonId != newCheckedId) {
+        check(newCheckedId)
     }
 
     // This prevents the animation from playing when SortFragment first opens
     if (isInitializing) {
         jumpDrawablesToCurrentState()
+    }
+}
+
+
+// This runs every time a new RadioButton is selected, and its job is to change the LiveData's value.
+@InverseBindingAdapter(attribute = "releaseDateType")
+fun RadioGroup.getReleaseDateType(): ReleaseDateType {
+
+    return when (checkedRadioButtonId) {
+        R.id.recent_and_upcoming_releases_radioButton -> ReleaseDateType.RecentAndUpcoming
+        R.id.past_month_radioButton -> ReleaseDateType.PastMonth
+        R.id.past_year_radioButton -> ReleaseDateType.PastYear
+        else -> ReleaseDateType.CustomRange
+    }
+}
+
+// This notifies the data binding system that the attribute value has changed.
+@BindingAdapter("app:releaseDateTypeAttrChanged")
+fun RadioGroup.setReleaseDateTypeListeners(listener: InverseBindingListener) {
+
+    setOnCheckedChangeListener{ _, _ ->
+        listener.onChange()
+    }
+}
+
+
+
+// This runs every time the LiveData value changes, and its job is to change the RadioGroup's checkedId.
+@BindingAdapter("sortDirection")
+fun RadioGroup.setSortDirection(sortDirection: SortDirection) {
+
+    val isInitializing = checkedRadioButtonId == -1
+
+    val newCheckedId = when (sortDirection) {
+        SortDirection.Ascending -> R.id.sort_ascending_radioButton
+        SortDirection.Descending -> R.id.sort_descending_radioButton
+    }
+
+    // Prevent infinite loops
+    if (checkedRadioButtonId != newCheckedId) {
+        check(newCheckedId)
+    }
+
+    // This prevents the animation from playing when SortFragment first opens
+    if (isInitializing) {
+        jumpDrawablesToCurrentState()
+    }
+}
+
+
+// This runs every time a new RadioButton is selected, and its job is to change the LiveData's value.
+@InverseBindingAdapter(attribute = "sortDirection")
+fun RadioGroup.getSortDirection(): SortDirection {
+
+    return when (checkedRadioButtonId) {
+        R.id.sort_ascending_radioButton -> SortDirection.Ascending
+        else -> SortDirection.Descending
+    }
+}
+
+// This notifies the data binding system that the attribute value has changed.
+@BindingAdapter("app:sortDirectionAttrChanged")
+fun RadioGroup.setSortDirectionListeners(listener: InverseBindingListener) {
+
+    setOnCheckedChangeListener{ _, _ ->
+        listener.onChange()
     }
 }

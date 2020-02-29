@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
  * This boundary callback gets notified when user reaches to the edges of the list for example when
  * the database cannot provide any more data.
  **/
+/*
 class GameBoundaryCallback(
     private val repository: GameRepository
 ) : PagedList.BoundaryCallback<Game>() {
@@ -21,29 +22,35 @@ class GameBoundaryCallback(
     // keep the last requested page. When the request is successful, increment the page number.
     private var lastRequestedPage = 0
 
+*/
 /*    private val _networkErrors = MutableLiveData<String>()
     // LiveData of network errors.
     val networkErrors: LiveData<String>
-        get() = _networkErrors*/
+        get() = _networkErrors*//*
+
 
     // avoid triggering multiple requests in the same time
     private var isRequestInProgress = false
 
-    /**
+    */
+/**
      * Database returned 0 items. We should query the backend for more items.
-     */
+     *//*
+
     override fun onZeroItemsLoaded() {
         Log.d("RepoBoundaryCallback", "onZeroItemsLoaded")
-        requestAndSaveData()
+        //requestAndSaveData()
     }
 
 
-    /**
+    */
+/**
      * When all items in the database were loaded, we need to query the backend for more items.
-     */
+     *//*
+
     override fun onItemAtEndLoaded(itemAtEnd: Game) {
         Log.d("RepoBoundaryCallback", "onItemAtEndLoaded")
-        requestAndSaveData()
+        //requestAndSaveData()
     }
 
     private fun requestAndSaveData() {
@@ -55,6 +62,7 @@ class GameBoundaryCallback(
         }
 
 
+*/
 /*        if (isRequestInProgress) return
 
         isRequestInProgress = true
@@ -66,6 +74,7 @@ class GameBoundaryCallback(
         }, { error ->
             _networkErrors.postValue(error)
             isRequestInProgress = false
-        })*/
+        })*//*
+
     }
-}
+}*/

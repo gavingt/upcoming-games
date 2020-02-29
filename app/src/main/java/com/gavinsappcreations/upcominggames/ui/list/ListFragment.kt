@@ -41,27 +41,8 @@ class ListFragment : Fragment() {
             findNavController(this).navigate(ListFragmentDirections.actionListFragmentToSortFragment())
         }
 
-        viewModel.sortOptions.observe(viewLifecycleOwner, Observer {
-
-            // TODO: this is getting called every time we return  even if the value isn't changed!
-            Toast.makeText(requireActivity(), "sortOptions changed: ${it.sortDirectionSelection.name}", Toast.LENGTH_LONG).show()
-        })
-
         binding.searchTextView.setOnClickListener {
-            val oldSortOptionsValue = viewModel.sortOptions.value!!.sortDirectionSelection
-
-            if (oldSortOptionsValue == SortDirection.Ascending) {
-                viewModel.onSortDirectionChanged(SortOptions(SortDirection.Descending))
-            } else {
-                viewModel.onSortDirectionChanged(SortOptions(SortDirection.Ascending))
-            }
-
-/*            newSortOptionsValue!!.sortDirectionSelection = newSortDirection
-
-            gamesRepository.updateSortOptions(newSortOptionsValue)*/
-
-
-            //findNavController(this).navigate(ListFragmentDirections.actionListFragmentToSearchFragment())
+            findNavController(this).navigate(ListFragmentDirections.actionListFragmentToSearchFragment())
         }
 
         return binding.root
