@@ -40,20 +40,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-<!--        <Button-->
-<!--            android:id="@+id/apply_button"-->
-<!--            style="@style/MyTextButtonTheme"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:layout_constraintRight_toRightOf="parent"-->
-<!--            android:layout_marginEnd="@dimen/margin_normal"-->
-<!--            app:layout_constraintTop_toTopOf="@id/up_navigation_imageButton"-->
-<!--            app:layout_constraintBottom_toBottomOf="@id/up_navigation_imageButton"-->
-<!--            android:letterSpacing="0.07"-->
-<!--            android:text="@string/apply"-->
-<!--            android:textColor="?attr/colorAccent"-->
-<!--            android:textSize="@dimen/text_button_size" />-->
-
         <View
             app:layout_constraintTop_toBottomOf="@id/up_navigation_imageButton"
             android:id="@+id/horizontal_line_view"

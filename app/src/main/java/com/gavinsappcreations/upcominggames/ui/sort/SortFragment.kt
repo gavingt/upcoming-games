@@ -41,11 +41,6 @@ class SortFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-/*        binding.applyButton.setOnClickListener {
-            viewModel.updateSortOptions()
-            findNavController().popBackStack()
-        }*/
-
         return binding.root
     }
 

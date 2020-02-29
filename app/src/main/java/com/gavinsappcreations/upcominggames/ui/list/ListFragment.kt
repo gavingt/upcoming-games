@@ -34,14 +34,17 @@ class ListFragment : Fragment() {
         binding.viewModel = viewModel
 
         binding.gameRecyclerView.adapter = GameGridAdapter(GameGridAdapter.OnClickListener {
+            // TODO: use SingleLiveEvent to trigger navigation
             findNavController(this).navigate(ListFragmentDirections.actionListFragmentToDetailFragment(it.guid))
         })
 
         binding.filterImageButton.setOnClickListener {
+            // TODO: use SingleLiveEvent to trigger navigation
             findNavController(this).navigate(ListFragmentDirections.actionListFragmentToSortFragment())
         }
 
         binding.searchTextView.setOnClickListener {
+            // TODO: use SingleLiveEvent to trigger navigation
             findNavController(this).navigate(ListFragmentDirections.actionListFragmentToSearchFragment())
         }
 

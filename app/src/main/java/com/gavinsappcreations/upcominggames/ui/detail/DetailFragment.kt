@@ -39,6 +39,7 @@ class DetailFragment : Fragment() {
             ScreenshotAdapter(ScreenshotAdapter.OnClickListener { currentImageIndex ->
                 val images = viewModel.gameDetail.value?.images?.toTypedArray()
                 images?.let {
+                    // TODO: use SingleLiveEvent to trigger navigation
                     findNavController().navigate(
                         DetailFragmentDirections.actionDetailFragmentToImageViewerFragment(
                             images,

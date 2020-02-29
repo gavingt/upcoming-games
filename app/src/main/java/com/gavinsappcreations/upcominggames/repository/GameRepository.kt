@@ -28,6 +28,9 @@ class GameRepository private constructor(application: Application) {
     private val prefs: SharedPreferences =
         application.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
 
+    // TODO: instead of having a SortOptions object, use LiveDatas for each property and a MediatorLiveData for holding all of them
+    // TODO: have setter methods for each LiveData
+
     private val _sortOptions = MutableLiveData<SortOptions>()
     val sortOptions: LiveData<SortOptions>
         get() = _sortOptions
@@ -132,6 +135,7 @@ class GameRepository private constructor(application: Application) {
     }
 
 
+    // TODO: modify this to fetch new games with WorkManager (query API using lastUpdated field as filter)
     suspend fun downloadGameListData(offset: Int) {
         val gameList = GameNetwork.gameData.getGameListData(
             API_KEY,
