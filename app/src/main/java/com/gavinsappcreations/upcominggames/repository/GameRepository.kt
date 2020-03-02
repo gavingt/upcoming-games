@@ -28,12 +28,8 @@ class GameRepository private constructor(application: Application) {
     private val prefs: SharedPreferences =
         application.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
 
-    // TODO: instead of having a SortOptions object, use LiveDatas for each property and a MediatorLiveData for holding all of them
-    // TODO: have setter methods for each LiveData
 
-    private val _sortOptions = MutableLiveData<SortOptions>()
-    val sortOptions: LiveData<SortOptions>
-        get() = _sortOptions
+    val sortOptions = PropertyAwareMutableLiveData<SortOptions>()
 
     init {
         // Fetch sort options from SharedPrefs
@@ -47,15 +43,13 @@ class GameRepository private constructor(application: Application) {
             enumValueOf(prefs.getString(KEY_SORT_DIRECTION, SortDirection.Ascending.name)!!)
 
         // Set all sort options to _sortOptions at once
-        _sortOptions.value = SortOptions(releaseDateType, sortDirection)
+        sortOptions.value = SortOptions(releaseDateType, sortDirection)
     }
 
     // Update value of _sortOptions and also save that value to SharedPrefs.
-    fun updateSortOptions(newSortOptions: SortOptions) {
-        _sortOptions.value = newSortOptions
-
-        prefs.edit().putString(KEY_SORT_DIRECTION, _sortOptions.value!!.sortDirection.name)
-            .putString(KEY_RELEASE_DATE_TYPE, _sortOptions.value!!.releaseDateType.name)
+    fun updateSortOptions() {
+        prefs.edit().putString(KEY_SORT_DIRECTION, sortOptions.value!!.sortDirection.name)
+            .putString(KEY_RELEASE_DATE_TYPE, sortOptions.value!!.releaseDateType.name)
             .apply()
     }
 
@@ -66,7 +60,7 @@ class GameRepository private constructor(application: Application) {
 
         // Get data source factory from the local cache
         val dataSourceFactory =
-            database.gameDao.getGames(_sortOptions.value!!.sortDirection.direction, dateConstraints[0], dateConstraints[1])
+            database.gameDao.getGames(sortOptions.value!!.sortDirection.direction, dateConstraints[0], dateConstraints[1])
 
         // every new query creates a new BoundaryCallback
         // The BoundaryCallback will observe when the user reaches to the edges of

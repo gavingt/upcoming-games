@@ -1,7 +1,10 @@
 package com.gavinsappcreations.upcominggames.domain
 
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.gavinsappcreations.upcominggames.BR
 import com.gavinsappcreations.upcominggames.utilities.ReleaseDateType
 import com.gavinsappcreations.upcominggames.utilities.SortDirection
 
@@ -43,9 +46,29 @@ data class GameDetail(
 )
 
 
-data class SortOptions(
-    var releaseDateType: ReleaseDateType,
-    var sortDirection: SortDirection
-)
-
 data class Platform(val abbreviation: String, val fullName: String)
+
+/**
+ * This class extends BaseObservable, which lets us wrap it in a PropertyAwareMutableLiveData.
+ * This means that any time one of the properties in SortOptions changes, the LiveData's
+ * observers will by notified.
+ */
+class SortOptions(
+    releaseDateType: ReleaseDateType,
+    sortDirection: SortDirection
+): BaseObservable() {
+
+    @Bindable
+    var releaseDateType: ReleaseDateType = releaseDateType
+        set(value) {
+            field = value
+            notifyChange()
+        }
+
+    @Bindable
+    var sortDirection: SortDirection = sortDirection
+        set(value) {
+            field = value
+            notifyChange()
+        }
+}

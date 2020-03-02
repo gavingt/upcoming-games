@@ -1,5 +1,6 @@
 package com.gavinsappcreations.upcominggames.utilities
 
+import android.view.View
 import android.widget.ImageView
 import android.widget.RadioGroup
 import android.widget.TextView
@@ -15,6 +16,7 @@ import com.gavinsappcreations.upcominggames.R
 import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.ui.detail.ScreenshotAdapter
 import com.gavinsappcreations.upcominggames.ui.list.GameGridAdapter
+import com.google.android.material.textfield.TextInputLayout
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -129,6 +131,16 @@ fun TextView.formatGameDetailList(items: List<String>?) {
     }
 }
 
+
+
+@BindingAdapter("customDateVisibility")
+fun TextInputLayout.setCustomDateVisibility(releaseDateType: ReleaseDateType) {
+    visibility = if (releaseDateType == ReleaseDateType.CustomRange) {
+        View.VISIBLE
+    } else {
+        View.GONE
+    }
+}
 
 
 // This runs every time the LiveData value changes, and its job is to change the RadioGroup's checkedId.

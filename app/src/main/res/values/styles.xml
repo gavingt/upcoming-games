@@ -10,7 +10,6 @@
         <item name="colorOnBackgroundHighContrast">@color/colorOnBackgroundHighContrast</item>
         <item name="colorOnBackgroundMediumContrast">@color/colorOnBackgroundMediumContrast</item>
         <item name="colorOnBackgroundLowContrast">@color/colorOnBackgroundLowContrast</item>
-
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
@@ -23,5 +22,17 @@
         <item name="rippleColor">@color/colorOnBackgroundMediumContrast</item>
     </style>
 
+
+    <!-- Changes the TextInputLayout to use colorAccent for its outline and hint text -->
+    <style name="TextInputLayoutAppearance" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="hintTextColor">@color/colorAccent</item>
+        <item name="boxStrokeColor">@color/colorAccent</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.AppTheme.TextInputEditText.FilledBox.Dense</item>
+    </style>
+
+    <!-- We need a ThemeOverlay to change the cursor color in the TextInputLayout -->
+    <style name="ThemeOverlay.AppTheme.TextInputEditText.FilledBox.Dense" parent="ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox.Dense">
+        <item name="colorControlActivated">@color/colorAccent</item>
+    </style>
 
 </resources>

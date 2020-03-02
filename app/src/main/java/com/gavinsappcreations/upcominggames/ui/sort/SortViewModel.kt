@@ -1,6 +1,7 @@
 package com.gavinsappcreations.upcominggames.ui.sort
 
 import android.app.Application
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.gavinsappcreations.upcominggames.repository.GameRepository
@@ -12,8 +13,7 @@ class SortViewModel(application: Application) : ViewModel() {
     val sortOptions = gameRepository.sortOptions
 
     fun updateSortOptions() {
-        // We need to replace the entire value for sortOptions, or else the observer won't be triggered.
-        gameRepository.updateSortOptions(sortOptions.value!!)
+        gameRepository.updateSortOptions()
     }
 
 
