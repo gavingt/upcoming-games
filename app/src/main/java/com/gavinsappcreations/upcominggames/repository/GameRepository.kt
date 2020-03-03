@@ -3,7 +3,6 @@ package com.gavinsappcreations.upcominggames.repository
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.LivePagedListBuilder
@@ -18,7 +17,6 @@ import com.gavinsappcreations.upcominggames.network.asDomainModel
 import com.gavinsappcreations.upcominggames.utilities.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.text.SimpleDateFormat
 import java.util.*
 
 class GameRepository private constructor(application: Application) {
@@ -28,10 +26,10 @@ class GameRepository private constructor(application: Application) {
     private val prefs: SharedPreferences =
         application.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
 
-
-    val sortOptions = PropertyAwareMutableLiveData<SortOptions>()
+    val sortOptions = MutableLiveData<SortOptions>()
 
     init {
+
         // Fetch sort options from SharedPrefs
         val releaseDateType: ReleaseDateType = enumValueOf(
             prefs.getString(
@@ -42,12 +40,18 @@ class GameRepository private constructor(application: Application) {
         val sortDirection: SortDirection =
             enumValueOf(prefs.getString(KEY_SORT_DIRECTION, SortDirection.Ascending.name)!!)
 
+        val customDateStart = prefs.getString(KEY_CUSTOM_DATE_START, "")!!
+        val customDateEnd = prefs.getString(KEY_CUSTOM_DATE_END, "")!!
+
         // Set all sort options to _sortOptions at once
-        sortOptions.value = SortOptions(releaseDateType, sortDirection)
+        sortOptions.value = SortOptions(releaseDateType, sortDirection, customDateStart, customDateEnd)
     }
 
     // Update value of _sortOptions and also save that value to SharedPrefs.
-    fun updateSortOptions() {
+    fun updateSortOptions(newSortOptions: SortOptions) {
+
+        sortOptions.value = newSortOptions
+
         prefs.edit().putString(KEY_SORT_DIRECTION, sortOptions.value!!.sortDirection.name)
             .putString(KEY_RELEASE_DATE_TYPE, sortOptions.value!!.releaseDateType.name)
             .apply()
@@ -112,8 +116,9 @@ class GameRepository private constructor(application: Application) {
                 // dateFilterEnd is set to current time.
                 dateFilterEnd = currentTimeMillis
             }
-            ReleaseDateType.CustomRange -> {
+            ReleaseDateType.CustomDate -> {
                 // TODO: use custom range fields of sortOptions here, after we implement them.
+                // TODO: if end date is after start date, just let it stay that way in storage but flip pass them before passing them to the database query
 
                 // dateFilterStart is set to one year before current day.
                 calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) - 1)

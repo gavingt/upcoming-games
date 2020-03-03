@@ -5,6 +5,7 @@ import android.widget.ImageView
 import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.core.net.toUri
+import androidx.core.widget.addTextChangedListener
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
@@ -16,7 +17,9 @@ import com.gavinsappcreations.upcominggames.R
 import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.ui.detail.ScreenshotAdapter
 import com.gavinsappcreations.upcominggames.ui.list.GameGridAdapter
+import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -135,7 +138,7 @@ fun TextView.formatGameDetailList(items: List<String>?) {
 
 @BindingAdapter("customDateVisibility")
 fun TextInputLayout.setCustomDateVisibility(releaseDateType: ReleaseDateType) {
-    visibility = if (releaseDateType == ReleaseDateType.CustomRange) {
+    visibility = if (releaseDateType == ReleaseDateType.CustomDate) {
         View.VISIBLE
     } else {
         View.GONE
@@ -153,7 +156,7 @@ fun RadioGroup.setReleaseDateType(type: ReleaseDateType) {
         ReleaseDateType.RecentAndUpcoming -> R.id.recent_and_upcoming_releases_radioButton
         ReleaseDateType.PastMonth -> R.id.past_month_radioButton
         ReleaseDateType.PastYear -> R.id.past_year_radioButton
-        ReleaseDateType.CustomRange -> R.id.custom_date_range_radioButton
+        ReleaseDateType.CustomDate -> R.id.custom_date_range_radioButton
     }
 
     // Prevent infinite loops
@@ -176,7 +179,7 @@ fun RadioGroup.getReleaseDateType(): ReleaseDateType {
         R.id.recent_and_upcoming_releases_radioButton -> ReleaseDateType.RecentAndUpcoming
         R.id.past_month_radioButton -> ReleaseDateType.PastMonth
         R.id.past_year_radioButton -> ReleaseDateType.PastYear
-        else -> ReleaseDateType.CustomRange
+        else -> ReleaseDateType.CustomDate
     }
 }
 
@@ -232,3 +235,47 @@ fun RadioGroup.setSortDirectionListeners(listener: InverseBindingListener) {
         listener.onChange()
     }
 }
+
+
+
+/*
+// This runs every time the LiveData value changes, and its job is to change the TextInputEditText's text.
+@BindingAdapter("customDateText")
+fun TextInputEditText.setCustomDateText(newText: String) {
+    // Prevent infinite loops
+    if (newText != text.toString()) {
+        setText(newText)
+    }
+}
+
+
+// This runs every time the TextInputEditText text changes, and its job is to change the LiveData's value.
+@InverseBindingAdapter(attribute = "customDateText")
+fun TextInputEditText.getCustomDateText(): String {
+
+    return try {
+        val df = SimpleDateFormat("MM/dd/yyyy")
+        df.isLenient = false
+        val inputText = text.toString()
+        df.parse(inputText)
+        inputText
+    } catch (e: ParseException) {
+        // TODO: this is getting called every time
+        ""
+    }
+}
+
+// This notifies the data binding system that the attribute value has changed.
+@BindingAdapter("app:customDateTextAttrChanged")
+fun TextInputEditText.setCustomDateListeners(listener: InverseBindingListener) {
+
+    addTextChangedListener {
+        listener.onChange()
+    }
+
+*/
+/*    setOnCheckedChangeListener{ _, _ ->
+        listener.onChange()
+    }*//*
+
+}*/

@@ -4,7 +4,6 @@ import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.gavinsappcreations.upcominggames.BR
 import com.gavinsappcreations.upcominggames.utilities.ReleaseDateType
 import com.gavinsappcreations.upcominggames.utilities.SortDirection
 
@@ -55,8 +54,10 @@ data class Platform(val abbreviation: String, val fullName: String)
  */
 class SortOptions(
     releaseDateType: ReleaseDateType,
-    sortDirection: SortDirection
-): BaseObservable() {
+    sortDirection: SortDirection,
+    customDateStart: String,
+    customDateEnd: String
+) : BaseObservable() {
 
     @Bindable
     var releaseDateType: ReleaseDateType = releaseDateType
@@ -67,6 +68,20 @@ class SortOptions(
 
     @Bindable
     var sortDirection: SortDirection = sortDirection
+        set(value) {
+            field = value
+            notifyChange()
+        }
+
+    @Bindable
+    var customDateStart: String = customDateStart
+        set(value) {
+            field = value
+            notifyChange()
+        }
+
+    @Bindable
+    var customDateEnd: String = customDateEnd
         set(value) {
             field = value
             notifyChange()

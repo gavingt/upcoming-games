@@ -1,12 +1,10 @@
 package com.gavinsappcreations.upcominggames.ui.sort
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -15,10 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.gavinsappcreations.upcominggames.databinding.FragmentSortBinding
 import com.gavinsappcreations.upcominggames.ui.sort.customDateRange.PlatformDialogFragment
-import com.gavinsappcreations.upcominggames.utilities.DateInputMask
 import com.gavinsappcreations.upcominggames.utilities.ReleaseDateType
-import com.google.android.material.textfield.TextInputEditText
-import java.util.*
 
 
 class SortFragment : Fragment() {
@@ -45,15 +40,18 @@ class SortFragment : Fragment() {
             findNavController().popBackStack()
         }
 
+        binding.applyButton.setOnClickListener {
+            // When the APPLY button is pressed, save the new ones to SharedPrefs.
+            viewModel.updateSortOptions()
+            findNavController().popBackStack()
+        }
+
         DateInputMask(binding.startDateTextInputEditText).listen()
         DateInputMask(binding.endDateTextInputEditText).listen()
 
-        viewModel.sortOptions.observe(viewLifecycleOwner, Observer {
+        viewModel.unsavedSortOptions.observe(viewLifecycleOwner, Observer {
 
-            //Any time sortOptions change, save the new ones to SharedPrefs.
-            viewModel.updateSortOptions()
-
-            if (it.releaseDateType == ReleaseDateType.CustomRange) {
+            if (it.releaseDateType == ReleaseDateType.CustomDate) {
                 // TODO: use SingleLiveEvent to trigger showing TextInputLayouts
             }
         })
@@ -76,12 +74,6 @@ class SortFragment : Fragment() {
         newFragment.show(ft, "dialog")
     }
 
-
-/*    // If user is leaving the Fragment, update sortOptions so changes are fed to ListFragment.
-    override fun onStop() {
-        super.onStop()
-        viewModel.updateSortOptions()
-    }*/
 
 }
 

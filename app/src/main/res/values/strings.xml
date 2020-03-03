@@ -12,7 +12,7 @@
     <string name="unknown_date">Unknown date</string>
     <string name="no_release_date">No release date</string>
     <string name="not_available">Not available</string>
-    <string name="release_date">Release date:</string>
+    <string name="release_date">Release date</string>
     <string name="quarter_release_date">Q%1d %2$s</string>
     <string name="platforms">Platforms</string>
     <string name="developers">Developers</string>

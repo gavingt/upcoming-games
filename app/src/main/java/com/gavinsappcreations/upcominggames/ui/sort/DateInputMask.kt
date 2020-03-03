@@ -1,4 +1,4 @@
-package com.gavinsappcreations.upcominggames.utilities
+package com.gavinsappcreations.upcominggames.ui.sort
 
 import android.text.Editable
 import android.text.TextWatcher
@@ -53,10 +53,6 @@ class DateInputMask(val editText: TextInputEditText) {
                     editText.error = "Non-existent date. Use MM/DD/YYYY format."
                 }
             }
-
-
-            // TODO: for second EditText, verify that its date is after first date
-
         }
 
         private fun manageDateDivider(
