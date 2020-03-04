@@ -17,6 +17,7 @@ import com.gavinsappcreations.upcominggames.network.asDomainModel
 import com.gavinsappcreations.upcominggames.utilities.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
 import java.util.*
 
 class GameRepository private constructor(application: Application) {
@@ -29,7 +30,6 @@ class GameRepository private constructor(application: Application) {
     val sortOptions = MutableLiveData<SortOptions>()
 
     init {
-
         // Fetch sort options from SharedPrefs
         val releaseDateType: ReleaseDateType = enumValueOf(
             prefs.getString(
@@ -49,11 +49,12 @@ class GameRepository private constructor(application: Application) {
 
     // Update value of _sortOptions and also save that value to SharedPrefs.
     fun updateSortOptions(newSortOptions: SortOptions) {
-
         sortOptions.value = newSortOptions
 
-        prefs.edit().putString(KEY_SORT_DIRECTION, sortOptions.value!!.sortDirection.name)
-            .putString(KEY_RELEASE_DATE_TYPE, sortOptions.value!!.releaseDateType.name)
+        prefs.edit().putString(KEY_SORT_DIRECTION, newSortOptions.sortDirection.name)
+            .putString(KEY_RELEASE_DATE_TYPE, newSortOptions.releaseDateType.name)
+            .putString(KEY_CUSTOM_DATE_START, newSortOptions.customDateStart)
+            .putString(KEY_CUSTOM_DATE_END, newSortOptions.customDateEnd)
             .apply()
     }
 
@@ -83,8 +84,8 @@ class GameRepository private constructor(application: Application) {
 
     private fun fetchDateConstraints(): LongArray {
 
-        val dateFilterStart: Long
-        val dateFilterEnd: Long
+        var dateStartMillis: Long
+        var dateEndMillis: Long
 
         val calendar: Calendar = Calendar.getInstance()
 
@@ -94,43 +95,49 @@ class GameRepository private constructor(application: Application) {
             ReleaseDateType.RecentAndUpcoming -> {
                 // dateFilterStart is set to one week before current day.
                 calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - 7)
-                dateFilterStart = calendar.timeInMillis
+                dateStartMillis = calendar.timeInMillis
 
                 // dateFilterEnd is set to a far-off date so that every future game will be listed.
                 calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + 100)
-                dateFilterEnd = calendar.timeInMillis
+                dateEndMillis = calendar.timeInMillis
             }
             ReleaseDateType.PastMonth -> {
                 // dateFilterStart is set to one month before current day.
                 calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1)
-                dateFilterStart = calendar.timeInMillis
+                dateStartMillis = calendar.timeInMillis
 
                 // dateFilterEnd is set to current time.
-                dateFilterEnd = currentTimeMillis
+                dateEndMillis = currentTimeMillis
             }
             ReleaseDateType.PastYear -> {
                 // dateFilterStart is set to one year before current day.
                 calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) - 1)
-                dateFilterStart = calendar.timeInMillis
+                dateStartMillis = calendar.timeInMillis
 
                 // dateFilterEnd is set to current time.
-                dateFilterEnd = currentTimeMillis
+                dateEndMillis = currentTimeMillis
             }
             ReleaseDateType.CustomDate -> {
-                // TODO: use custom range fields of sortOptions here, after we implement them.
-                // TODO: if end date is after start date, just let it stay that way in storage but flip pass them before passing them to the database query
+                val df = SimpleDateFormat("MM/dd/yyyy")
 
-                // dateFilterStart is set to one year before current day.
-                calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) - 1)
-                dateFilterStart = calendar.timeInMillis
+                val startDateString = sortOptions.value!!.customDateStart
+                calendar.time = df.parse(startDateString)!!
+                dateStartMillis = calendar.timeInMillis
 
-                // dateFilterEnd is set to current time.
-                dateFilterEnd = currentTimeMillis
+                val endDateString = sortOptions.value!!.customDateEnd
+                calendar.time = df.parse(endDateString)!!
+                dateEndMillis = calendar.timeInMillis
+
+                // If the end date is before the start date, just flip them.
+                if (dateEndMillis < dateStartMillis) {
+                    val temp = dateStartMillis
+                    dateStartMillis = dateEndMillis
+                    dateEndMillis = temp
+                }
             }
-
         }
 
-        return longArrayOf(dateFilterStart, dateFilterEnd)
+        return longArrayOf(dateStartMillis, dateEndMillis)
     }
 
 

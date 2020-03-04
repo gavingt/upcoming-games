@@ -1,4 +1,4 @@
-package com.gavinsappcreations.upcominggames.ui.sort.customDateRange
+package com.gavinsappcreations.upcominggames.ui.sort.platform
 
 import android.os.Bundle
 import android.view.LayoutInflater
