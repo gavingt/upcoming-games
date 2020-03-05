@@ -73,7 +73,7 @@
             app:layout_constraintTop_toBottomOf="@id/search_cardView"
             app:spanCount="2"
             tools:itemCount="16"
-            tools:listitem="@layout/grid_view_item" />
+            tools:listitem="@layout/grid_list_item" />
 
         <ImageView
             android:id="@+id/game_cover_imageView"

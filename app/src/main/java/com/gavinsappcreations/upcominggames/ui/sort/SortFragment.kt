@@ -9,14 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.gavinsappcreations.upcominggames.App
 import com.gavinsappcreations.upcominggames.databinding.FragmentSortBinding
-import com.gavinsappcreations.upcominggames.ui.sort.platform.PlatformDialogFragment
 import com.gavinsappcreations.upcominggames.utilities.ReleaseDateType
 import com.gavinsappcreations.upcominggames.utilities.hideKeyboard
 
@@ -41,6 +38,9 @@ class SortFragment : Fragment() {
         // Giving the binding access to the SortViewModel
         binding.viewModel = viewModel
 
+        val platformAdapter = PlatformAdapter()
+        binding.platformRecyclerView.adapter = platformAdapter
+
         binding.upNavigationImageButton.setOnClickListener {
             hideKeyboard(requireActivity())
             // TODO: this should be done in ViewModel
@@ -50,14 +50,15 @@ class SortFragment : Fragment() {
         binding.applyButton.setOnClickListener {
             hideKeyboard(requireActivity())
 
-            val startNull = binding.startDateTextInputEditText.error
-            val endNull = binding.endDateTextInputEditText.error
+            Toast.makeText(requireActivity(), platformAdapter.checkedPlatformsList.toString(), Toast.LENGTH_LONG).show()
 
             // TODO: this should be done in ViewModel, except vibrating
             // When the APPLY button is pressed, save the new ones to SharedPrefs.
             if (viewModel.unsavedSortOptions.value!!.releaseDateType != ReleaseDateType.CustomDate
                 || (binding.startDateTextInputEditText.error == null
-                        && binding.endDateTextInputEditText.error == null)
+                        && !binding.startDateTextInputEditText.text.isNullOrBlank()
+                        && binding.endDateTextInputEditText.error == null
+                        && !binding.endDateTextInputEditText.text.isNullOrBlank())
             ) {
                 viewModel.updateSortOptions()
                 findNavController().popBackStack()
@@ -88,22 +89,6 @@ class SortFragment : Fragment() {
 
         return binding.root
     }
-
-
-    fun showPlatformDialog() {
-        val ft: FragmentTransaction = childFragmentManager.beginTransaction()
-        val prev: Fragment? = childFragmentManager.findFragmentByTag("dialog")
-        // Remove any previous instances of this dialog.
-        if (prev != null) {
-            ft.remove(prev)
-        }
-        ft.addToBackStack(null)
-
-        // Create and show the dialog.
-        val newFragment: DialogFragment = PlatformDialogFragment()
-        newFragment.show(ft, "dialog")
-    }
-
 
 }
 

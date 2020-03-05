@@ -10,48 +10,48 @@
             type="com.gavinsappcreations.upcominggames.ui.sort.SortViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/margin_normal">
+        android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/up_navigation_imageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_marginStart="@dimen/margin_normal"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/nav_app_bar_navigate_up_description"
-            android:src="@drawable/ic_left_arrow"
-            android:tint="?attr/colorOnBackground"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/toolbar_title_textView"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_normal"
-            android:text="@string/sort_options"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-            app:layout_constraintBottom_toBottomOf="@id/up_navigation_imageButton"
-            app:layout_constraintLeft_toRightOf="@id/up_navigation_imageButton"
-            app:layout_constraintTop_toTopOf="@id/up_navigation_imageButton" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/apply_button"
-            style="@style/MyTextButtonTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginEnd="@dimen/margin_normal"
-            app:layout_constraintTop_toTopOf="@id/up_navigation_imageButton"
-            app:layout_constraintBottom_toBottomOf="@id/up_navigation_imageButton"
-            android:letterSpacing="0.07"
-            android:text="@string/apply"
-            android:textColor="?attr/colorAccent"
-            android:textSize="@dimen/text_button_size" />
+            <ImageButton
+                android:id="@+id/up_navigation_imageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/nav_app_bar_navigate_up_description"
+                android:src="@drawable/ic_left_arrow"
+                android:tint="?attr/colorOnBackground" />
+
+            <TextView
+                android:id="@+id/toolbar_title_textView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:text="@string/sort_options"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"/>
+
+            <Button
+                android:id="@+id/apply_button"
+                style="@style/MyTextButtonTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_normal"
+                android:letterSpacing="0.07"
+                android:text="@string/apply"
+                android:textColor="?attr/colorAccent"
+                android:textSize="@dimen/text_button_size"/>
+
+        </LinearLayout>
 
         <View
             android:id="@+id/horizontal_line_view"
@@ -61,163 +61,237 @@
             android:visibility="visible"
             app:layout_constraintTop_toBottomOf="@id/up_navigation_imageButton" />
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/release_date_cardView"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_normal"
-            app:cardBackgroundColor="?attr/colorBackgroundVariant"
-            app:layout_constraintTop_toBottomOf="@id/horizontal_line_view">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/margin_normal"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/release_date_header_textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/release_date_header"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                    android:textSize="18sp" />
-
-                <RadioGroup
-                    android:id="@+id/release_date_radioGroup"
-                    releaseDateType="@={viewModel.unsavedSortOptions.releaseDateType}"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/release_date_cardView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_normal">
-
-                    <RadioButton
-                        android:id="@+id/recent_and_upcoming_releases_radioButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/radio_button_height"
-                        android:text="@string/recent_and_upcoming" />
-
-                    <RadioButton
-                        android:id="@+id/past_month_radioButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/radio_button_height"
-                        android:text="@string/past_month" />
-
-                    <RadioButton
-                        android:id="@+id/past_year_radioButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/radio_button_height"
-                        android:text="@string/past_year" />
-
-                    <RadioButton
-                        android:id="@+id/custom_date_range_radioButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/radio_button_height"
-                        android:text="@string/custom_range" />
-
-                </RadioGroup>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/TextInputLayoutAppearance"
-                    customDateVisibility="@{viewModel.unsavedSortOptions.releaseDateType}"
-                    android:layout_width="180dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_large"
                     android:layout_marginTop="@dimen/margin_normal"
-                    android:hint="Start date"
-                    app:errorEnabled="true"
-                    app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
-                    app:boxCornerRadiusBottomStart="@dimen/corner_radius"
-                    app:boxCornerRadiusTopEnd="@dimen/corner_radius"
-                    app:boxCornerRadiusTopStart="@dimen/corner_radius">
+                    android:layout_marginLeft="@dimen/margin_normal"
+                    android:layout_marginRight="@dimen/margin_normal"
+                    app:cardBackgroundColor="?attr/colorBackgroundVariant">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/start_date_textInputEditText"
-                        android:inputType="date"
-                        android:maxLength="10"
-                        android:digits="0123456789/"
-                        android:text="@={viewModel.unsavedSortOptions.customDateStart}"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="match_parent"
+                        android:layout_margin="@dimen/margin_normal"
+                        android:orientation="vertical">
 
-                </com.google.android.material.textfield.TextInputLayout>
+                        <TextView
+                            android:id="@+id/release_date_header_textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/release_date_header"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                            android:textSize="18sp" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/TextInputLayoutAppearance"
-                    customDateVisibility="@{viewModel.unsavedSortOptions.releaseDateType}"
-                    android:layout_width="180dp"
+                        <RadioGroup
+                            android:id="@+id/release_date_radioGroup"
+                            releaseDateType="@={viewModel.unsavedSortOptions.releaseDateType}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_normal">
+
+                            <RadioButton
+                                android:id="@+id/recent_and_upcoming_releases_radioButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/radio_button_height"
+                                android:text="@string/recent_and_upcoming" />
+
+                            <RadioButton
+                                android:id="@+id/past_month_radioButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/radio_button_height"
+                                android:text="@string/past_month" />
+
+                            <RadioButton
+                                android:id="@+id/past_year_radioButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/radio_button_height"
+                                android:text="@string/past_year" />
+
+                            <RadioButton
+                                android:id="@+id/custom_date_range_radioButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/radio_button_height"
+                                android:text="@string/custom_range" />
+
+                        </RadioGroup>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/TextInputLayoutAppearance"
+                            customDateVisibility="@{viewModel.unsavedSortOptions.releaseDateType}"
+                            android:layout_width="180dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_large"
+                            android:layout_marginTop="@dimen/margin_normal"
+                            android:hint="@string/start_date"
+                            app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
+                            app:boxCornerRadiusBottomStart="@dimen/corner_radius"
+                            app:boxCornerRadiusTopEnd="@dimen/corner_radius"
+                            app:boxCornerRadiusTopStart="@dimen/corner_radius"
+                            app:errorEnabled="true">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/start_date_textInputEditText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:digits="0123456789/"
+                                android:inputType="date"
+                                android:maxLength="10"
+                                android:text="@={viewModel.unsavedSortOptions.customDateStart}" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/TextInputLayoutAppearance"
+                            customDateVisibility="@{viewModel.unsavedSortOptions.releaseDateType}"
+                            android:layout_width="180dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_large"
+                            android:layout_marginTop="@dimen/margin_normal"
+                            android:hint="@string/end_date"
+                            app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
+                            app:boxCornerRadiusBottomStart="@dimen/corner_radius"
+                            app:boxCornerRadiusTopEnd="@dimen/corner_radius"
+                            app:boxCornerRadiusTopStart="@dimen/corner_radius"
+                            app:errorEnabled="true">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/end_date_textInputEditText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:digits="0123456789/"
+                                android:inputType="date"
+                                android:maxLength="10"
+                                android:text="@={viewModel.unsavedSortOptions.customDateEnd}" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/sort_order_cardView"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_large"
+                    android:layout_marginLeft="@dimen/margin_normal"
+                    android:layout_marginRight="@dimen/margin_normal"
                     android:layout_marginTop="@dimen/margin_normal"
-                    android:hint="End date"
-                    app:errorEnabled="true"
-                    app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
-                    app:boxCornerRadiusBottomStart="@dimen/corner_radius"
-                    app:boxCornerRadiusTopEnd="@dimen/corner_radius"
-                    app:boxCornerRadiusTopStart="@dimen/corner_radius">
+                    app:cardBackgroundColor="?attr/colorBackgroundVariant">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/end_date_textInputEditText"
-                        android:inputType="date"
-                        android:maxLength="10"
-                        android:digits="0123456789/"
-                        android:text="@={viewModel.unsavedSortOptions.customDateEnd}"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="match_parent"
+                        android:layout_margin="@dimen/margin_normal"
+                        android:orientation="vertical">
 
-                </com.google.android.material.textfield.TextInputLayout>
+                        <TextView
+                            android:id="@+id/sort_direction_header_textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/sort_direction"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                            android:textSize="18sp" />
+
+                        <RadioGroup
+                            android:id="@+id/sort_direction_radioGroup"
+                            sortDirection="@={viewModel.unsavedSortOptions.sortDirection}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_normal">
+
+                            <RadioButton
+                                android:id="@+id/sort_ascending_radioButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/radio_button_height"
+                                android:text="@string/ascending" />
+
+                            <RadioButton
+                                android:id="@+id/sort_descending_radioButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/radio_button_height"
+                                android:text="@string/descending" />
+
+                        </RadioGroup>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/platform_cardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_normal"
+                    app:cardBackgroundColor="?attr/colorBackgroundVariant">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="@dimen/margin_normal"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/platform_header_textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/platforms"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                            android:textSize="18sp" />
+
+                        <RadioGroup
+                            android:id="@+id/platform_radioGroup"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_normal">
+
+                            <RadioButton
+                                android:id="@+id/current_platforms_radioButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/radio_button_height"
+                                android:text="@string/current" />
+
+                            <RadioButton
+                                android:id="@+id/all_platforms_radioButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/radio_button_height"
+                                android:text="@string/all" />
+
+                            <RadioButton
+                                android:id="@+id/custom_platforms_radioButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/radio_button_height"
+                                android:text="@string/pick_platforms_from_list" />
+
+                        </RadioGroup>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/platform_recyclerView"
+                            android:layout_marginTop="@dimen/margin_normal"
+                            android:layout_marginLeft="@dimen/margin_large"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
 
             </LinearLayout>
 
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/sort_order_cardView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_normal"
-            app:cardBackgroundColor="?attr/colorBackgroundVariant"
-            app:layout_constraintTop_toBottomOf="@id/release_date_cardView">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/margin_normal"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/sort_direction_header_textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/sort_direction"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                    android:textSize="18sp" />
-
-                <RadioGroup
-                    android:id="@+id/sort_direction_radioGroup"
-                    sortDirection="@={viewModel.unsavedSortOptions.sortDirection}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_normal">
-
-                    <RadioButton
-                        android:id="@+id/sort_ascending_radioButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/radio_button_height"
-                        android:text="Ascending" />
-
-                    <RadioButton
-                        android:id="@+id/sort_descending_radioButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/radio_button_height"
-                        android:text="Descending" />
-
-                </RadioGroup>
-
-            </LinearLayout>
-
-        </com.google.android.material.card.MaterialCardView>
+        </androidx.core.widget.NestedScrollView>
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
 </layout>

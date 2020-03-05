@@ -15,7 +15,8 @@ class SortViewModel(application: Application) : ViewModel() {
     val unsavedSortOptions = PropertyAwareMutableLiveData(
         SortOptions(
             originalSortOptions.releaseDateType, originalSortOptions.sortDirection,
-            originalSortOptions.customDateStart, originalSortOptions.customDateEnd
+            originalSortOptions.customDateStart, originalSortOptions.customDateEnd,
+            originalSortOptions.platformIndices
         )
     )
 

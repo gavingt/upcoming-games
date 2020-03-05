@@ -56,7 +56,8 @@ class SortOptions(
     releaseDateType: ReleaseDateType,
     sortDirection: SortDirection,
     customDateStart: String,
-    customDateEnd: String
+    customDateEnd: String,
+    platformIndices: MutableList<Int>
 ) : BaseObservable() {
 
     @Bindable
@@ -82,6 +83,13 @@ class SortOptions(
 
     @Bindable
     var customDateEnd: String = customDateEnd
+        set(value) {
+            field = value
+            notifyChange()
+        }
+
+    @Bindable
+    var platformIndices: MutableList<Int> = platformIndices
         set(value) {
             field = value
             notifyChange()

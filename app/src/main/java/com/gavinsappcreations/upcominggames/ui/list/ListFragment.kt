@@ -51,10 +51,6 @@ class ListFragment : Fragment() {
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        //viewModel.checkIfSortOptionsChanged()
-    }
 }
 
 

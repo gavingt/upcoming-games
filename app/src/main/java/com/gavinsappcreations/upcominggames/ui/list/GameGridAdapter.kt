@@ -7,16 +7,15 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.gavinsappcreations.upcominggames.R
-import com.gavinsappcreations.upcominggames.databinding.GridViewItemBinding
+import com.gavinsappcreations.upcominggames.databinding.GridListItemBinding
 import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.network.sortPlatformAbbreviationsByRelevance
-import java.util.*
 
 class GameGridAdapter(private val onClickListener: OnClickListener) :
     PagedListAdapter<Game, GameGridAdapter.GameReleaseViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameReleaseViewHolder {
-        return GameReleaseViewHolder(GridViewItemBinding.inflate(LayoutInflater.from(parent.context)))
+        return GameReleaseViewHolder(GridListItemBinding.inflate(LayoutInflater.from(parent.context)))
     }
 
     override fun onBindViewHolder(holder: GameReleaseViewHolder, position: Int) {
@@ -31,7 +30,7 @@ class GameGridAdapter(private val onClickListener: OnClickListener) :
     }
 
 
-    class GameReleaseViewHolder(private var binding: GridViewItemBinding) :
+    class GameReleaseViewHolder(private var binding: GridListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(game: Game) {

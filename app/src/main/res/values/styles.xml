@@ -12,9 +12,14 @@
         <item name="colorOnBackgroundLowContrast">@color/colorOnBackgroundLowContrast</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
+
     </style>
 
     <style name="AppTheme" parent="CommonTheme" />
+
+    <style name="AppTheme.SplashScreen">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+    </style>
 
 
     <!-- Change ripple color on TextButtons -->
@@ -27,7 +32,9 @@
     <style name="TextInputLayoutAppearance" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
         <item name="hintTextColor">@color/colorAccent</item>
         <item name="boxStrokeColor">@color/colorAccent</item>
-        <item name="materialThemeOverlay">@style/ThemeOverlay.AppTheme.TextInputEditText.FilledBox.Dense</item>
+        <item name="materialThemeOverlay">
+            @style/ThemeOverlay.AppTheme.TextInputEditText.FilledBox.Dense
+        </item>
     </style>
 
     <!-- We need a ThemeOverlay to change the cursor color in the TextInputLayout -->
