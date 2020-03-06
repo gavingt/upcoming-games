@@ -9,10 +9,8 @@ class Converters {
     fun listToString(list: List<String>?): String {
 
         if (list == null) {
-            return "no platforms"
+            return "NONE,"
         }
-
-        //TODO: this is causing a trailing comma in platforms list
 
         val stringBuilder = StringBuilder()
         for (item in list) {

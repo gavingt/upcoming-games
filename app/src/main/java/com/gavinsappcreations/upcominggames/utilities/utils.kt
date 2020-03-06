@@ -6,6 +6,7 @@ import android.content.res.Resources
 import android.util.DisplayMetrics
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.lifecycle.MutableLiveData
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
@@ -88,4 +89,10 @@ fun hideKeyboard(activity: Activity) {
         view = View(activity)
     }
     imm.hideSoftInputFromWindow(view.windowToken, 0)
+}
+
+
+// We can call this to notify observers after we've changed, for example, a single item in a MutableLiveData<List<T>>
+fun <T> MutableLiveData<T>.notifyObserver() {
+    this.value = this.value
 }

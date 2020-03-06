@@ -16,6 +16,7 @@ import com.gavinsappcreations.upcominggames.App
 import com.gavinsappcreations.upcominggames.databinding.FragmentSortBinding
 import com.gavinsappcreations.upcominggames.utilities.ReleaseDateType
 import com.gavinsappcreations.upcominggames.utilities.hideKeyboard
+import com.gavinsappcreations.upcominggames.utilities.notifyObserver
 
 
 class SortFragment : Fragment() {
@@ -38,8 +39,7 @@ class SortFragment : Fragment() {
         // Giving the binding access to the SortViewModel
         binding.viewModel = viewModel
 
-        val platformAdapter = PlatformAdapter()
-        binding.platformRecyclerView.adapter = platformAdapter
+        binding.platformRecyclerView.adapter = PlatformAdapter(viewModel.unsavedSortOptions)
 
         binding.upNavigationImageButton.setOnClickListener {
             hideKeyboard(requireActivity())
@@ -50,7 +50,7 @@ class SortFragment : Fragment() {
         binding.applyButton.setOnClickListener {
             hideKeyboard(requireActivity())
 
-            Toast.makeText(requireActivity(), platformAdapter.checkedPlatformsList.toString(), Toast.LENGTH_LONG).show()
+            Toast.makeText(requireActivity(), viewModel.unsavedSortOptions.value!!.platformIndices.toString(), Toast.LENGTH_LONG).show()
 
             // TODO: this should be done in ViewModel, except vibrating
             // When the APPLY button is pressed, save the new ones to SharedPrefs.

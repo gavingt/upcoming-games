@@ -57,7 +57,7 @@ class SortOptions(
     sortDirection: SortDirection,
     customDateStart: String,
     customDateEnd: String,
-    platformIndices: MutableList<Int>
+    platformIndices: MutableSet<Int>
 ) : BaseObservable() {
 
     @Bindable
@@ -89,7 +89,7 @@ class SortOptions(
         }
 
     @Bindable
-    var platformIndices: MutableList<Int> = platformIndices
+    var platformIndices: MutableSet<Int> = platformIndices
         set(value) {
             field = value
             notifyChange()

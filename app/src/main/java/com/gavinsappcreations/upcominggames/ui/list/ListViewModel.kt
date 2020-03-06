@@ -1,9 +1,17 @@
 package com.gavinsappcreations.upcominggames.ui.list
 
 import android.app.Application
+import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.*
+import com.gavinsappcreations.upcominggames.App
+import com.gavinsappcreations.upcominggames.domain.Game
+import com.gavinsappcreations.upcominggames.domain.Platform
 import com.gavinsappcreations.upcominggames.repository.GameRepository
+import com.gavinsappcreations.upcominggames.utilities.allPlatforms
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ListViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -21,6 +29,7 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     val games = Transformations.switchMap(gameRepository.sortOptions) {
         gameRepository.getGameList()
     }
+
 
 
     //Factory for constructing ListViewModel with Application parameter.

@@ -7,6 +7,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
+import androidx.sqlite.db.SimpleSQLiteQuery
+import com.gavinsappcreations.upcominggames.database.buildFinalQuery
 import com.gavinsappcreations.upcominggames.database.getDatabase
 import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.domain.GameDetail
@@ -43,8 +45,17 @@ class GameRepository private constructor(application: Application) {
         val customDateStart = prefs.getString(KEY_CUSTOM_DATE_START, "")!!
         val customDateEnd = prefs.getString(KEY_CUSTOM_DATE_END, "")!!
 
+        // TODO: the default for testing is set to just show XSX
+        val platformIndices = mutableSetOf<Int>(2)
+
         // Set all sort options to _sortOptions at once
-        sortOptions.value = SortOptions(releaseDateType, sortDirection, customDateStart, customDateEnd)
+        sortOptions.value = SortOptions(
+            releaseDateType,
+            sortDirection,
+            customDateStart,
+            customDateEnd,
+            platformIndices
+        )
     }
 
     // Update value of _sortOptions and also save that value to SharedPrefs.
@@ -64,23 +75,24 @@ class GameRepository private constructor(application: Application) {
         val dateConstraints = fetchDateConstraints()
 
         // Get data source factory from the local cache
-        val dataSourceFactory =
-            database.gameDao.getGames(sortOptions.value!!.sortDirection.direction, dateConstraints[0], dateConstraints[1])
+/*        val dataSourceFactory =
+            database.gameDao.getGames(sortOptions.value!!.sortDirection.direction, dateConstraints[0], dateConstraints[1], platformAbbreviations)*/
 
-        // every new query creates a new BoundaryCallback
-        // The BoundaryCallback will observe when the user reaches to the edges of
-        // the list and update the database with extra data
-        //val boundaryCallback = GameBoundaryCallback(this)
-        //val networkErrors = boundaryCallback.networkErrors
+        val query = buildFinalQuery(sortOptions.value!!.sortDirection.direction, dateConstraints[0], dateConstraints[1], sortOptions.value!!.platformIndices)
+
+        val dataSourceFactory =
+            database.gameDao.getGamesTest(query)
 
         // Get the paged list
         val data = LivePagedListBuilder(dataSourceFactory, DATABASE_PAGE_SIZE)
             .build()
 
-        // Get the network errors exposed by the boundary callback
-        //return RepoSearchResult(data, networkErrors)
         return data
     }
+
+
+
+
 
     private fun fetchDateConstraints(): LongArray {
 
@@ -88,7 +100,6 @@ class GameRepository private constructor(application: Application) {
         var dateEndMillis: Long
 
         val calendar: Calendar = Calendar.getInstance()
-
         val currentTimeMillis = calendar.timeInMillis
 
         when (sortOptions.value!!.releaseDateType) {
@@ -138,6 +149,19 @@ class GameRepository private constructor(application: Application) {
         }
 
         return longArrayOf(dateStartMillis, dateEndMillis)
+    }
+
+
+    private fun fetchPlatformAbbreviations(platformIndices: MutableSet<Int>): String {
+        val sb = StringBuilder()
+
+        // Game.platforms LIKE '%XONE%' OR Game.platforms LIKE '%PC%'
+
+        for (platformIndex in platformIndices) {
+            sb.append("platforms LIKE '%${allPlatforms[platformIndex].abbreviation}%'")
+            sb.append(" OR ")
+        }
+        return sb.toString().removeSuffix(" OR ")
     }
 
 

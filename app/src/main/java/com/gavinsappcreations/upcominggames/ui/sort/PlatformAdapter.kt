@@ -10,19 +10,32 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gavinsappcreations.upcominggames.R
 import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.domain.Platform
+import com.gavinsappcreations.upcominggames.domain.SortOptions
+import com.gavinsappcreations.upcominggames.utilities.PropertyAwareMutableLiveData
 import com.gavinsappcreations.upcominggames.utilities.allPlatforms
+import com.gavinsappcreations.upcominggames.utilities.notifyObserver
 
-class PlatformAdapter (private val checkedChangeListener: PlatformAdapter.OnCheckedChangeListener) :
+class PlatformAdapter (private val unsavedSortOptions: PropertyAwareMutableLiveData<SortOptions>) :
     RecyclerView.Adapter<PlatformAdapter.ViewHolder>() {
 
-    var data = allPlatforms
-    val checkedPlatformsList: MutableList<Int> = mutableListOf()
+    val data = allPlatforms
 
     override fun getItemCount() = data.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = data[position]
-        holder.bind(item, position, checkedPlatformsList)
+
+        (holder.itemView as CheckBox).setOnCheckedChangeListener{ _, isChecked ->
+            if (isChecked) {
+                unsavedSortOptions.value!!.platformIndices.add(position)
+                unsavedSortOptions.notifyObserver()
+            } else {
+                unsavedSortOptions.value!!.platformIndices.remove(position)
+                unsavedSortOptions.notifyObserver()
+            }
+        }
+
+        holder.bind(item)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -32,13 +45,8 @@ class PlatformAdapter (private val checkedChangeListener: PlatformAdapter.OnChec
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         private val checkBox: CheckBox = itemView.findViewById(R.id.platform_checkBox)
 
-        fun bind(item: Platform, position: Int, checkedPlatformList: MutableList<Int>) {
+        fun bind(item: Platform) {
             checkBox.text = item.fullName
-            checkBox.setOnCheckedChangeListener{ _, isChecked ->
-                if (isChecked) {
-                    checkedPlatformList.add(position)
-                }
-            }
         }
 
         companion object {
@@ -51,7 +59,7 @@ class PlatformAdapter (private val checkedChangeListener: PlatformAdapter.OnChec
         }
     }
 
-    class OnCheckedChangeListener (val checkedChangeListener: (platformIndex: Int) -> Unit) {
-        fun onCheck(platformIndex: Int) = checkedChangeListener(platformIndex)
+    class OnCheckedChangeListener (val checkedChangeListener: (platformIndices: MutableSet<Int>) -> Unit) {
+        fun onCheck(platformIndices: MutableSet<Int>) = checkedChangeListener(platformIndices)
     }
 }
