@@ -7,7 +7,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import androidx.sqlite.db.SimpleSQLiteQuery
 import com.gavinsappcreations.upcominggames.database.buildFinalQuery
 import com.gavinsappcreations.upcominggames.database.getDatabase
 import com.gavinsappcreations.upcominggames.domain.Game
@@ -45,8 +44,11 @@ class GameRepository private constructor(application: Application) {
         val customDateStart = prefs.getString(KEY_CUSTOM_DATE_START, "")!!
         val customDateEnd = prefs.getString(KEY_CUSTOM_DATE_END, "")!!
 
-        // TODO: the default for testing is set to just show XSX
-        val platformIndices = mutableSetOf<Int>(2)
+        val platformIndices: MutableSet<Int> =
+            prefs.getStringSet(KEY_PLATFORM_INDICES, setOf())!!.map {
+            it.toInt()
+        }.toMutableSet()
+
 
         // Set all sort options to _sortOptions at once
         sortOptions.value = SortOptions(
@@ -66,6 +68,10 @@ class GameRepository private constructor(application: Application) {
             .putString(KEY_RELEASE_DATE_TYPE, newSortOptions.releaseDateType.name)
             .putString(KEY_CUSTOM_DATE_START, newSortOptions.customDateStart)
             .putString(KEY_CUSTOM_DATE_END, newSortOptions.customDateEnd)
+                // Convert MutableSet<Int> to Set<String> so we can store it in SharedPrefs
+            .putStringSet(KEY_PLATFORM_INDICES, newSortOptions.platformIndices.map {
+                it.toString()
+            }.toSet())
             .apply()
     }
 
@@ -74,14 +80,15 @@ class GameRepository private constructor(application: Application) {
 
         val dateConstraints = fetchDateConstraints()
 
-        // Get data source factory from the local cache
-/*        val dataSourceFactory =
-            database.gameDao.getGames(sortOptions.value!!.sortDirection.direction, dateConstraints[0], dateConstraints[1], platformAbbreviations)*/
-
-        val query = buildFinalQuery(sortOptions.value!!.sortDirection.direction, dateConstraints[0], dateConstraints[1], sortOptions.value!!.platformIndices)
+        val query = buildFinalQuery(
+            sortOptions.value!!.sortDirection.direction,
+            dateConstraints[0],
+            dateConstraints[1],
+            sortOptions.value!!.platformIndices
+        )
 
         val dataSourceFactory =
-            database.gameDao.getGamesTest(query)
+            database.gameDao.getGameList(query)
 
         // Get the paged list
         val data = LivePagedListBuilder(dataSourceFactory, DATABASE_PAGE_SIZE)
@@ -91,13 +98,10 @@ class GameRepository private constructor(application: Application) {
     }
 
 
+    private fun fetchDateConstraints(): Array<Long?> {
 
-
-
-    private fun fetchDateConstraints(): LongArray {
-
-        var dateStartMillis: Long
-        var dateEndMillis: Long
+        var dateStartMillis: Long?
+        var dateEndMillis: Long?
 
         val calendar: Calendar = Calendar.getInstance()
         val currentTimeMillis = calendar.timeInMillis
@@ -111,6 +115,10 @@ class GameRepository private constructor(application: Application) {
                 // dateFilterEnd is set to a far-off date so that every future game will be listed.
                 calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + 100)
                 dateEndMillis = calendar.timeInMillis
+            }
+            ReleaseDateType.Unknown -> {
+                dateStartMillis = null
+                dateEndMillis = null
             }
             ReleaseDateType.PastMonth -> {
                 // dateFilterStart is set to one month before current day.
@@ -148,7 +156,7 @@ class GameRepository private constructor(application: Application) {
             }
         }
 
-        return longArrayOf(dateStartMillis, dateEndMillis)
+        return arrayOf(dateStartMillis, dateEndMillis)
     }
 
 

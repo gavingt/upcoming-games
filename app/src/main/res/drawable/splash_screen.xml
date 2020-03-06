@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android"
     android:opacity="opaque">
-    <item android:drawable="?attr/colorAccent" />
+    <item android:drawable="@color/colorBackground" />
+    <item
+        android:width="144dp"
+        android:height="144dp"
+        android:gravity="center">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/colorAccent" />
+            <corners android:radius="@dimen/corner_radius" />
+        </shape>
+    </item>
     <item
         android:width="96dp"
         android:height="96dp"
         android:drawable="@drawable/games"
-        android:gravity="center">
-    </item>
+        android:gravity="center" />
 </layer-list>

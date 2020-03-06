@@ -5,7 +5,6 @@ import android.widget.ImageView
 import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.core.net.toUri
-import androidx.core.widget.addTextChangedListener
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
@@ -17,9 +16,7 @@ import com.gavinsappcreations.upcominggames.R
 import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.ui.detail.ScreenshotAdapter
 import com.gavinsappcreations.upcominggames.ui.list.GameGridAdapter
-import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -156,6 +153,7 @@ fun RadioGroup.setReleaseDateType(type: ReleaseDateType) {
         ReleaseDateType.RecentAndUpcoming -> R.id.recent_and_upcoming_releases_radioButton
         ReleaseDateType.PastMonth -> R.id.past_month_radioButton
         ReleaseDateType.PastYear -> R.id.past_year_radioButton
+        ReleaseDateType.Unknown -> R.id.unknown_release_date_radioButton
         ReleaseDateType.CustomDate -> R.id.custom_date_range_radioButton
     }
 
@@ -179,6 +177,7 @@ fun RadioGroup.getReleaseDateType(): ReleaseDateType {
         R.id.recent_and_upcoming_releases_radioButton -> ReleaseDateType.RecentAndUpcoming
         R.id.past_month_radioButton -> ReleaseDateType.PastMonth
         R.id.past_year_radioButton -> ReleaseDateType.PastYear
+        R.id.unknown_release_date_radioButton -> ReleaseDateType.Unknown
         else -> ReleaseDateType.CustomDate
     }
 }

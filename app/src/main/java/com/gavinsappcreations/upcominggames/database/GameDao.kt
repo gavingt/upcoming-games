@@ -10,21 +10,24 @@ import com.gavinsappcreations.upcominggames.utilities.allPlatforms
 
 fun buildFinalQuery(
     sortDirection: String,
-    startReleaseDateMillis: Long,
-    endReleaseDateMillis: Long,
+    startReleaseDateMillis: Long?,
+    endReleaseDateMillis: Long?,
     platformsIndices: MutableSet<Int>
 ): SimpleSQLiteQuery {
 
-    // TODO: this is preventing games with null release dates from ever showing up
-
-    val queryBeginning = "SELECT * FROM Game " +
-            // These two lines constrain the games returned to be within the date range requested.
-            "WHERE Game.releaseDateInMillis > $startReleaseDateMillis " +
-            "AND Game.releaseDateInMillis < $endReleaseDateMillis "
+    val queryBeginning = "SELECT * FROM Game WHERE " +
+            if (startReleaseDateMillis == null) {
+                // If release date type is "unknown", select only games with null release dates.
+                "Game.releaseDateInMillis IS NULL "
+            } else {
+                // These two lines constrain the games returned to be within the date range requested.
+                "Game.releaseDateInMillis > $startReleaseDateMillis " +
+                        "AND Game.releaseDateInMillis < $endReleaseDateMillis "
+            }
 
     val queryMiddle = if (platformsIndices.size == 0) {
-        // If no platforms are selected, choose a WHERE clause that always returns zero rows.
-        "AND Game.gameId = null "
+        // If no platforms are selected, choose a WHERE clause that always returns zero rows so no games appear.
+        "AND 1 = 2 "
     } else {
         // Create a LIKE clause for each platform the user has selected.
         platformsIndices.joinToString(prefix = "AND (", postfix = ")", separator = " OR ") {
@@ -45,32 +48,14 @@ fun buildFinalQuery(
 @Dao
 interface GameDao {
 
-    @Query(
-        "SELECT * FROM Game " +
-                // This line constrains the games returned to be within the date range requested.
-                "WHERE Game.releaseDateInMillis > :startReleaseDate AND Game.releaseDateInMillis < :endReleaseDate " +
-                // This line constrains the games returned to the platforms specified by the user.
-                "AND Game.platforms LIKE '%XSX,%'" +
-                "ORDER BY " +
-                // This line puts any games with unknown release dates at the end of the returned list.
-                "CASE WHEN Game.dateFormat IS 4 THEN 1 ELSE 0 END," +
-                // This line uses the variable sortDirection to switch between ASC and DESC order.
-                "CASE WHEN :sortDirection = 'asc' THEN Game.releaseDateInMillis END ASC, CASE WHEN :sortDirection = 'desc' THEN Game.releaseDateInMillis END DESC"
-    )
-    fun getGames(
-        sortDirection: String,
-        startReleaseDate: Long,
-        endReleaseDate: Long
-    ): DataSource.Factory<Int, Game>
-
-
     @RawQuery(observedEntities = [Game::class])
-    fun getGamesTest(query: SupportSQLiteQuery): DataSource.Factory<Int, Game>
-
+    fun getGameList(query: SupportSQLiteQuery): DataSource.Factory<Int, Game>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(games: List<Game>)
 }
+
+
 
 @Database(entities = [Game::class], version = 1)
 @TypeConverters(Converters::class)
