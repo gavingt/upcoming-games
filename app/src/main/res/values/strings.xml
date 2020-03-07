@@ -40,6 +40,7 @@
     <string name="start_date">Start date</string>
     <string name="all">All</string>
     <string name="unknown">Unknown</string>
+    <string name="any">Any</string>
 
 
 </resources>

@@ -50,8 +50,6 @@ class SortFragment : Fragment() {
         binding.applyButton.setOnClickListener {
             hideKeyboard(requireActivity())
 
-            Toast.makeText(requireActivity(), viewModel.unsavedSortOptions.value!!.platformIndices.toString(), Toast.LENGTH_LONG).show()
-
             // TODO: this should be done in ViewModel, except vibrating
             // When the APPLY button is pressed, save the new ones to SharedPrefs.
             if (viewModel.unsavedSortOptions.value!!.releaseDateType != ReleaseDateType.CustomDate

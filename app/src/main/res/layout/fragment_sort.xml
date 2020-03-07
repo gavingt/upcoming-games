@@ -119,10 +119,10 @@
                                 android:text="@string/past_year" />
 
                             <RadioButton
-                                android:id="@+id/unknown_release_date_radioButton"
+                                android:id="@+id/any_release_date_radioButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="@dimen/radio_button_height"
-                                android:text="@string/unknown" />
+                                android:text="@string/any" />
 
                             <RadioButton
                                 android:id="@+id/custom_date_range_radioButton"
@@ -256,7 +256,7 @@
                             android:textSize="18sp" />
 
                         <RadioGroup
-                            android:id="@+id/platform_radioGroup"
+                            android:id="@+id/platform_type_radioGroup"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_normal">

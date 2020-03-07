@@ -153,7 +153,7 @@ fun RadioGroup.setReleaseDateType(type: ReleaseDateType) {
         ReleaseDateType.RecentAndUpcoming -> R.id.recent_and_upcoming_releases_radioButton
         ReleaseDateType.PastMonth -> R.id.past_month_radioButton
         ReleaseDateType.PastYear -> R.id.past_year_radioButton
-        ReleaseDateType.Unknown -> R.id.unknown_release_date_radioButton
+        ReleaseDateType.Any -> R.id.any_release_date_radioButton
         ReleaseDateType.CustomDate -> R.id.custom_date_range_radioButton
     }
 
@@ -177,7 +177,7 @@ fun RadioGroup.getReleaseDateType(): ReleaseDateType {
         R.id.recent_and_upcoming_releases_radioButton -> ReleaseDateType.RecentAndUpcoming
         R.id.past_month_radioButton -> ReleaseDateType.PastMonth
         R.id.past_year_radioButton -> ReleaseDateType.PastYear
-        R.id.unknown_release_date_radioButton -> ReleaseDateType.Unknown
+        R.id.any_release_date_radioButton -> ReleaseDateType.Any
         else -> ReleaseDateType.CustomDate
     }
 }
@@ -234,3 +234,48 @@ fun RadioGroup.setSortDirectionListeners(listener: InverseBindingListener) {
         listener.onChange()
     }
 }
+
+
+
+/*
+// This runs every time the LiveData value changes, and its job is to change the RadioGroup's checkedId.
+@BindingAdapter("platformType")
+fun RadioGroup.setPlatformType(platformType: PlatformType) {
+
+    val isInitializing = checkedRadioButtonId == -1
+
+    val newCheckedId = when (sortDirection) {
+        SortDirection.Ascending -> R.id.sort_ascending_radioButton
+        SortDirection.Descending -> R.id.sort_descending_radioButton
+    }
+
+    // Prevent infinite loops
+    if (checkedRadioButtonId != newCheckedId) {
+        check(newCheckedId)
+    }
+
+    // This prevents the animation from playing when SortFragment first opens
+    if (isInitializing) {
+        jumpDrawablesToCurrentState()
+    }
+}
+
+
+// This runs every time a new RadioButton is selected, and its job is to change the LiveData's value.
+@InverseBindingAdapter(attribute = "sortDirection")
+fun RadioGroup.getSortDirection(): SortDirection {
+
+    return when (checkedRadioButtonId) {
+        R.id.sort_ascending_radioButton -> SortDirection.Ascending
+        else -> SortDirection.Descending
+    }
+}
+
+// This notifies the data binding system that the attribute value has changed.
+@BindingAdapter("app:sortDirectionAttrChanged")
+fun RadioGroup.setSortDirectionListeners(listener: InverseBindingListener) {
+
+    setOnCheckedChangeListener{ _, _ ->
+        listener.onChange()
+    }
+}*/

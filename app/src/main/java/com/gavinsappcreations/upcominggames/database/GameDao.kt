@@ -17,20 +17,20 @@ fun buildFinalQuery(
 
     val queryBeginning = "SELECT * FROM Game WHERE " +
             if (startReleaseDateMillis == null) {
-                // If release date type is "unknown", select only games with null release dates.
-                "Game.releaseDateInMillis IS NULL "
+                // If release date type is "any", don't restrict the release dates at all.
+                ""
             } else {
                 // These two lines constrain the games returned to be within the date range requested.
                 "Game.releaseDateInMillis > $startReleaseDateMillis " +
-                        "AND Game.releaseDateInMillis < $endReleaseDateMillis "
+                        "AND Game.releaseDateInMillis < $endReleaseDateMillis AND "
             }
 
     val queryMiddle = if (platformsIndices.size == 0) {
         // If no platforms are selected, choose a WHERE clause that always returns zero rows so no games appear.
-        "AND 1 = 2 "
+        "1 = 2 "
     } else {
         // Create a LIKE clause for each platform the user has selected.
-        platformsIndices.joinToString(prefix = "AND (", postfix = ")", separator = " OR ") {
+        platformsIndices.joinToString(prefix = "(", postfix = ")", separator = " OR ") {
             "Game.platforms LIKE '%${allPlatforms[it].abbreviation},%' "
         }
     }

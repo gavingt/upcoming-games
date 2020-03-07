@@ -116,7 +116,7 @@ class GameRepository private constructor(application: Application) {
                 calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + 100)
                 dateEndMillis = calendar.timeInMillis
             }
-            ReleaseDateType.Unknown -> {
+            ReleaseDateType.Any -> {
                 dateStartMillis = null
                 dateEndMillis = null
             }

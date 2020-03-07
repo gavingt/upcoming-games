@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.view.children
+import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.gavinsappcreations.upcominggames.databinding.FragmentScreenshotBinding
@@ -55,15 +58,11 @@ class ScreenshotFragment : Fragment() {
                  * If we've previously visited one of the neighboring pages and zoomed in, this
                  * will reset the zoom level before that page is made visible again.
                  */
-                var currentView = binding.viewPager.getChildAt(position - 1)
-                currentView?.let {
-                    (it as TouchImageView).resetZoom()
-                }
+                var currentView = binding.viewPager.findViewWithTag<TouchImageView>(position - 1)
+                currentView?.resetZoom()
 
-                currentView = binding.viewPager.getChildAt(position + 1)
-                currentView?.let {
-                    (it as TouchImageView).resetZoom()
-                }
+                currentView = binding.viewPager.findViewWithTag<TouchImageView>(position + 1)
+                currentView?.resetZoom()
             }
         })
 
