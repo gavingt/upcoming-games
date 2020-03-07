@@ -86,7 +86,6 @@ class GameRepository private constructor(application: Application) {
 
 
     fun getGameList(): LiveData<PagedList<Game>> {
-
         val dateConstraints = fetchDateConstraints()
 
         val query = buildGameListQuery(
@@ -108,7 +107,6 @@ class GameRepository private constructor(application: Application) {
 
 
     private fun fetchPlatformIndices(): Set<Int> {
-
         val platformIndices = mutableSetOf<Int>()
 
         return when (sortOptions.value!!.platformType) {

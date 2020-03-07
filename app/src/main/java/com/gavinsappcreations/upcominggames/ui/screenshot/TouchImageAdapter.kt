@@ -37,6 +37,7 @@ class TouchImageAdapter(val images: List<String>) : PagerAdapter() {
                             .error(R.drawable.ic_broken_image)
                     )
                     .into(this)
+                this.tag = position
             }
         }
 
