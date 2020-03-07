@@ -25,12 +25,20 @@ class PlatformAdapter (private val unsavedSortOptions: PropertyAwareMutableLiveD
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = data[position]
 
-        (holder.itemView as CheckBox).setOnCheckedChangeListener{ _, isChecked ->
+        val checkBox = holder.itemView as CheckBox
+
+        // Set the initial checked state of each platform checkBox
+        checkBox.isChecked = unsavedSortOptions.value!!.platformIndices.contains(position)
+        checkBox.jumpDrawablesToCurrentState()
+
+        checkBox.setOnCheckedChangeListener{ _, isChecked ->
             if (isChecked) {
                 unsavedSortOptions.value!!.platformIndices.add(position)
+                // TODO: do we need notifyObserver() here since we're not saving to repository yet?
                 unsavedSortOptions.notifyObserver()
             } else {
                 unsavedSortOptions.value!!.platformIndices.remove(position)
+                // TODO: do we need notifyObserver() here since we're not saving to repository yet?
                 unsavedSortOptions.notifyObserver()
             }
         }

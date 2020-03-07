@@ -32,7 +32,7 @@
     <string name="apply">APPLY</string>
     <string name="sort_options">Sort options</string>
     <string name="sort_direction">Sort direction</string>
-    <string name="current">Current</string>
+    <string name="current_generation">Current generation</string>
     <string name="pick_platforms_from_list">Pick from list…</string>
     <string name="ascending">Ascending</string>
     <string name="descending">Descending</string>

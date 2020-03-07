@@ -143,6 +143,9 @@ fun TextInputLayout.setCustomDateVisibility(releaseDateType: ReleaseDateType) {
 }
 
 
+// TODO: could I just pass in entire sortOptions LiveData to these methods and get rid of PropertyAwareMutableLiveData?
+ // TODO: I would just call notifyObserver() in these methods
+
 // This runs every time the LiveData value changes, and its job is to change the RadioGroup's checkedId.
 @BindingAdapter("releaseDateType")
 fun RadioGroup.setReleaseDateType(type: ReleaseDateType) {
@@ -237,16 +240,16 @@ fun RadioGroup.setSortDirectionListeners(listener: InverseBindingListener) {
 
 
 
-/*
 // This runs every time the LiveData value changes, and its job is to change the RadioGroup's checkedId.
 @BindingAdapter("platformType")
 fun RadioGroup.setPlatformType(platformType: PlatformType) {
 
     val isInitializing = checkedRadioButtonId == -1
 
-    val newCheckedId = when (sortDirection) {
-        SortDirection.Ascending -> R.id.sort_ascending_radioButton
-        SortDirection.Descending -> R.id.sort_descending_radioButton
+    val newCheckedId = when (platformType) {
+        PlatformType.CurrentGeneration -> R.id.current_generation_radioButton
+        PlatformType.All -> R.id.all_platforms_radioButton
+        PlatformType.PickFromList -> R.id.custom_platforms_radioButton
     }
 
     // Prevent infinite loops
@@ -262,20 +265,32 @@ fun RadioGroup.setPlatformType(platformType: PlatformType) {
 
 
 // This runs every time a new RadioButton is selected, and its job is to change the LiveData's value.
-@InverseBindingAdapter(attribute = "sortDirection")
-fun RadioGroup.getSortDirection(): SortDirection {
+@InverseBindingAdapter(attribute = "platformType")
+fun RadioGroup.getPlatformType(): PlatformType {
 
     return when (checkedRadioButtonId) {
-        R.id.sort_ascending_radioButton -> SortDirection.Ascending
-        else -> SortDirection.Descending
+        R.id.current_generation_radioButton -> PlatformType.CurrentGeneration
+        R.id.all_platforms_radioButton -> PlatformType.All
+        else -> PlatformType.PickFromList
     }
 }
 
 // This notifies the data binding system that the attribute value has changed.
-@BindingAdapter("app:sortDirectionAttrChanged")
-fun RadioGroup.setSortDirectionListeners(listener: InverseBindingListener) {
+@BindingAdapter("app:platformTypeAttrChanged")
+fun RadioGroup.setPlatformTypeListeners(listener: InverseBindingListener) {
 
     setOnCheckedChangeListener{ _, _ ->
         listener.onChange()
     }
-}*/
+}
+
+
+
+@BindingAdapter("customPlatformListVisibility")
+fun RecyclerView.setCustomPlatformListVisibility(platformType: PlatformType) {
+    visibility = if (platformType == PlatformType.PickFromList) {
+        View.VISIBLE
+    } else {
+        View.GONE
+    }
+}

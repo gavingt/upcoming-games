@@ -259,13 +259,14 @@
                             android:id="@+id/platform_type_radioGroup"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            platformType="@={viewModel.unsavedSortOptions.platformType}"
                             android:layout_marginTop="@dimen/margin_normal">
 
                             <RadioButton
-                                android:id="@+id/current_platforms_radioButton"
+                                android:id="@+id/current_generation_radioButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="@dimen/radio_button_height"
-                                android:text="@string/current" />
+                                android:text="@string/current_generation" />
 
                             <RadioButton
                                 android:id="@+id/all_platforms_radioButton"
@@ -285,6 +286,7 @@
                             android:id="@+id/platform_recyclerView"
                             android:layout_marginTop="@dimen/margin_normal"
                             android:layout_marginLeft="@dimen/margin_large"
+                            customPlatformListVisibility="@{viewModel.unsavedSortOptions.platformType}"
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>

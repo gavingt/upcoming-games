@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.gavinsappcreations.upcominggames.database.buildFinalQuery
+import com.gavinsappcreations.upcominggames.database.buildGameListQuery
 import com.gavinsappcreations.upcominggames.database.getDatabase
 import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.domain.GameDetail
@@ -44,10 +44,17 @@ class GameRepository private constructor(application: Application) {
         val customDateStart = prefs.getString(KEY_CUSTOM_DATE_START, "")!!
         val customDateEnd = prefs.getString(KEY_CUSTOM_DATE_END, "")!!
 
+        val platformType: PlatformType = enumValueOf(
+            prefs.getString(
+                KEY_PLATFORM_TYPE,
+                PlatformType.CurrentGeneration.name
+            )!!
+        )
+
         val platformIndices: MutableSet<Int> =
             prefs.getStringSet(KEY_PLATFORM_INDICES, setOf())!!.map {
-            it.toInt()
-        }.toMutableSet()
+                it.toInt()
+            }.toMutableSet()
 
 
         // Set all sort options to _sortOptions at once
@@ -56,6 +63,7 @@ class GameRepository private constructor(application: Application) {
             sortDirection,
             customDateStart,
             customDateEnd,
+            platformType,
             platformIndices
         )
     }
@@ -64,11 +72,12 @@ class GameRepository private constructor(application: Application) {
     fun updateSortOptions(newSortOptions: SortOptions) {
         sortOptions.value = newSortOptions
 
-        prefs.edit().putString(KEY_SORT_DIRECTION, newSortOptions.sortDirection.name)
-            .putString(KEY_RELEASE_DATE_TYPE, newSortOptions.releaseDateType.name)
+        prefs.edit().putString(KEY_RELEASE_DATE_TYPE, newSortOptions.releaseDateType.name)
+            .putString(KEY_SORT_DIRECTION, newSortOptions.sortDirection.name)
             .putString(KEY_CUSTOM_DATE_START, newSortOptions.customDateStart)
             .putString(KEY_CUSTOM_DATE_END, newSortOptions.customDateEnd)
-                // Convert MutableSet<Int> to Set<String> so we can store it in SharedPrefs
+            .putString(KEY_PLATFORM_TYPE, newSortOptions.platformType.name)
+            // Convert MutableSet<Int> to Set<String> so we can store it in SharedPrefs
             .putStringSet(KEY_PLATFORM_INDICES, newSortOptions.platformIndices.map {
                 it.toString()
             }.toSet())
@@ -80,11 +89,11 @@ class GameRepository private constructor(application: Application) {
 
         val dateConstraints = fetchDateConstraints()
 
-        val query = buildFinalQuery(
+        val query = buildGameListQuery(
             sortOptions.value!!.sortDirection.direction,
             dateConstraints[0],
             dateConstraints[1],
-            sortOptions.value!!.platformIndices
+            fetchPlatformIndices()
         )
 
         val dataSourceFactory =
@@ -95,6 +104,20 @@ class GameRepository private constructor(application: Application) {
             .build()
 
         return data
+    }
+
+
+    private fun fetchPlatformIndices(): Set<Int> {
+
+        val platformIndices = mutableSetOf<Int>()
+
+        return when (sortOptions.value!!.platformType) {
+            PlatformType.CurrentGeneration -> {
+                platformIndices.apply{addAll(0..14)}
+            }
+            PlatformType.All -> platformIndices.apply{addAll(allPlatforms.indices)}
+            PlatformType.PickFromList -> sortOptions.value!!.platformIndices
+        }
     }
 
 
@@ -157,19 +180,6 @@ class GameRepository private constructor(application: Application) {
         }
 
         return arrayOf(dateStartMillis, dateEndMillis)
-    }
-
-
-    private fun fetchPlatformAbbreviations(platformIndices: MutableSet<Int>): String {
-        val sb = StringBuilder()
-
-        // Game.platforms LIKE '%XONE%' OR Game.platforms LIKE '%PC%'
-
-        for (platformIndex in platformIndices) {
-            sb.append("platforms LIKE '%${allPlatforms[platformIndex].abbreviation}%'")
-            sb.append(" OR ")
-        }
-        return sb.toString().removeSuffix(" OR ")
     }
 
 

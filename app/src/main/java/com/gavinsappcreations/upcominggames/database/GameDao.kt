@@ -8,42 +8,6 @@ import androidx.sqlite.db.SupportSQLiteQuery
 import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.utilities.allPlatforms
 
-fun buildFinalQuery(
-    sortDirection: String,
-    startReleaseDateMillis: Long?,
-    endReleaseDateMillis: Long?,
-    platformsIndices: MutableSet<Int>
-): SimpleSQLiteQuery {
-
-    val queryBeginning = "SELECT * FROM Game WHERE " +
-            if (startReleaseDateMillis == null) {
-                // If release date type is "any", don't restrict the release dates at all.
-                ""
-            } else {
-                // These two lines constrain the games returned to be within the date range requested.
-                "Game.releaseDateInMillis > $startReleaseDateMillis " +
-                        "AND Game.releaseDateInMillis < $endReleaseDateMillis AND "
-            }
-
-    val queryMiddle = if (platformsIndices.size == 0) {
-        // If no platforms are selected, choose a WHERE clause that always returns zero rows so no games appear.
-        "1 = 2 "
-    } else {
-        // Create a LIKE clause for each platform the user has selected.
-        platformsIndices.joinToString(prefix = "(", postfix = ")", separator = " OR ") {
-            "Game.platforms LIKE '%${allPlatforms[it].abbreviation},%' "
-        }
-    }
-
-    val queryEnd = "ORDER BY " +
-            // This line puts any games with unknown release dates at the end of the returned list.
-            "CASE WHEN Game.dateFormat IS 4 THEN 1 ELSE 0 END, " +
-
-            // This line sets the sort direction as either ascending or descending.
-            "Game.releaseDateInMillis $sortDirection"
-
-    return SimpleSQLiteQuery(queryBeginning + queryMiddle + queryEnd)
-}
 
 @Dao
 interface GameDao {
@@ -76,4 +40,43 @@ fun getDatabase(context: Context): GamesDatabase {
         }
     }
     return INSTANCE
+}
+
+
+
+fun buildGameListQuery(
+    sortDirection: String,
+    startReleaseDateMillis: Long?,
+    endReleaseDateMillis: Long?,
+    platformsIndices: Set<Int>
+): SimpleSQLiteQuery {
+
+    val queryBeginning = "SELECT * FROM Game WHERE " +
+            if (startReleaseDateMillis == null) {
+                // If release date type is "any", don't restrict the release dates at all.
+                ""
+            } else {
+                // These two lines constrain the games returned to be within the date range requested.
+                "Game.releaseDateInMillis > $startReleaseDateMillis " +
+                        "AND Game.releaseDateInMillis < $endReleaseDateMillis AND "
+            }
+
+    val queryMiddle = if (platformsIndices.size == 0) {
+        // If no platforms are selected, choose a WHERE clause that always returns zero rows so no games appear.
+        "1 = 2 "
+    } else {
+        // Create a LIKE clause for each platform the user has selected.
+        platformsIndices.joinToString(prefix = "(", postfix = ")", separator = " OR ") {
+            "Game.platforms LIKE '%${allPlatforms[it].abbreviation},%' "
+        }
+    }
+
+    val queryEnd = "ORDER BY " +
+            // This line puts any games with unknown release dates at the end of the returned list.
+            "CASE WHEN Game.dateFormat IS 4 THEN 1 ELSE 0 END, " +
+
+            // This line sets the sort direction as either ascending or descending.
+            "Game.releaseDateInMillis $sortDirection"
+
+    return SimpleSQLiteQuery(queryBeginning + queryMiddle + queryEnd)
 }

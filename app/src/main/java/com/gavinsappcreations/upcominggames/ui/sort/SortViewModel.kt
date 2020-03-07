@@ -16,7 +16,7 @@ class SortViewModel(application: Application) : ViewModel() {
         SortOptions(
             originalSortOptions.releaseDateType, originalSortOptions.sortDirection,
             originalSortOptions.customDateStart, originalSortOptions.customDateEnd,
-            originalSortOptions.platformIndices
+            originalSortOptions.platformType, originalSortOptions.platformIndices
         )
     )
 
