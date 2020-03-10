@@ -2,10 +2,10 @@ package com.gavinsappcreations.upcominggames.utilities
 
 import android.view.View
 import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.core.net.toUri
+import androidx.core.widget.ContentLoadingProgressBar
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.gavinsappcreations.upcominggames.R
 import com.gavinsappcreations.upcominggames.domain.Game
-import com.gavinsappcreations.upcominggames.network.NetworkState
+import com.gavinsappcreations.upcominggames.ui.detail.NestedScrollingParentScrollView
 import com.gavinsappcreations.upcominggames.ui.detail.ScreenshotAdapter
 import com.gavinsappcreations.upcominggames.ui.list.GameGridAdapter
 import com.google.android.material.textfield.TextInputLayout
@@ -84,8 +84,8 @@ fun TextView.formatReleaseDateString(
 
 
 //This BindingAdapter function gets called automatically whenever gameList changes.
-@BindingAdapter("gameListData", "networkState")
-fun RecyclerView.bindListRecyclerView(gameList: PagedList<Game>?, networkState: NetworkState) {
+@BindingAdapter("gameListData", "databaseState")
+fun RecyclerView.bindListRecyclerView(gameList: PagedList<Game>?, databaseState: DatabaseState) {
     val adapter = adapter as GameGridAdapter
 
     /**
@@ -95,9 +95,8 @@ fun RecyclerView.bindListRecyclerView(gameList: PagedList<Game>?, networkState: 
     adapter.submitList(null)
 
     adapter.submitList(gameList) {
-        // TODO: this makes list scroll up when returning to fragment
         // This Runnable moves the list back to the top when changing sort options
-        if (networkState == NetworkState.Loading) {
+        if (databaseState == DatabaseState.Loading) {
             scrollToPosition(0)
         }
     }
@@ -105,18 +104,18 @@ fun RecyclerView.bindListRecyclerView(gameList: PagedList<Game>?, networkState: 
 
 
 @BindingAdapter("gameListVisibility")
-fun RecyclerView.setListVisibility(networkState: NetworkState) {
-    visibility = when (networkState) {
-        NetworkState.Success -> View.VISIBLE
+fun RecyclerView.setListVisibility(databaseState: DatabaseState) {
+    visibility = when (databaseState) {
+        DatabaseState.Success -> View.VISIBLE
         else -> View.INVISIBLE
     }
 }
 
-@BindingAdapter("progressBarVisibility")
-fun ProgressBar.setProgressBarVisibility(networkState: NetworkState) {
-    visibility = when (networkState) {
-        NetworkState.Success -> View.GONE
-        else -> View.VISIBLE
+@BindingAdapter("gameListProgressBarVisibility")
+fun ContentLoadingProgressBar.setGameListProgressBarVisibility(databaseState: DatabaseState) {
+    when (databaseState) {
+        DatabaseState.Success -> hide()
+        else -> show()
     }
 }
 
@@ -126,6 +125,23 @@ fun ProgressBar.setProgressBarVisibility(networkState: NetworkState) {
 fun RecyclerView.bindScreenshotRecyclerView(data: List<String>?) {
     val adapter = adapter as ScreenshotAdapter
     adapter.submitList(data)
+}
+
+
+@BindingAdapter("gameDetailVisibility")
+fun NestedScrollingParentScrollView.setGameDetailVisibility(networkState: NetworkState) {
+    visibility = when (networkState) {
+        NetworkState.Success -> View.VISIBLE
+        else -> View.INVISIBLE
+    }
+}
+
+@BindingAdapter("gameDetailProgressBarVisibility")
+fun ContentLoadingProgressBar.setGameDetailProgressBarVisibility(networkState: NetworkState) {
+    when (networkState) {
+        NetworkState.Success -> hide()
+        else -> show()
+    }
 }
 
 
@@ -215,7 +231,7 @@ fun RadioGroup.getReleaseDateType(): ReleaseDateType {
 }
 
 // This notifies the data binding system that the attribute value has changed.
-@BindingAdapter("app:releaseDateTypeAttrChanged")
+@BindingAdapter("releaseDateTypeAttrChanged")
 fun RadioGroup.setReleaseDateTypeListeners(listener: InverseBindingListener) {
 
     setOnCheckedChangeListener{ _, _ ->
@@ -259,7 +275,7 @@ fun RadioGroup.getSortDirection(): SortDirection {
 }
 
 // This notifies the data binding system that the attribute value has changed.
-@BindingAdapter("app:sortDirectionAttrChanged")
+@BindingAdapter("sortDirectionAttrChanged")
 fun RadioGroup.setSortDirectionListeners(listener: InverseBindingListener) {
 
     setOnCheckedChangeListener{ _, _ ->
@@ -305,7 +321,7 @@ fun RadioGroup.getPlatformType(): PlatformType {
 }
 
 // This notifies the data binding system that the attribute value has changed.
-@BindingAdapter("app:platformTypeAttrChanged")
+@BindingAdapter("platformTypeAttrChanged")
 fun RadioGroup.setPlatformTypeListeners(listener: InverseBindingListener) {
 
     setOnCheckedChangeListener{ _, _ ->

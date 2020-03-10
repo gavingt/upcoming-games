@@ -9,7 +9,6 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-import retrofit2.http.Url
 
 
 /**
@@ -53,7 +52,7 @@ object GameNetwork {
         .addNetworkInterceptor(GameApiRateLimitInterceptor())
         .build()
 
-    // Configure Retrofit to parse JSON, use our rate-limiting okHttp, and use coroutines
+    // Configure Retrofit to parse JSON, use our rate-limiting OkHttp instance, and use coroutines
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://www.giantbomb.com/api/")
         .client(okHttpClient)

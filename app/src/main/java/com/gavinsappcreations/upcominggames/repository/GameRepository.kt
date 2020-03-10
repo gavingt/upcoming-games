@@ -14,7 +14,6 @@ import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.domain.GameDetail
 import com.gavinsappcreations.upcominggames.domain.SortOptions
 import com.gavinsappcreations.upcominggames.network.GameNetwork
-import com.gavinsappcreations.upcominggames.network.NetworkState
 import com.gavinsappcreations.upcominggames.network.asDatabaseModel
 import com.gavinsappcreations.upcominggames.network.asDomainModel
 import com.gavinsappcreations.upcominggames.utilities.*
@@ -34,17 +33,14 @@ class GameRepository private constructor(application: Application) {
     val sortOptions: LiveData<SortOptions>
         get() = _sortOptions
 
-    private val _networkState = MutableLiveData<NetworkState>(NetworkState.Loading)
-    val networkState: LiveData<NetworkState>
-        get() = _networkState
+    private val _loadingState = MutableLiveData(DatabaseState.Loading)
+    val databaseState: LiveData<DatabaseState>
+        get() = _loadingState
 
     init {
         // Fetch sort options from SharedPrefs
         val releaseDateType: ReleaseDateType = enumValueOf(
-            prefs.getString(
-                KEY_RELEASE_DATE_TYPE,
-                ReleaseDateType.RecentAndUpcoming.name
-            )!!
+            prefs.getString(KEY_RELEASE_DATE_TYPE, ReleaseDateType.RecentAndUpcoming.name)!!
         )
         val sortDirection: SortDirection =
             enumValueOf(prefs.getString(KEY_SORT_DIRECTION, SortDirection.Ascending.name)!!)
@@ -53,10 +49,7 @@ class GameRepository private constructor(application: Application) {
         val customDateEnd = prefs.getString(KEY_CUSTOM_DATE_END, "")!!
 
         val platformType: PlatformType = enumValueOf(
-            prefs.getString(
-                KEY_PLATFORM_TYPE,
-                PlatformType.CurrentGeneration.name
-            )!!
+            prefs.getString(KEY_PLATFORM_TYPE, PlatformType.CurrentGeneration.name)!!
         )
 
         val platformIndices: MutableSet<Int> =
@@ -79,7 +72,7 @@ class GameRepository private constructor(application: Application) {
     // Update value of _sortOptions and also save that value to SharedPrefs.
     fun updateSortOptions(newSortOptions: SortOptions) {
 
-        _networkState.value = NetworkState.LoadingSortChange
+        _loadingState.value = DatabaseState.LoadingSortChange
 
         _sortOptions.value = newSortOptions
 
@@ -96,8 +89,8 @@ class GameRepository private constructor(application: Application) {
     }
 
 
-    fun updateNetworkState(newState: NetworkState) {
-        _networkState.value = newState
+    fun updateDatabaseState(newState: DatabaseState) {
+        _loadingState.value = newState
     }
 
 
@@ -114,8 +107,9 @@ class GameRepository private constructor(application: Application) {
 
         val dataSourceFactory: DataSource.Factory<Int, Game> = database.gameDao.getGameList(query)
 
-        val data: LiveData<PagedList<Game>> = LivePagedListBuilder(dataSourceFactory, DATABASE_PAGE_SIZE)
-            .build()
+        val data: LiveData<PagedList<Game>> =
+            LivePagedListBuilder(dataSourceFactory, DATABASE_PAGE_SIZE)
+                .build()
 
         return data
     }
@@ -126,9 +120,9 @@ class GameRepository private constructor(application: Application) {
 
         return when (_sortOptions.value!!.platformType) {
             PlatformType.CurrentGeneration -> {
-                platformIndices.apply{addAll(0..14)}
+                platformIndices.apply { addAll(0..14) }
             }
-            PlatformType.All -> platformIndices.apply{addAll(allPlatforms.indices)}
+            PlatformType.All -> platformIndices.apply { addAll(allPlatforms.indices) }
             PlatformType.PickFromList -> _sortOptions.value!!.platformIndices
         }
     }

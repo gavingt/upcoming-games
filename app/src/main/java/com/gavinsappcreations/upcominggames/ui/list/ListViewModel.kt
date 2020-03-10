@@ -2,8 +2,8 @@ package com.gavinsappcreations.upcominggames.ui.list
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.gavinsappcreations.upcominggames.network.NetworkState
 import com.gavinsappcreations.upcominggames.repository.GameRepository
+import com.gavinsappcreations.upcominggames.utilities.DatabaseState
 import kotlinx.coroutines.launch
 
 class ListViewModel(application: Application) : AndroidViewModel(application) {
@@ -17,9 +17,9 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    val networkState = gameRepository.networkState
+    val databaseState = gameRepository.databaseState
 
-    // When the sortOptions LiveData changes, switchMap sets games = gameRepository.getGameList().
+    // When the sortOptions LiveData changes, switchMap sets gameList = gameRepository.getGameList().
     val gameList = Transformations.switchMap(gameRepository.sortOptions) {
         gameRepository.getGameList()
     }
@@ -31,10 +31,11 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
      * until the second firing. So in this case, NetworkState transitions from LoadingSortChange to
      * Loading, and finally to Success.
      */
-    fun updateNetworkState() {
-        when (networkState.value) {
-            NetworkState.LoadingSortChange -> gameRepository.updateNetworkState(NetworkState.Loading)
-            NetworkState.Loading -> gameRepository.updateNetworkState(NetworkState.Success)
+    fun updateDatabaseState() {
+        when (databaseState.value) {
+            DatabaseState.LoadingSortChange -> gameRepository.updateDatabaseState(DatabaseState.Loading)
+            DatabaseState.Loading -> gameRepository.updateDatabaseState(DatabaseState.Success)
+            DatabaseState.Success -> return
         }
     }
 

@@ -41,7 +41,6 @@ class ListFragment : Fragment() {
             )
         })
 
-
         binding.gameRecyclerView.adapter = adapter
 
         binding.filterImageButton.setOnClickListener {
@@ -55,7 +54,7 @@ class ListFragment : Fragment() {
         }
 
         viewModel.gameList.observe(viewLifecycleOwner, Observer {
-            viewModel.updateNetworkState()
+            viewModel.updateDatabaseState()
         })
 
         return binding.root
