@@ -84,8 +84,8 @@ fun TextView.formatReleaseDateString(
 
 
 //This BindingAdapter function gets called automatically whenever gameList changes.
-@BindingAdapter("gameListData")
-fun RecyclerView.bindListRecyclerView(gameList: PagedList<Game>?) {
+@BindingAdapter("gameListData", "networkState")
+fun RecyclerView.bindListRecyclerView(gameList: PagedList<Game>?, networkState: NetworkState) {
     val adapter = adapter as GameGridAdapter
 
     /**
@@ -95,8 +95,11 @@ fun RecyclerView.bindListRecyclerView(gameList: PagedList<Game>?) {
     adapter.submitList(null)
 
     adapter.submitList(gameList) {
+        // TODO: this makes list scroll up when returning to fragment
         // This Runnable moves the list back to the top when changing sort options
-        scrollToPosition(0)
+        if (networkState == NetworkState.Loading) {
+            scrollToPosition(0)
+        }
     }
 }
 
