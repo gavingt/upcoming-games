@@ -41,7 +41,7 @@ class DetailFragment : Fragment() {
                 images?.let {
                     // TODO: use SingleLiveEvent to trigger navigation
                     findNavController().navigate(
-                        DetailFragmentDirections.actionDetailFragmentToImageViewerFragment(
+                        DetailFragmentDirections.actionDetailFragmentToScreenshotFragment(
                             images,
                             currentImageIndex
                         )

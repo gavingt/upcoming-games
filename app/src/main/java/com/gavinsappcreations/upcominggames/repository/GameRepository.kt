@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.gavinsappcreations.upcominggames.database.buildGameListQuery
@@ -13,6 +14,7 @@ import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.domain.GameDetail
 import com.gavinsappcreations.upcominggames.domain.SortOptions
 import com.gavinsappcreations.upcominggames.network.GameNetwork
+import com.gavinsappcreations.upcominggames.network.NetworkState
 import com.gavinsappcreations.upcominggames.network.asDatabaseModel
 import com.gavinsappcreations.upcominggames.network.asDomainModel
 import com.gavinsappcreations.upcominggames.utilities.*
@@ -28,7 +30,13 @@ class GameRepository private constructor(application: Application) {
     private val prefs: SharedPreferences =
         application.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
 
-    val sortOptions = MutableLiveData<SortOptions>()
+    private val _sortOptions = MutableLiveData<SortOptions>()
+    val sortOptions: LiveData<SortOptions>
+        get() = _sortOptions
+
+    private val _networkState = MutableLiveData<NetworkState>(NetworkState.Loading)
+    val networkState: LiveData<NetworkState>
+        get() = _networkState
 
     init {
         // Fetch sort options from SharedPrefs
@@ -58,7 +66,7 @@ class GameRepository private constructor(application: Application) {
 
 
         // Set all sort options to _sortOptions at once
-        sortOptions.value = SortOptions(
+        _sortOptions.value = SortOptions(
             releaseDateType,
             sortDirection,
             customDateStart,
@@ -70,7 +78,10 @@ class GameRepository private constructor(application: Application) {
 
     // Update value of _sortOptions and also save that value to SharedPrefs.
     fun updateSortOptions(newSortOptions: SortOptions) {
-        sortOptions.value = newSortOptions
+
+        _networkState.value = NetworkState.LoadingSortChange
+
+        _sortOptions.value = newSortOptions
 
         prefs.edit().putString(KEY_RELEASE_DATE_TYPE, newSortOptions.releaseDateType.name)
             .putString(KEY_SORT_DIRECTION, newSortOptions.sortDirection.name)
@@ -85,21 +96,25 @@ class GameRepository private constructor(application: Application) {
     }
 
 
+    fun updateNetworkState(newState: NetworkState) {
+        _networkState.value = newState
+    }
+
+
     fun getGameList(): LiveData<PagedList<Game>> {
+
         val dateConstraints = fetchDateConstraints()
 
         val query = buildGameListQuery(
-            sortOptions.value!!.sortDirection.direction,
+            _sortOptions.value!!.sortDirection.direction,
             dateConstraints[0],
             dateConstraints[1],
             fetchPlatformIndices()
         )
 
-        val dataSourceFactory =
-            database.gameDao.getGameList(query)
+        val dataSourceFactory: DataSource.Factory<Int, Game> = database.gameDao.getGameList(query)
 
-        // Get the paged list
-        val data = LivePagedListBuilder(dataSourceFactory, DATABASE_PAGE_SIZE)
+        val data: LiveData<PagedList<Game>> = LivePagedListBuilder(dataSourceFactory, DATABASE_PAGE_SIZE)
             .build()
 
         return data
@@ -109,12 +124,12 @@ class GameRepository private constructor(application: Application) {
     private fun fetchPlatformIndices(): Set<Int> {
         val platformIndices = mutableSetOf<Int>()
 
-        return when (sortOptions.value!!.platformType) {
+        return when (_sortOptions.value!!.platformType) {
             PlatformType.CurrentGeneration -> {
                 platformIndices.apply{addAll(0..14)}
             }
             PlatformType.All -> platformIndices.apply{addAll(allPlatforms.indices)}
-            PlatformType.PickFromList -> sortOptions.value!!.platformIndices
+            PlatformType.PickFromList -> _sortOptions.value!!.platformIndices
         }
     }
 
@@ -127,7 +142,7 @@ class GameRepository private constructor(application: Application) {
         val calendar: Calendar = Calendar.getInstance()
         val currentTimeMillis = calendar.timeInMillis
 
-        when (sortOptions.value!!.releaseDateType) {
+        when (_sortOptions.value!!.releaseDateType) {
             ReleaseDateType.RecentAndUpcoming -> {
                 // dateFilterStart is set to one week before current day.
                 calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - 7)
@@ -160,11 +175,11 @@ class GameRepository private constructor(application: Application) {
             ReleaseDateType.CustomDate -> {
                 val df = SimpleDateFormat("MM/dd/yyyy")
 
-                val startDateString = sortOptions.value!!.customDateStart
+                val startDateString = _sortOptions.value!!.customDateStart
                 calendar.time = df.parse(startDateString)!!
                 dateStartMillis = calendar.timeInMillis
 
-                val endDateString = sortOptions.value!!.customDateEnd
+                val endDateString = _sortOptions.value!!.customDateEnd
                 calendar.time = df.parse(endDateString)!!
                 dateEndMillis = calendar.timeInMillis
 

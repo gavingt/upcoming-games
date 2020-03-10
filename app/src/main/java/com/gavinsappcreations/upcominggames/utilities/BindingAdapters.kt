@@ -2,6 +2,7 @@ package com.gavinsappcreations.upcominggames.utilities
 
 import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.core.net.toUri
@@ -14,6 +15,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.gavinsappcreations.upcominggames.R
 import com.gavinsappcreations.upcominggames.domain.Game
+import com.gavinsappcreations.upcominggames.network.NetworkState
 import com.gavinsappcreations.upcominggames.ui.detail.ScreenshotAdapter
 import com.gavinsappcreations.upcominggames.ui.list.GameGridAdapter
 import com.google.android.material.textfield.TextInputLayout
@@ -81,14 +83,38 @@ fun TextView.formatReleaseDateString(
 }
 
 
-//This BindingAdapter function gets called automatically whenever "data" changes, since BindingAdapters are equivalent to Observers
-@BindingAdapter("listData")
-fun RecyclerView.bindListRecyclerView(data: PagedList<Game>?) {
+//This BindingAdapter function gets called automatically whenever gameList changes.
+@BindingAdapter("gameListData")
+fun RecyclerView.bindListRecyclerView(gameList: PagedList<Game>?) {
     val adapter = adapter as GameGridAdapter
-    adapter.submitList(data)
 
-    // TODO: itemAnimator is making list not scroll to top when sort options are changed. Find out why it does this.
-    this.itemAnimator = null
+    /**
+     * We need to null out the old list or else the old games will briefly appear on screen
+     * after the ProgressBar disappears.
+     */
+    adapter.submitList(null)
+
+    adapter.submitList(gameList) {
+        // This Runnable moves the list back to the top when changing sort options
+        scrollToPosition(0)
+    }
+}
+
+
+@BindingAdapter("gameListVisibility")
+fun RecyclerView.setListVisibility(networkState: NetworkState) {
+    visibility = when (networkState) {
+        NetworkState.Success -> View.VISIBLE
+        else -> View.INVISIBLE
+    }
+}
+
+@BindingAdapter("progressBarVisibility")
+fun ProgressBar.setProgressBarVisibility(networkState: NetworkState) {
+    visibility = when (networkState) {
+        NetworkState.Success -> View.GONE
+        else -> View.VISIBLE
+    }
 }
 
 

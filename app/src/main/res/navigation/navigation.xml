@@ -42,15 +42,15 @@
             android:name="guid"
             app:argType="string" />
         <action
-            android:id="@+id/action_detailFragment_to_imageViewerFragment"
-            app:destination="@id/imageViewerFragment"
+            android:id="@+id/action_detailFragment_to_screenshotFragment"
+            app:destination="@id/screenshotFragment"
             app:enterAnim="@anim/fade_in"
             app:popEnterAnim="@anim/fade_in" />
     </fragment>
     <fragment
-        android:id="@+id/imageViewerFragment"
+        android:id="@+id/screenshotFragment"
         android:name="com.gavinsappcreations.upcominggames.ui.screenshot.ScreenshotFragment"
-        android:label="image_viewer_fragment"
+        android:label="screenshot_fragment"
         tools:layout="@layout/fragment_screenshot" >
         <argument
             android:name="images"

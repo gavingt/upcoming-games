@@ -16,7 +16,6 @@ import com.gavinsappcreations.upcominggames.App
 import com.gavinsappcreations.upcominggames.databinding.FragmentSortBinding
 import com.gavinsappcreations.upcominggames.utilities.ReleaseDateType
 import com.gavinsappcreations.upcominggames.utilities.hideKeyboard
-import com.gavinsappcreations.upcominggames.utilities.notifyObserver
 
 
 class SortFragment : Fragment() {
@@ -59,6 +58,8 @@ class SortFragment : Fragment() {
                         && !binding.endDateTextInputEditText.text.isNullOrBlank())
             ) {
                 viewModel.updateSortOptions()
+
+
                 findNavController().popBackStack()
             } else {
                 Toast.makeText(

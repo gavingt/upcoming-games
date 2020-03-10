@@ -34,12 +34,8 @@ class PlatformAdapter (private val unsavedSortOptions: PropertyAwareMutableLiveD
         checkBox.setOnCheckedChangeListener{ _, isChecked ->
             if (isChecked) {
                 unsavedSortOptions.value!!.platformIndices.add(position)
-                // TODO: do we need notifyObserver() here since we're not saving to repository yet?
-                unsavedSortOptions.notifyObserver()
             } else {
                 unsavedSortOptions.value!!.platformIndices.remove(position)
-                // TODO: do we need notifyObserver() here since we're not saving to repository yet?
-                unsavedSortOptions.notifyObserver()
             }
         }
 
