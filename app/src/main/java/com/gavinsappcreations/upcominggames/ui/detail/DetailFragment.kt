@@ -1,16 +1,16 @@
 package com.gavinsappcreations.upcominggames.ui.detail
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ScrollView
-import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.gavinsappcreations.upcominggames.databinding.FragmentDetailBinding
-import com.gavinsappcreations.upcominggames.utilities.hideKeyboard
+
 
 class DetailFragment : Fragment() {
 
@@ -43,7 +43,14 @@ class DetailFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        //binding.moreOptionsImageButton
+        binding.gameLinkImageButton.setOnClickListener {
+            val url = viewModel.gameDetail.value?.detailUrl
+            url?.let {
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.data = Uri.parse(url)
+                startActivity(intent)
+            }
+        }
 
         binding.screenshotRecyclerView.adapter =
             ScreenshotAdapter(ScreenshotAdapter.OnClickListener { currentImageIndex ->

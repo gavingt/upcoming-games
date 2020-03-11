@@ -42,7 +42,8 @@ data class GameDetail(
     val publishers: List<String>?,
     val genres: List<String>?,
     val gameRating: List<String>?,
-    val deck: String?
+    val deck: String?,
+    val detailUrl: String?
 )
 
 

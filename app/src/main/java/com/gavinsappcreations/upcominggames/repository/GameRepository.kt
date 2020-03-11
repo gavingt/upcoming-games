@@ -220,11 +220,12 @@ class GameRepository private constructor(application: Application) {
         return GameNetwork.gameData.getGameDetailData(
             guid,
             API_KEY,
+            // TODO: use ApiField object here instead of strings
             "json",
             "id,guid,name,image,images,platforms," +
                     "original_release_date,expected_release_day,expected_release_month," +
                     "expected_release_year,expected_release_quarter,original_game_rating,developers,publishers,genres," +
-                    "deck"
+                    "deck,site_detail_url"
         ).body()!!.gameDetails.asDomainModel()
     }
 

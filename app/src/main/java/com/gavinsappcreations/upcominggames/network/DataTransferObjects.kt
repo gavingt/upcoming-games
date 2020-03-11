@@ -97,7 +97,8 @@ data class NetworkGameDetail(
     val publishers: List<GenericContainer>?,
     val genres: List<GenericContainer>?,
     val deck: String?,
-    val description: String?
+    val description: String?,
+    @Json(name = "site_detail_url") val detailUrl: String?
 )
 
 
@@ -185,7 +186,8 @@ fun NetworkGameDetail.asDomainModel(): GameDetail {
         gameRating = this.originalGameRating?.map {
             it.ratingName
         },
-        deck = this.deck
+        deck = this.deck,
+        detailUrl = this.detailUrl
     )
 }
 
