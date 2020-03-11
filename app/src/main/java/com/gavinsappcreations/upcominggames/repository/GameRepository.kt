@@ -94,15 +94,15 @@ class GameRepository private constructor(application: Application) {
     }
 
 
-    fun getGameList(): LiveData<PagedList<Game>> {
+    fun getGameList(newSortOptions: SortOptions): LiveData<PagedList<Game>> {
 
-        val dateConstraints = fetchDateConstraints()
+        val dateConstraints = fetchDateConstraints(newSortOptions)
 
         val query = buildGameListQuery(
-            _sortOptions.value!!.sortDirection.direction,
+            newSortOptions.sortDirection.direction,
             dateConstraints[0],
             dateConstraints[1],
-            fetchPlatformIndices()
+            fetchPlatformIndices(newSortOptions)
         )
 
         val dataSourceFactory: DataSource.Factory<Int, Game> = database.gameDao.getGameList(query)
@@ -115,20 +115,20 @@ class GameRepository private constructor(application: Application) {
     }
 
 
-    private fun fetchPlatformIndices(): Set<Int> {
+    private fun fetchPlatformIndices(sortOptions: SortOptions): Set<Int> {
         val platformIndices = mutableSetOf<Int>()
 
-        return when (_sortOptions.value!!.platformType) {
+        return when (sortOptions.platformType) {
             PlatformType.CurrentGeneration -> {
                 platformIndices.apply { addAll(0..14) }
             }
             PlatformType.All -> platformIndices.apply { addAll(allPlatforms.indices) }
-            PlatformType.PickFromList -> _sortOptions.value!!.platformIndices
+            PlatformType.PickFromList -> sortOptions.platformIndices
         }
     }
 
 
-    private fun fetchDateConstraints(): Array<Long?> {
+    private fun fetchDateConstraints(sortOptions: SortOptions): Array<Long?> {
 
         var dateStartMillis: Long?
         var dateEndMillis: Long?
@@ -136,7 +136,7 @@ class GameRepository private constructor(application: Application) {
         val calendar: Calendar = Calendar.getInstance()
         val currentTimeMillis = calendar.timeInMillis
 
-        when (_sortOptions.value!!.releaseDateType) {
+        when (sortOptions.releaseDateType) {
             ReleaseDateType.RecentAndUpcoming -> {
                 // dateFilterStart is set to one week before current day.
                 calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - 7)
@@ -169,11 +169,11 @@ class GameRepository private constructor(application: Application) {
             ReleaseDateType.CustomDate -> {
                 val df = SimpleDateFormat("MM/dd/yyyy")
 
-                val startDateString = _sortOptions.value!!.customDateStart
+                val startDateString = sortOptions.customDateStart
                 calendar.time = df.parse(startDateString)!!
                 dateStartMillis = calendar.timeInMillis
 
-                val endDateString = _sortOptions.value!!.customDateEnd
+                val endDateString = sortOptions.customDateEnd
                 calendar.time = df.parse(endDateString)!!
                 dateEndMillis = calendar.timeInMillis
 

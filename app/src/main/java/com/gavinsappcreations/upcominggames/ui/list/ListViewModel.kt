@@ -19,17 +19,17 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
 
     val databaseState = gameRepository.databaseState
 
-    // When the sortOptions LiveData changes, switchMap sets gameList = gameRepository.getGameList().
+    // When the sortOptions LiveData changes, switchMap sets gameList = gameRepository.getGameList(it).
     val gameList = Transformations.switchMap(gameRepository.sortOptions) {
-        gameRepository.getGameList()
+        gameRepository.getGameList(it)
     }
 
 
     /**
      * The observer that triggers this method fires once under normal circumstances, but fires
-     * twice if the sort options change. When sort options change, the "success" state doesn't occur
-     * until the second firing. So in this case, NetworkState transitions from LoadingSortChange to
-     * Loading, and finally to Success.
+     * twice if the sort options change. When sort options change, the Success state doesn't occur
+     * until the second firing. So in this case, DatabaseState transitions from LoadingSortChange to
+     * Loading, and then finally to Success.
      */
     fun updateDatabaseState() {
         when (databaseState.value) {

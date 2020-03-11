@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -81,6 +82,15 @@ class SortFragment : Fragment() {
                     vibrator?.vibrate(200)
                 }
             }
+        }
+
+        binding.nestedScrollView.setOnScrollChangeListener { scrollView, _, _, _, _ ->
+            binding.horizontalLineView.visibility =
+                if (scrollView.canScrollVertically(-1)) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
         }
 
         DateInputTextWatcher(binding.startDateTextInputEditText).listen()

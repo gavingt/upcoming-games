@@ -43,7 +43,7 @@ class ListFragment : Fragment() {
 
         binding.gameRecyclerView.adapter = adapter
 
-        binding.filterImageButton.setOnClickListener {
+        binding.sortImageButton.setOnClickListener {
             // TODO: use SingleLiveEvent to trigger navigation
             findNavController(this).navigate(ListFragmentDirections.actionListFragmentToSortFragment())
         }

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -11,58 +10,56 @@
             type="com.gavinsappcreations.upcominggames.ui.sort.SortViewModel" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <ImageButton
+            android:id="@+id/up_navigation_imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginTop="@dimen/margin_extra_small"
+            android:layout_marginBottom="@dimen/margin_extra_small"
+            android:layout_marginStart="@dimen/margin_normal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/nav_app_bar_navigate_up_description"
+            android:src="@drawable/ic_left_arrow"
+            android:tint="?attr/colorOnBackground" />
+
+        <TextView
+            android:id="@+id/toolbar_title_textView"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_marginStart="@dimen/margin_normal"
+            app:layout_constraintTop_toTopOf="@id/up_navigation_imageButton"
+            app:layout_constraintBottom_toBottomOf="@id/up_navigation_imageButton"
+            app:layout_constraintLeft_toRightOf="@id/up_navigation_imageButton"
+            android:layout_weight="1"
+            android:text="@string/sort_options"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
 
-            <ImageButton
-                android:id="@+id/up_navigation_imageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="?attr/actionBarSize"
-                android:layout_marginStart="@dimen/margin_normal"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/nav_app_bar_navigate_up_description"
-                android:src="@drawable/ic_left_arrow"
-                android:tint="?attr/colorOnBackground" />
-
-            <TextView
-                android:id="@+id/toolbar_title_textView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="@dimen/margin_normal"
-                android:text="@string/sort_options"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"/>
-
-            <Button
-                android:id="@+id/apply_button"
-                style="@style/MyTextButtonTheme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_normal"
-                android:letterSpacing="0.07"
-                android:text="@string/apply"
-                android:textColor="?attr/colorAccent"
-                android:textSize="@dimen/text_button_size"/>
-
-        </LinearLayout>
-
-        <View
-            android:id="@+id/horizontal_line_view"
-            android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:background="@drawable/drop_shadow"
-            android:visibility="visible"
-            app:layout_constraintTop_toBottomOf="@id/up_navigation_imageButton" />
+        <Button
+            android:id="@+id/apply_button"
+            style="@style/MyTextButtonTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginTop="@dimen/margin_extra_small"
+            android:layout_marginBottom="@dimen/margin_extra_small"
+            android:layout_marginEnd="@dimen/margin_small"
+            app:layout_constraintTop_toTopOf="@id/up_navigation_imageButton"
+            app:layout_constraintBottom_toBottomOf="@id/up_navigation_imageButton"
+            app:layout_constraintRight_toRightOf="parent"
+            android:letterSpacing="0.07"
+            android:text="@string/apply"
+            android:textColor="?attr/colorAccent"
+            android:textSize="@dimen/text_button_size" />
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScrollView"
+            app:layout_constraintTop_toTopOf="@id/horizontal_line_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -75,8 +72,8 @@
                     android:id="@+id/release_date_cardView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_normal"
                     android:layout_marginLeft="@dimen/margin_normal"
+                    android:layout_marginTop="@dimen/margin_normal"
                     android:layout_marginRight="@dimen/margin_normal"
                     app:cardBackgroundColor="?attr/colorBackgroundVariant">
 
@@ -192,8 +189,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_normal"
-                    android:layout_marginRight="@dimen/margin_normal"
                     android:layout_marginTop="@dimen/margin_normal"
+                    android:layout_marginRight="@dimen/margin_normal"
                     app:cardBackgroundColor="?attr/colorBackgroundVariant">
 
                     <LinearLayout
@@ -258,9 +255,9 @@
 
                         <RadioGroup
                             android:id="@+id/platform_type_radioGroup"
+                            platformType="@={viewModel.unsavedSortOptions.platformType}"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            platformType="@={viewModel.unsavedSortOptions.platformType}"
                             android:layout_marginTop="@dimen/margin_normal">
 
                             <RadioButton
@@ -285,12 +282,12 @@
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/platform_recyclerView"
-                            android:layout_marginTop="@dimen/margin_normal"
-                            android:layout_marginLeft="@dimen/margin_large"
                             customPlatformListVisibility="@{viewModel.unsavedSortOptions.platformType}"
-                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_large"
+                            android:layout_marginTop="@dimen/margin_normal"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
                     </LinearLayout>
 
@@ -300,7 +297,15 @@
 
         </androidx.core.widget.NestedScrollView>
 
+        <View
+            android:id="@+id/horizontal_line_view"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:alpha="0.8"
+            android:background="@drawable/drop_shadow"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/up_navigation_imageButton" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

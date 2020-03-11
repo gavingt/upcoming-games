@@ -13,20 +13,45 @@
             type="com.gavinsappcreations.upcominggames.ui.detail.DetailViewModel" />
     </data>
 
-<!--    TODO: change to ConstraintLayout-->
-    
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- TODO: add toolbar to top (no title), and a ... menu with Share button in it that
-           links to Giant Bomb game page -->
+        <ImageButton
+            android:id="@+id/up_navigation_imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginTop="@dimen/margin_extra_small"
+            android:layout_marginBottom="@dimen/margin_extra_small"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/nav_app_bar_navigate_up_description"
+            android:src="@drawable/ic_left_arrow"
+            android:tint="?attr/colorOnBackground"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/more_options_imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginTop="@dimen/margin_extra_small"
+            android:layout_marginBottom="@dimen/margin_extra_small"
+            android:layout_marginEnd="@dimen/margin_normal"
+            android:background="?selectableItemBackgroundBorderless"
+            android:contentDescription="@string/more_options"
+            android:src="@drawable/more_vert"
+            app:layout_constraintBottom_toBottomOf="@id/up_navigation_imageButton"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/up_navigation_imageButton" />
 
         <com.gavinsappcreations.upcominggames.ui.detail.NestedScrollingParentScrollView
             android:id="@+id/scrollView"
             gameDetailVisibility="@{viewModel.networkState}"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@id/horizontal_line_view">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -60,7 +85,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_normal"
                     android:ellipsize="end"
-                    android:maxLines="2"
                     android:text="@{viewModel.gameDetail.gameName}"
                     android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -273,13 +297,25 @@
 
         </com.gavinsappcreations.upcominggames.ui.detail.NestedScrollingParentScrollView>
 
+        <View
+            android:id="@+id/horizontal_line_view"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:alpha="0.8"
+            android:background="@drawable/drop_shadow"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/more_options_imageButton" />
+
         <androidx.core.widget.ContentLoadingProgressBar
-            android:layout_gravity="center"
             style="?android:attr/progressBarStyleLarge"
             gameDetailProgressBarVisibility="@{viewModel.networkState}"
             android:layout_width="96dp"
-            android:layout_height="96dp"/>
+            android:layout_height="96dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
