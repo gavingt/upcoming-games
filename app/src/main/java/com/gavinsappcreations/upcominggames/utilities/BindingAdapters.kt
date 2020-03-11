@@ -103,14 +103,6 @@ fun RecyclerView.bindListRecyclerView(gameList: PagedList<Game>?, databaseState:
 }
 
 
-@BindingAdapter("gameListVisibility")
-fun RecyclerView.setListVisibility(databaseState: DatabaseState) {
-    visibility = when (databaseState) {
-        DatabaseState.Success -> View.VISIBLE
-        else -> View.INVISIBLE
-    }
-}
-
 @BindingAdapter("gameListProgressBarVisibility")
 fun ContentLoadingProgressBar.setGameListProgressBarVisibility(databaseState: DatabaseState) {
     when (databaseState) {
@@ -128,13 +120,6 @@ fun RecyclerView.bindScreenshotRecyclerView(data: List<String>?) {
 }
 
 
-@BindingAdapter("gameDetailVisibility")
-fun NestedScrollingParentScrollView.setGameDetailVisibility(networkState: NetworkState) {
-    visibility = when (networkState) {
-        NetworkState.Success -> View.VISIBLE
-        else -> View.INVISIBLE
-    }
-}
 
 @BindingAdapter("gameDetailProgressBarVisibility")
 fun ContentLoadingProgressBar.setGameDetailProgressBarVisibility(networkState: NetworkState) {

@@ -6,6 +6,7 @@
 
     <data>
 
+        <import type="com.gavinsappcreations.upcominggames.utilities.NetworkState"/>
         <import type="android.view.View" />
 
         <variable
@@ -48,7 +49,7 @@
 
         <com.gavinsappcreations.upcominggames.ui.detail.NestedScrollingParentScrollView
             android:id="@+id/scrollView"
-            gameDetailVisibility="@{viewModel.networkState}"
+            android:visibility="@{viewModel.networkState == NetworkState.Success ? View.VISIBLE : View.INVISIBLE}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -132,9 +133,10 @@
                             dateFormat="@{viewModel.gameDetail.dateFormat}"
                             inGameDetailFragment="@{true}"
                             releaseDateInMillis="@{viewModel.gameDetail.releaseDateInMillis}"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            app:layout_constraintRight_toRightOf="parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/margin_large"
+                            android:layout_marginStart="@dimen/margin_large"
                             android:textSize="15sp"
                             app:layout_constraintLeft_toRightOf="@id/release_date_label_textView"
                             app:layout_constraintTop_toTopOf="@id/release_date_label_textView"
@@ -153,7 +155,8 @@
                         <TextView
                             android:id="@+id/platforms_value_textView"
                             platformList="@{viewModel.gameDetail.platforms}"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            app:layout_constraintRight_toRightOf="parent"
                             android:layout_height="wrap_content"
                             android:textSize="15sp"
                             app:layout_constraintLeft_toLeftOf="@id/release_date_value_textView"
@@ -173,7 +176,8 @@
                         <TextView
                             android:id="@+id/developers_value_textView"
                             gameDetailList="@{viewModel.gameDetail.developers}"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            app:layout_constraintRight_toRightOf="parent"
                             android:layout_height="wrap_content"
                             android:textSize="15sp"
                             app:layout_constraintLeft_toLeftOf="@id/release_date_value_textView"
@@ -193,7 +197,8 @@
                         <TextView
                             android:id="@+id/publishers_value_textView"
                             gameDetailList="@{viewModel.gameDetail.publishers}"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            app:layout_constraintRight_toRightOf="parent"
                             android:layout_height="wrap_content"
                             android:textSize="15sp"
                             app:layout_constraintLeft_toLeftOf="@id/release_date_value_textView"
@@ -213,7 +218,8 @@
                         <TextView
                             android:id="@+id/genres_value_textView"
                             gameDetailList="@{viewModel.gameDetail.genres}"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            app:layout_constraintRight_toRightOf="parent"
                             android:layout_height="wrap_content"
                             android:textSize="15sp"
                             app:layout_constraintLeft_toLeftOf="@id/release_date_value_textView"
@@ -233,7 +239,8 @@
                         <TextView
                             android:id="@+id/ratings_value_textView"
                             gameDetailList="@{viewModel.gameDetail.gameRating}"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            app:layout_constraintRight_toRightOf="parent"
                             android:layout_height="wrap_content"
                             android:textSize="15sp"
                             app:layout_constraintLeft_toLeftOf="@id/release_date_value_textView"
@@ -301,8 +308,8 @@
         <View
             android:id="@+id/horizontal_line_view"
             android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:alpha="0.8"
+            android:layout_height="3dp"
+            android:alpha="0.5"
             android:background="@drawable/drop_shadow"
             android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/game_link_imageButton" />

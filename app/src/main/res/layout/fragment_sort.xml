@@ -301,8 +301,8 @@
         <View
             android:id="@+id/horizontal_line_view"
             android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:alpha="0.8"
+            android:layout_height="3dp"
+            android:alpha="0.5"
             android:background="@drawable/drop_shadow"
             android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/up_navigation_imageButton" />

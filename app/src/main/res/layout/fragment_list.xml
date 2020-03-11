@@ -6,6 +6,9 @@
 
     <data>
 
+        <import type="android.view.View" />
+        <import type="com.gavinsappcreations.upcominggames.utilities.DatabaseState" />
+
         <variable
             name="viewModel"
             type="com.gavinsappcreations.upcominggames.ui.list.ListViewModel" />
@@ -65,7 +68,7 @@
             android:id="@+id/game_recyclerView"
             gameListData="@{viewModel.gameList}"
             databaseState="@{viewModel.databaseState}"
-            gameListVisibility="@{viewModel.databaseState}"
+            android:visibility="@{viewModel.databaseState == DatabaseState.Success ? View.VISIBLE : View.INVISIBLE}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:clipToPadding="false"
