@@ -70,7 +70,7 @@ class GameRepository private constructor(application: Application) {
     }
 
     // Update value of _sortOptions and also save that value to SharedPrefs.
-    fun updateSortOptions(newSortOptions: SortOptions) {
+    fun saveNewSortOptions(newSortOptions: SortOptions) {
 
         _loadingState.value = DatabaseState.LoadingSortChange
 
@@ -120,6 +120,7 @@ class GameRepository private constructor(application: Application) {
 
         return when (sortOptions.platformType) {
             PlatformType.CurrentGeneration -> {
+                // TODO: make this a constant or something so it's explicit which consoles are considered current
                 platformIndices.apply { addAll(0..14) }
             }
             PlatformType.All -> platformIndices.apply { addAll(allPlatforms.indices) }
@@ -194,19 +195,14 @@ class GameRepository private constructor(application: Application) {
     suspend fun downloadGameListData(offset: Int) {
         val gameList = GameNetwork.gameData.getGameListData(
             API_KEY,
-            "${ApiField.Json}",
-            "${ApiField.OriginalReleaseDate}:${SortDirection.Ascending}",
+            ApiField.Json.field,
+            "${ApiField.OriginalReleaseDate.field}:${SortDirection.Ascending.direction}",
             "",
-            "${ApiField.Id}," +
-                    "${ApiField.Guid}," +
-                    "${ApiField.Name}," +
-                    "${ApiField.Image}," +
-                    "${ApiField.Platforms}," +
-                    "${ApiField.OriginalReleaseDate}," +
-                    "${ApiField.ExpectedReleaseDay}," +
-                    "${ApiField.ExpectedReleaseMonth}," +
-                    "${ApiField.ExpectedReleaseYear}," +
-                    "${ApiField.ExpectedReleaseQuarter}",
+            "${ApiField.Id.field},${ApiField.Guid.field},${ApiField.Name.field}," +
+                    "${ApiField.Image.field},${ApiField.Platforms.field}," +
+                    "${ApiField.OriginalReleaseDate.field},${ApiField.ExpectedReleaseDay.field}," +
+                    "${ApiField.ExpectedReleaseMonth.field},${ApiField.ExpectedReleaseYear.field}," +
+                    ApiField.ExpectedReleaseQuarter.field,
             offset
         ).body()!!.games
 
@@ -220,12 +216,14 @@ class GameRepository private constructor(application: Application) {
         return GameNetwork.gameData.getGameDetailData(
             guid,
             API_KEY,
-            // TODO: use ApiField object here instead of strings
-            "json",
-            "id,guid,name,image,images,platforms," +
-                    "original_release_date,expected_release_day,expected_release_month," +
-                    "expected_release_year,expected_release_quarter,original_game_rating,developers,publishers,genres," +
-                    "deck,site_detail_url"
+            ApiField.Json.field,
+            "${ApiField.Id.field},${ApiField.Guid.field},${ApiField.Name.field}," +
+                    "${ApiField.Image.field},${ApiField.Images.field},${ApiField.Platforms.field}," +
+                    "${ApiField.OriginalReleaseDate.field},${ApiField.ExpectedReleaseDay.field}," +
+                    "${ApiField.ExpectedReleaseMonth.field},${ApiField.ExpectedReleaseYear.field}," +
+                    "${ApiField.ExpectedReleaseQuarter.field},${ApiField.OriginalGameRating.field}," +
+                    "${ApiField.Developers.field},${ApiField.Publishers.field}," +
+                    "${ApiField.Genres.field},${ApiField.Deck.field},${ApiField.DetailUrl.field}"
         ).body()!!.gameDetails.asDomainModel()
     }
 

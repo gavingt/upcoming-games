@@ -15,7 +15,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.gavinsappcreations.upcominggames.R
 import com.gavinsappcreations.upcominggames.domain.Game
-import com.gavinsappcreations.upcominggames.ui.detail.NestedScrollingParentScrollView
 import com.gavinsappcreations.upcominggames.ui.detail.ScreenshotAdapter
 import com.gavinsappcreations.upcominggames.ui.list.GameGridAdapter
 import com.google.android.material.textfield.TextInputLayout
@@ -120,7 +119,6 @@ fun RecyclerView.bindScreenshotRecyclerView(data: List<String>?) {
 }
 
 
-
 @BindingAdapter("gameDetailProgressBarVisibility")
 fun ContentLoadingProgressBar.setGameDetailProgressBarVisibility(networkState: NetworkState) {
     when (networkState) {
@@ -162,7 +160,6 @@ fun TextView.formatGameDetailList(items: List<String>?) {
 }
 
 
-
 @BindingAdapter("customDateVisibility")
 fun TextInputLayout.setCustomDateVisibility(releaseDateType: ReleaseDateType) {
     visibility = if (releaseDateType == ReleaseDateType.CustomDate) {
@@ -174,7 +171,7 @@ fun TextInputLayout.setCustomDateVisibility(releaseDateType: ReleaseDateType) {
 
 
 // TODO: could I just pass in entire sortOptions LiveData to these methods and get rid of PropertyAwareMutableLiveData?
- // TODO: I would just call notifyObserver() in these methods
+// TODO: I would just call notifyObserver() in these methods
 
 // This runs every time the LiveData value changes, and its job is to change the RadioGroup's checkedId.
 @BindingAdapter("releaseDateType")
@@ -219,11 +216,10 @@ fun RadioGroup.getReleaseDateType(): ReleaseDateType {
 @BindingAdapter("releaseDateTypeAttrChanged")
 fun RadioGroup.setReleaseDateTypeListeners(listener: InverseBindingListener) {
 
-    setOnCheckedChangeListener{ _, _ ->
+    setOnCheckedChangeListener { _, _ ->
         listener.onChange()
     }
 }
-
 
 
 // This runs every time the LiveData value changes, and its job is to change the RadioGroup's checkedId.
@@ -263,11 +259,10 @@ fun RadioGroup.getSortDirection(): SortDirection {
 @BindingAdapter("sortDirectionAttrChanged")
 fun RadioGroup.setSortDirectionListeners(listener: InverseBindingListener) {
 
-    setOnCheckedChangeListener{ _, _ ->
+    setOnCheckedChangeListener { _, _ ->
         listener.onChange()
     }
 }
-
 
 
 // This runs every time the LiveData value changes, and its job is to change the RadioGroup's checkedId.
@@ -309,18 +304,8 @@ fun RadioGroup.getPlatformType(): PlatformType {
 @BindingAdapter("platformTypeAttrChanged")
 fun RadioGroup.setPlatformTypeListeners(listener: InverseBindingListener) {
 
-    setOnCheckedChangeListener{ _, _ ->
+    setOnCheckedChangeListener { _, _ ->
         listener.onChange()
     }
 }
 
-
-
-@BindingAdapter("customPlatformListVisibility")
-fun RecyclerView.setCustomPlatformListVisibility(platformType: PlatformType) {
-    visibility = if (platformType == PlatformType.PickFromList) {
-        View.VISIBLE
-    } else {
-        View.GONE
-    }
-}

@@ -1,11 +1,15 @@
 package com.gavinsappcreations.upcominggames.ui.sort
 
 import android.app.Application
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.gavinsappcreations.upcominggames.domain.SortOptions
 import com.gavinsappcreations.upcominggames.repository.GameRepository
+import com.gavinsappcreations.upcominggames.utilities.Event
 import com.gavinsappcreations.upcominggames.utilities.PropertyAwareMutableLiveData
+import com.gavinsappcreations.upcominggames.utilities.ReleaseDateType
 
 class SortViewModel(application: Application) : ViewModel() {
 
@@ -20,8 +24,38 @@ class SortViewModel(application: Application) : ViewModel() {
         )
     )
 
-    fun updateSortOptions() {
-        gameRepository.updateSortOptions(unsavedSortOptions.value!!)
+    private val _popBackStack = MutableLiveData<Event<Boolean>>()
+    val popBackStack: LiveData<Event<Boolean>>
+        get() = _popBackStack
+
+    private val _updateSortOptions = MutableLiveData<Event<Boolean>>()
+    val updateSortOptions: LiveData<Event<Boolean>>
+        get() = _updateSortOptions
+
+    fun saveNewSortOptions() {
+        gameRepository.saveNewSortOptions(unsavedSortOptions.value!!)
+    }
+
+    fun onPopBackStack() {
+        _popBackStack.value = Event(true)
+    }
+
+    fun onUpdateSortOptions(
+        startDateError: String?,
+        startDateText: String?,
+        endDateError: String?,
+        endDateText: String?
+    ) {
+        if (unsavedSortOptions.value!!.releaseDateType == ReleaseDateType.CustomDate) {
+            if (startDateError == null && !startDateText.isNullOrBlank()
+                && endDateError == null && !endDateText.isNullOrBlank()) {
+                _updateSortOptions.value = Event(true)
+            } else {
+                _updateSortOptions.value = Event(false)
+            }
+        } else {
+            _updateSortOptions.value = Event(true)
+        }
     }
 
 

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.gavinsappcreations.upcominggames.databinding.FragmentDetailBinding
@@ -39,8 +40,7 @@ class DetailFragment : Fragment() {
         binding.viewModel = viewModel
 
         binding.upNavigationImageButton.setOnClickListener {
-            // TODO: this should be done in ViewModel
-            findNavController().popBackStack()
+            viewModel.onPopBackStack()
         }
 
         binding.gameLinkImageButton.setOnClickListener {
@@ -54,16 +54,7 @@ class DetailFragment : Fragment() {
 
         binding.screenshotRecyclerView.adapter =
             ScreenshotAdapter(ScreenshotAdapter.OnClickListener { currentImageIndex ->
-                val images = viewModel.gameDetail.value?.images?.toTypedArray()
-                images?.let {
-                    // TODO: use SingleLiveEvent to trigger navigation
-                    findNavController().navigate(
-                        DetailFragmentDirections.actionDetailFragmentToScreenshotFragment(
-                            images,
-                            currentImageIndex
-                        )
-                    )
-                }
+                viewModel.onNavigateToScreenshotFragment(currentImageIndex)
             })
 
         binding.scrollView.setOnScrollChangeListener { scrollView, _, _, _, _ ->
@@ -74,6 +65,25 @@ class DetailFragment : Fragment() {
                     View.GONE
                 }
         }
+
+        viewModel.popBackStack.observe(viewLifecycleOwner, Observer {
+            if (it.getContentIfNotHandled() == true) {
+                findNavController().popBackStack()
+            }
+        })
+
+        viewModel.navigateToScreenshotFragment.observe(viewLifecycleOwner, Observer {
+            it.getContentIfNotHandled()?.let { imageIndex ->
+                // We turn our List<String> into an Array<String> here so we can pass it as an arg.
+                val images = viewModel.gameDetail.value!!.images!!.toTypedArray()
+                findNavController().navigate(
+                    DetailFragmentDirections.actionDetailFragmentToScreenshotFragment(
+                        images,
+                        imageIndex
+                    )
+                )
+            }
+        })
 
 
         return binding.root

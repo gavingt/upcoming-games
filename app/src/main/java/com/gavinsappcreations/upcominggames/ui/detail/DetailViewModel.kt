@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.gavinsappcreations.upcominggames.domain.GameDetail
 import com.gavinsappcreations.upcominggames.repository.GameRepository
+import com.gavinsappcreations.upcominggames.utilities.Event
 import com.gavinsappcreations.upcominggames.utilities.NetworkState
 import kotlinx.coroutines.launch
 
@@ -20,6 +21,14 @@ class DetailViewModel(application: Application, guid: String) : AndroidViewModel
     val networkState: LiveData<NetworkState>
         get() = _networkState
 
+    private val _popBackStack = MutableLiveData<Event<Boolean>>()
+    val popBackStack: LiveData<Event<Boolean>>
+        get() = _popBackStack
+
+    private val _navigateToScreenshotFragment = MutableLiveData<Event<Int>>()
+    val navigateToScreenshotFragment: LiveData<Event<Int>>
+        get() = _navigateToScreenshotFragment
+
     init {
         _networkState.value = NetworkState.Loading
         viewModelScope.launch {
@@ -31,6 +40,14 @@ class DetailViewModel(application: Application, guid: String) : AndroidViewModel
                 _networkState.value = NetworkState.Failure
             }
         }
+    }
+
+    fun onPopBackStack() {
+        _popBackStack.value = Event(true)
+    }
+
+    fun onNavigateToScreenshotFragment(imageIndex: Int) {
+        _navigateToScreenshotFragment.value = Event(imageIndex)
     }
 
     //Factory for constructing DetailViewModel with Application parameter.

@@ -33,28 +33,43 @@ class ListFragment : Fragment() {
         binding.gameRecyclerView.itemAnimator = null
 
         val adapter = GameGridAdapter(GameGridAdapter.OnClickListener {
-            // TODO: use SingleLiveEvent to trigger navigation
-            findNavController(this).navigate(
-                ListFragmentDirections.actionListFragmentToDetailFragment(
-                    it.guid
-                )
-            )
+            viewModel.onNavigateToDetailFragment(it)
         })
 
         binding.gameRecyclerView.adapter = adapter
 
         binding.sortImageButton.setOnClickListener {
-            // TODO: use SingleLiveEvent to trigger navigation
-            findNavController(this).navigate(ListFragmentDirections.actionListFragmentToSortFragment())
+            viewModel.onNavigateToSortFragment()
         }
 
         binding.searchTextView.setOnClickListener {
-            // TODO: use SingleLiveEvent to trigger navigation
-            findNavController(this).navigate(ListFragmentDirections.actionListFragmentToSearchFragment())
+            viewModel.onNavigateToSearchFragment()
         }
 
         viewModel.gameList.observe(viewLifecycleOwner, Observer {
             viewModel.updateDatabaseState()
+        })
+
+        viewModel.navigateToDetailFragment.observe(viewLifecycleOwner, Observer {
+            it.getContentIfNotHandled()?.let { game ->
+                findNavController(this).navigate(
+                    ListFragmentDirections.actionListFragmentToDetailFragment(
+                        game.guid
+                    )
+                )
+            }
+        })
+
+        viewModel.navigateToSortFragment.observe(viewLifecycleOwner, Observer {
+            it.getContentIfNotHandled()?.let {
+                findNavController(this).navigate(ListFragmentDirections.actionListFragmentToSortFragment())
+            }
+        })
+
+        viewModel.navigateToSearchFragment.observe(viewLifecycleOwner, Observer {
+            it.getContentIfNotHandled()?.let {
+                findNavController(this).navigate(ListFragmentDirections.actionListFragmentToSearchFragment())
+            }
         })
 
         return binding.root

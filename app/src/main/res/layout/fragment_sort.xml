@@ -5,6 +5,9 @@
 
     <data>
 
+        <import type="android.view.View"/>
+        <import type="com.gavinsappcreations.upcominggames.utilities.PlatformType"/>
+
         <variable
             name="viewModel"
             type="com.gavinsappcreations.upcominggames.ui.sort.SortViewModel" />
@@ -136,7 +139,7 @@
                             customDateVisibility="@{viewModel.unsavedSortOptions.releaseDateType}"
                             android:layout_width="180dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/margin_large"
+                            android:layout_marginStart="@dimen/margin_large"
                             android:layout_marginTop="@dimen/margin_normal"
                             android:hint="@string/start_date"
                             app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
@@ -161,7 +164,7 @@
                             customDateVisibility="@{viewModel.unsavedSortOptions.releaseDateType}"
                             android:layout_width="180dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/margin_large"
+                            android:layout_marginStart="@dimen/margin_large"
                             android:layout_marginTop="@dimen/margin_normal"
                             android:hint="@string/end_date"
                             app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
@@ -283,7 +286,7 @@
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/platform_recyclerView"
-                            customPlatformListVisibility="@{viewModel.unsavedSortOptions.platformType}"
+                            android:visibility="@{viewModel.unsavedSortOptions.platformType == PlatformType.PickFromList ? View.VISIBLE : View.GONE}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/margin_large"

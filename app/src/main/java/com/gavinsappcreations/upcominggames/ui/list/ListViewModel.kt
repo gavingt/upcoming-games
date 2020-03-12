@@ -2,8 +2,10 @@ package com.gavinsappcreations.upcominggames.ui.list
 
 import android.app.Application
 import androidx.lifecycle.*
+import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.repository.GameRepository
 import com.gavinsappcreations.upcominggames.utilities.DatabaseState
+import com.gavinsappcreations.upcominggames.utilities.Event
 import kotlinx.coroutines.launch
 
 class ListViewModel(application: Application) : AndroidViewModel(application) {
@@ -22,6 +24,31 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     // When the sortOptions LiveData changes, switchMap sets gameList = gameRepository.getGameList(it).
     val gameList = Transformations.switchMap(gameRepository.sortOptions) {
         gameRepository.getGameList(it)
+    }
+
+    private val _navigateToDetailFragment = MutableLiveData<Event<Game>>()
+    val navigateToDetailFragment: LiveData<Event<Game>>
+        get() = _navigateToDetailFragment
+
+    private val _navigateToSortFragment = MutableLiveData<Event<Boolean>>()
+    val navigateToSortFragment: LiveData<Event<Boolean>>
+        get() = _navigateToSortFragment
+
+    private val _navigateToSearchFragment = MutableLiveData<Event<Boolean>>()
+    val navigateToSearchFragment: LiveData<Event<Boolean>>
+        get() = _navigateToSearchFragment
+
+
+    fun onNavigateToDetailFragment(game: Game) {
+        _navigateToDetailFragment.value = Event(game)
+    }
+
+    fun onNavigateToSortFragment() {
+        _navigateToSortFragment.value = Event(true)
+    }
+
+    fun onNavigateToSearchFragment() {
+        _navigateToSearchFragment.value = Event(true)
     }
 
 
