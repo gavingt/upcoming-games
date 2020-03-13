@@ -214,10 +214,7 @@ fun List<NetworkImage>.filterImagesByTag(): List<String> {
 
 
 fun List<NetworkPlatform>.sortPlatformNamesByRelevance(): List<String> {
-
-    // TODO: test this new algorithm by changing the platform of a game (both abbreviation and full name)
-
-    val platformsSorted = mutableListOf<String>()
+    val platformNamesSorted = mutableListOf<String>()
     val knownPlatformIndices = mutableListOf<Int>()
 
     for (platform in this) {
@@ -226,7 +223,7 @@ fun List<NetworkPlatform>.sortPlatformNamesByRelevance(): List<String> {
         }
 
         if (currentPlatformIndex == -1) {
-            platformsSorted.add(platform.platformName)
+            platformNamesSorted.add(platform.platformName)
         } else {
             knownPlatformIndices.add(currentPlatformIndex)
         }
@@ -238,27 +235,36 @@ fun List<NetworkPlatform>.sortPlatformNamesByRelevance(): List<String> {
         allKnownPlatforms[it].fullName
     }
 
-    platformsSorted.addAll(knownPlatformsSorted)
+    platformNamesSorted.addAll(knownPlatformsSorted)
 
-    return platformsSorted
+    return platformNamesSorted
 }
 
 
 fun List<String>.sortPlatformAbbreviationsByRelevance(): List<String> {
 
-    // TODO: make same changes here as we did in the method above (more efficient algorithm)
+    val platformAbbreviationsSorted = mutableListOf<String>()
+    val knownPlatformIndices = mutableListOf<Int>()
 
-    val abbreviatedPlatformsSorted = mutableListOf<String>()
-
-    for (possiblePlatform in allKnownPlatforms) {
-
-        val abbreviatedPlatform = this.find {
-            it == possiblePlatform.abbreviation
+    for (platformAbbreviation in this) {
+        val currentPlatformIndex = allKnownPlatforms.indexOfFirst {
+            platformAbbreviation == it.abbreviation
         }
 
-        abbreviatedPlatform?.let {
-            abbreviatedPlatformsSorted.add(it)
+        if (currentPlatformIndex == -1) {
+            platformAbbreviationsSorted.add(platformAbbreviation)
+        } else {
+            knownPlatformIndices.add(currentPlatformIndex)
         }
     }
-    return abbreviatedPlatformsSorted
+
+    knownPlatformIndices.sort()
+
+    val knownPlatformsSorted = knownPlatformIndices.map {
+        allKnownPlatforms[it].abbreviation
+    }
+
+    platformAbbreviationsSorted.addAll(knownPlatformsSorted)
+
+    return platformAbbreviationsSorted
 }

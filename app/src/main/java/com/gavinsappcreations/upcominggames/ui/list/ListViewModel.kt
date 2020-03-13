@@ -75,7 +75,14 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
 
                 for (game in allGames) {
 
-                    gameRepository.updateGame(game)
+                    if (game.gameName == "Ember Sword") {
+                        val newPlatformList = mutableListOf<String>()
+                        newPlatformList.addAll(game.platforms!!)
+                        newPlatformList.add("FAKE")
+
+                        val newGame = Game(game.gameId, game.gameName, game.mainImageUrl, newPlatformList, game.releaseDateInMillis, game.dateFormat,game.guid)
+                        gameRepository.updateGame(newGame)
+                    }
                 }
 
                 Log.d("LOG", "hello")

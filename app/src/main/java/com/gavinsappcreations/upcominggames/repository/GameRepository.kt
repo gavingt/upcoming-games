@@ -37,7 +37,6 @@ class GameRepository private constructor(application: Application) {
     val databaseState: LiveData<DatabaseState>
         get() = _loadingState
 
-    // TODO: make val platforms: LiveData<List<Platform>> here
 
     init {
         // Fetch sort options from SharedPrefs
@@ -122,12 +121,9 @@ class GameRepository private constructor(application: Application) {
 
         return when (sortOptions.platformType) {
             PlatformType.CurrentGeneration -> {
-                // TODO: make this a constant or something so it's explicit which consoles are considered current
-
-                val currentGenerationRange = IntRange(0, 14)
 
                 platformIndices.apply {
-                    addAll(currentGenerationRange)
+                    addAll(currentGenerationPlatformRange)
                 }
             }
             PlatformType.All -> platformIndices.apply { addAll(allKnownPlatforms.indices) }

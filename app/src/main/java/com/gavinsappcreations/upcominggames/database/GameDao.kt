@@ -18,10 +18,10 @@ interface GameDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(games: List<Game>)
 
-    /*    @Query("SELECT * from Game")
-    fun getAllGames(): List<Game>*/
+/*        @Query("SELECT * from Game")
+    fun getAllGames(): List<Game>
 
-/*    @Update
+    @Update
     fun updateGame(game: Game)*/
 }
 
