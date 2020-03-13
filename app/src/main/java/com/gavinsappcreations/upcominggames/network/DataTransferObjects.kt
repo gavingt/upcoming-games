@@ -3,7 +3,7 @@ package com.gavinsappcreations.upcominggames.network
 import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.domain.GameDetail
 import com.gavinsappcreations.upcominggames.utilities.DateFormat
-import com.gavinsappcreations.upcominggames.utilities.allPlatforms
+import com.gavinsappcreations.upcominggames.utilities.allKnownPlatforms
 import com.gavinsappcreations.upcominggames.utilities.fetchReleaseDateInMillis
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -215,27 +215,42 @@ fun List<NetworkImage>.filterImagesByTag(): List<String> {
 
 fun List<NetworkPlatform>.sortPlatformNamesByRelevance(): List<String> {
 
-    val abbreviatedPlatformsSorted = mutableListOf<String>()
+    // TODO: test this new algorithm by changing the platform of a game (both abbreviation and full name)
 
-    for (possiblePlatform in allPlatforms) {
+    val platformsSorted = mutableListOf<String>()
+    val knownPlatformIndices = mutableListOf<Int>()
 
-        val abbreviatedPlatform = this.find {
-            it.abbreviation == possiblePlatform.abbreviation
-        }?.abbreviation
+    for (platform in this) {
+        val currentPlatformIndex = allKnownPlatforms.indexOfFirst {
+            platform.abbreviation == it.abbreviation
+        }
 
-        abbreviatedPlatform?.let {
-            abbreviatedPlatformsSorted.add(it)
+        if (currentPlatformIndex == -1) {
+            platformsSorted.add(platform.platformName)
+        } else {
+            knownPlatformIndices.add(currentPlatformIndex)
         }
     }
-    return abbreviatedPlatformsSorted
+
+    knownPlatformIndices.sort()
+
+    val knownPlatformsSorted = knownPlatformIndices.map {
+        allKnownPlatforms[it].fullName
+    }
+
+    platformsSorted.addAll(knownPlatformsSorted)
+
+    return platformsSorted
 }
 
 
 fun List<String>.sortPlatformAbbreviationsByRelevance(): List<String> {
 
+    // TODO: make same changes here as we did in the method above (more efficient algorithm)
+
     val abbreviatedPlatformsSorted = mutableListOf<String>()
 
-    for (possiblePlatform in allPlatforms) {
+    for (possiblePlatform in allKnownPlatforms) {
 
         val abbreviatedPlatform = this.find {
             it == possiblePlatform.abbreviation

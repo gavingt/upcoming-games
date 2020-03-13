@@ -6,7 +6,7 @@ import androidx.room.*
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.gavinsappcreations.upcominggames.domain.Game
-import com.gavinsappcreations.upcominggames.utilities.allPlatforms
+import com.gavinsappcreations.upcominggames.utilities.allKnownPlatforms
 
 
 @Dao
@@ -17,6 +17,12 @@ interface GameDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(games: List<Game>)
+
+    /*    @Query("SELECT * from Game")
+    fun getAllGames(): List<Game>*/
+
+/*    @Update
+    fun updateGame(game: Game)*/
 }
 
 
@@ -44,6 +50,7 @@ fun getDatabase(context: Context): GamesDatabase {
 
 
 
+
 fun buildGameListQuery(
     sortDirection: String,
     startReleaseDateMillis: Long?,
@@ -61,13 +68,13 @@ fun buildGameListQuery(
                         "AND Game.releaseDateInMillis < $endReleaseDateMillis AND "
             }
 
-    val queryMiddle = if (platformsIndices.size == 0) {
+    val queryMiddle = if (platformsIndices.isEmpty()) {
         // If no platforms are selected, choose a WHERE clause that always returns zero rows so no games appear.
         "1 = 2 "
     } else {
         // Create a LIKE clause for each platform the user has selected.
         platformsIndices.joinToString(prefix = "(", postfix = ")", separator = " OR ") {
-            "Game.platforms LIKE '%${allPlatforms[it].abbreviation},%' "
+            "Game.platforms LIKE '%,${allKnownPlatforms[it].abbreviation},%' "
         }
     }
 

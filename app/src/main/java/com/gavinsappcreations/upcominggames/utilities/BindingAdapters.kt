@@ -133,11 +133,8 @@ fun TextView.formatPlatformList(platforms: List<String>?) {
 
     text = if (platforms != null) {
         val builder = StringBuilder()
-        for (abbreviatedPlatform in platforms) {
-            val platformIndex = allPlatforms.indexOfFirst {
-                it.abbreviation == abbreviatedPlatform
-            }
-            builder.append(allPlatforms[platformIndex].fullName).append("\n")
+        for (platformName in platforms) {
+            builder.append(platformName).append("\n")
         }
         builder.trim()
     } else {
@@ -170,8 +167,6 @@ fun TextInputLayout.setCustomDateVisibility(releaseDateType: ReleaseDateType) {
 }
 
 
-// TODO: could I just pass in entire sortOptions LiveData to these methods and get rid of PropertyAwareMutableLiveData?
-// TODO: I would just call notifyObserver() in these methods
 
 // This runs every time the LiveData value changes, and its job is to change the RadioGroup's checkedId.
 @BindingAdapter("releaseDateType")

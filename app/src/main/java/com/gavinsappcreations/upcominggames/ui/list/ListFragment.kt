@@ -44,6 +44,8 @@ class ListFragment : Fragment() {
 
         binding.searchTextView.setOnClickListener {
             viewModel.onNavigateToSearchFragment()
+
+            //viewModel.getAllGames()
         }
 
         viewModel.gameList.observe(viewLifecycleOwner, Observer {

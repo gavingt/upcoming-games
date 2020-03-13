@@ -67,6 +67,23 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
+
+/*    fun getAllGames() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val allGames = gameRepository.getAllGames()
+
+                for (game in allGames) {
+
+                    gameRepository.updateGame(game)
+                }
+
+                Log.d("LOG", "hello")
+            }
+        }
+    }*/
+
+
     //Factory for constructing ListViewModel with Application parameter.
     class Factory(private val application: Application) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {

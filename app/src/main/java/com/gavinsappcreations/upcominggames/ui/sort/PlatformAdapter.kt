@@ -1,24 +1,20 @@
 package com.gavinsappcreations.upcominggames.ui.sort
 
-import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
-import androidx.core.util.set
 import androidx.recyclerview.widget.RecyclerView
 import com.gavinsappcreations.upcominggames.R
-import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.domain.Platform
 import com.gavinsappcreations.upcominggames.domain.SortOptions
 import com.gavinsappcreations.upcominggames.utilities.PropertyAwareMutableLiveData
-import com.gavinsappcreations.upcominggames.utilities.allPlatforms
-import com.gavinsappcreations.upcominggames.utilities.notifyObserver
+import com.gavinsappcreations.upcominggames.utilities.allKnownPlatforms
 
 class PlatformAdapter (private val unsavedSortOptions: PropertyAwareMutableLiveData<SortOptions>) :
     RecyclerView.Adapter<PlatformAdapter.ViewHolder>() {
 
-    val data = allPlatforms
+    val data = allKnownPlatforms
 
     override fun getItemCount() = data.size
 

@@ -37,6 +37,8 @@ class GameRepository private constructor(application: Application) {
     val databaseState: LiveData<DatabaseState>
         get() = _loadingState
 
+    // TODO: make val platforms: LiveData<List<Platform>> here
+
     init {
         // Fetch sort options from SharedPrefs
         val releaseDateType: ReleaseDateType = enumValueOf(
@@ -121,9 +123,14 @@ class GameRepository private constructor(application: Application) {
         return when (sortOptions.platformType) {
             PlatformType.CurrentGeneration -> {
                 // TODO: make this a constant or something so it's explicit which consoles are considered current
-                platformIndices.apply { addAll(0..14) }
+
+                val currentGenerationRange = IntRange(0, 14)
+
+                platformIndices.apply {
+                    addAll(currentGenerationRange)
+                }
             }
-            PlatformType.All -> platformIndices.apply { addAll(allPlatforms.indices) }
+            PlatformType.All -> platformIndices.apply { addAll(allKnownPlatforms.indices) }
             PlatformType.PickFromList -> sortOptions.platformIndices
         }
     }
@@ -210,6 +217,15 @@ class GameRepository private constructor(application: Application) {
             database.gameDao.insertAll(gameList.asDatabaseModel())
         }
     }
+
+
+/*    fun getAllGames(): List<Game> {
+        return database.gameDao.getAllGames()
+    }
+
+    fun updateGame(game: Game) {
+        database.gameDao.updateGame(game)
+    }*/
 
 
     suspend fun downloadGameDetailData(guid: String): GameDetail {

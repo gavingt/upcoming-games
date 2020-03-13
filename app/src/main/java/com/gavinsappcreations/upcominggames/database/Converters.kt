@@ -9,10 +9,11 @@ class Converters {
     fun listToString(list: List<String>?): String {
 
         if (list == null) {
-            return "NONE,"
+            return ",NONE,"
         }
 
         val stringBuilder = StringBuilder()
+        stringBuilder.append(",")
         for (item in list) {
             stringBuilder.append(item).append(",")
         }
@@ -21,6 +22,6 @@ class Converters {
 
     @TypeConverter
     fun stringToList(string: String): List<String> {
-        return string.substring(0, string.length - 1).split(",")
+        return string.removePrefix(",").removeSuffix(",").split(",")
     }
 }
