@@ -42,6 +42,8 @@
     <string name="unknown">Unknown</string>
     <string name="any">Any</string>
     <string name="more_options">more options</string>
+    <string name="search_by_game_title">Search by game title</string>
+    <string name="search_item">search item</string>
 
 
 </resources>

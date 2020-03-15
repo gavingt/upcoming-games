@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="game"
+            type="com.gavinsappcreations.upcominggames.domain.Game" />
+    </data>
+
+    <TextView
+        android:id="@+id/search_item_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_normal"
+        android:layout_marginEnd="@dimen/margin_normal"
+        android:background="?android:attr/selectableItemBackground"
+        android:drawableStart="@drawable/search"
+        android:drawablePadding="@dimen/margin_normal"
+        android:drawableTint="?attr/colorOnBackgroundHighContrast"
+        android:ellipsize="end"
+        android:lines="1"
+        android:paddingStart="@dimen/margin_extra_small"
+        android:paddingTop="@dimen/margin_normal"
+        android:paddingEnd="@dimen/margin_extra_small"
+        android:paddingBottom="@dimen/margin_normal"
+        android:text="@{game.gameName}"
+        android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Subtitle"
+        tools:text="Halo Infinite" />
+
+</layout>

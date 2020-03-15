@@ -108,11 +108,23 @@ class GameRepository private constructor(application: Application) {
 
         val dataSourceFactory: DataSource.Factory<Int, Game> = database.gameDao.getGameList(query)
 
-        val data: LiveData<PagedList<Game>> =
-            LivePagedListBuilder(dataSourceFactory, DATABASE_PAGE_SIZE)
-                .build()
+        return LivePagedListBuilder(dataSourceFactory, DATABASE_PAGE_SIZE)
+            .build()
+    }
 
-        return data
+
+    fun searchGameList(searchString: String): LiveData<PagedList<Game>> {
+
+        val query = if (searchString.trim().isEmpty()) {
+            ""
+        } else {
+            "%${searchString.replace(' ', '%')}%"
+        }
+
+        val dataSourceFactory: DataSource.Factory<Int, Game> =
+            database.gameDao.searchGameList(query)
+
+        return LivePagedListBuilder(dataSourceFactory, DATABASE_PAGE_SIZE).build()
     }
 
 

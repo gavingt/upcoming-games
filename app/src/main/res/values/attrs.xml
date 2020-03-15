@@ -2,6 +2,7 @@
 <resources>
     <attr name="colorBackgroundVariant" format="color" />
     <attr name="colorOnBackgroundVariant" format="color" />
+    <attr name="colorOnBackgroundVeryHighContrast" format="color" />
     <attr name="colorOnBackgroundHighContrast" format="color" />
     <attr name="colorOnBackgroundMediumContrast" format="color" />
     <attr name="colorOnBackgroundLowContrast" format="color" />

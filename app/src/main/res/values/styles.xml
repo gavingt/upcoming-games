@@ -7,6 +7,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:colorBackground">@color/colorBackground</item>
         <item name="colorBackgroundVariant">@color/colorBackgroundVariant</item>
+        <item name="colorOnBackgroundVeryHighContrast">@color/colorOnBackgroundVeryHighContrast</item>
         <item name="colorOnBackgroundHighContrast">@color/colorOnBackgroundHighContrast</item>
         <item name="colorOnBackgroundMediumContrast">@color/colorOnBackgroundMediumContrast</item>
         <item name="colorOnBackgroundLowContrast">@color/colorOnBackgroundLowContrast</item>

@@ -17,6 +17,7 @@ import com.gavinsappcreations.upcominggames.R
 import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.ui.detail.ScreenshotAdapter
 import com.gavinsappcreations.upcominggames.ui.list.GameGridAdapter
+import com.gavinsappcreations.upcominggames.ui.search.SearchAdapter
 import com.google.android.material.textfield.TextInputLayout
 import java.text.SimpleDateFormat
 import java.util.*
@@ -102,8 +103,9 @@ fun RecyclerView.bindListRecyclerView(gameList: PagedList<Game>?, databaseState:
 }
 
 
+
 @BindingAdapter("gameListProgressBarVisibility")
-fun ContentLoadingProgressBar.setGameListProgressBarVisibility(databaseState: DatabaseState) {
+fun ContentLoadingProgressBar.bindGameListProgressBarVisibility(databaseState: DatabaseState) {
     when (databaseState) {
         DatabaseState.Success -> hide()
         else -> show()
@@ -120,7 +122,7 @@ fun RecyclerView.bindScreenshotRecyclerView(data: List<String>?) {
 
 
 @BindingAdapter("gameDetailProgressBarVisibility")
-fun ContentLoadingProgressBar.setGameDetailProgressBarVisibility(networkState: NetworkState) {
+fun ContentLoadingProgressBar.bindGameDetailProgressBarVisibility(networkState: NetworkState) {
     when (networkState) {
         NetworkState.Success -> hide()
         else -> show()
@@ -129,7 +131,7 @@ fun ContentLoadingProgressBar.setGameDetailProgressBarVisibility(networkState: N
 
 
 @BindingAdapter("platformList")
-fun TextView.formatPlatformList(platforms: List<String>?) {
+fun TextView.bindPlatformList(platforms: List<String>?) {
 
     text = if (platforms != null) {
         val builder = StringBuilder()
@@ -144,7 +146,7 @@ fun TextView.formatPlatformList(platforms: List<String>?) {
 
 
 @BindingAdapter("gameDetailList")
-fun TextView.formatGameDetailList(items: List<String>?) {
+fun TextView.bindGameDetailList(items: List<String>?) {
     text = if (items != null) {
         val builder = StringBuilder()
         for (item in items) {
@@ -170,7 +172,7 @@ fun TextInputLayout.setCustomDateVisibility(releaseDateType: ReleaseDateType) {
 
 // This runs every time the LiveData value changes, and its job is to change the RadioGroup's checkedId.
 @BindingAdapter("releaseDateType")
-fun RadioGroup.setReleaseDateType(type: ReleaseDateType) {
+fun RadioGroup.bindReleaseDateType(type: ReleaseDateType) {
 
     val isInitializing = checkedRadioButtonId == -1
 
@@ -196,7 +198,7 @@ fun RadioGroup.setReleaseDateType(type: ReleaseDateType) {
 
 // This runs every time a new RadioButton is selected, and its job is to change the LiveData's value.
 @InverseBindingAdapter(attribute = "releaseDateType")
-fun RadioGroup.getReleaseDateType(): ReleaseDateType {
+fun RadioGroup.setReleaseDateType(): ReleaseDateType {
 
     return when (checkedRadioButtonId) {
         R.id.recent_and_upcoming_releases_radioButton -> ReleaseDateType.RecentAndUpcoming
@@ -219,7 +221,7 @@ fun RadioGroup.setReleaseDateTypeListeners(listener: InverseBindingListener) {
 
 // This runs every time the LiveData value changes, and its job is to change the RadioGroup's checkedId.
 @BindingAdapter("sortDirection")
-fun RadioGroup.setSortDirection(sortDirection: SortDirection) {
+fun RadioGroup.bindSortDirection(sortDirection: SortDirection) {
 
     val isInitializing = checkedRadioButtonId == -1
 
@@ -242,7 +244,7 @@ fun RadioGroup.setSortDirection(sortDirection: SortDirection) {
 
 // This runs every time a new RadioButton is selected, and its job is to change the LiveData's value.
 @InverseBindingAdapter(attribute = "sortDirection")
-fun RadioGroup.getSortDirection(): SortDirection {
+fun RadioGroup.setSortDirection(): SortDirection {
 
     return when (checkedRadioButtonId) {
         R.id.sort_ascending_radioButton -> SortDirection.Ascending
@@ -262,7 +264,7 @@ fun RadioGroup.setSortDirectionListeners(listener: InverseBindingListener) {
 
 // This runs every time the LiveData value changes, and its job is to change the RadioGroup's checkedId.
 @BindingAdapter("platformType")
-fun RadioGroup.setPlatformType(platformType: PlatformType) {
+fun RadioGroup.bindPlatformType(platformType: PlatformType) {
 
     val isInitializing = checkedRadioButtonId == -1
 
@@ -286,7 +288,7 @@ fun RadioGroup.setPlatformType(platformType: PlatformType) {
 
 // This runs every time a new RadioButton is selected, and its job is to change the LiveData's value.
 @InverseBindingAdapter(attribute = "platformType")
-fun RadioGroup.getPlatformType(): PlatformType {
+fun RadioGroup.setPlatformType(): PlatformType {
 
     return when (checkedRadioButtonId) {
         R.id.current_generation_radioButton -> PlatformType.CurrentGeneration
@@ -304,3 +306,17 @@ fun RadioGroup.setPlatformTypeListeners(listener: InverseBindingListener) {
     }
 }
 
+
+
+//This BindingAdapter function gets called automatically whenever searchResults changes.
+@BindingAdapter("searchResults")
+fun RecyclerView.bindSearchRecyclerView(gameList: PagedList<Game>?) {
+    val adapter = adapter as SearchAdapter
+
+    adapter.submitList(gameList) {
+        // This Runnable moves the list back to the top when changing sort options
+/*        if (databaseState == DatabaseState.Loading) {
+            scrollToPosition(0)
+        }*/
+    }
+}

@@ -46,10 +46,10 @@
                     android:layout_weight="1"
                     android:drawableStart="@drawable/search"
                     android:drawablePadding="16dp"
-                    android:drawableTint="?attr/colorOnBackgroundHighContrast"
+                    android:drawableTint="?attr/colorOnBackgroundVeryHighContrast"
                     android:text="@string/search_all_games"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                    android:textColor="?attr/colorOnBackgroundHighContrast" />
+                    android:textColor="?attr/colorOnBackgroundVeryHighContrast" />
 
                 <ImageButton
                     android:id="@+id/sort_imageButton"
@@ -60,7 +60,7 @@
                     android:contentDescription="@string/filter"
                     android:padding="4dp"
                     android:src="@drawable/filter"
-                    android:tint="?attr/colorOnBackgroundHighContrast" />
+                    android:tint="?attr/colorOnBackgroundVeryHighContrast" />
 
             </LinearLayout>
 

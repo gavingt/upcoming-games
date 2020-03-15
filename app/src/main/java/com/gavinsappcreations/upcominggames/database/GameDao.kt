@@ -18,6 +18,9 @@ interface GameDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(games: List<Game>)
 
+    @Query("SELECT * FROM Game WHERE Game.gameName LIKE :query ORDER BY Game.releaseDateInMillis DESC")
+    fun searchGameList(query: String): DataSource.Factory<Int, Game>
+
 /*        @Query("SELECT * from Game")
     fun getAllGames(): List<Game>
 

@@ -9,7 +9,8 @@
     <color name="colorBackground">#F0F0F0</color>
     <color name="colorBackgroundVariant">#FFFFFF</color>
     <color name="colorOnBackground">#000000</color>
-    <color name="colorOnBackgroundHighContrast">#666666</color>
+    <color name="colorOnBackgroundVeryHighContrast">#666666</color>
+    <color name="colorOnBackgroundHighContrast">#909090</color>
     <color name="colorOnBackgroundMediumContrast">#AAAAAA</color>
     <color name="colorOnBackgroundLowContrast">#E0E0E0</color>
     <color name="colorErrorText">#CC0000</color>
