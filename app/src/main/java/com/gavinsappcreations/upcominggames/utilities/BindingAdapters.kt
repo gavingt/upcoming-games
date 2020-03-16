@@ -124,8 +124,8 @@ fun RecyclerView.bindScreenshotRecyclerView(data: List<String>?) {
 @BindingAdapter("gameDetailProgressBarVisibility")
 fun ContentLoadingProgressBar.bindGameDetailProgressBarVisibility(networkState: NetworkState) {
     when (networkState) {
-        NetworkState.Success -> hide()
-        else -> show()
+        NetworkState.Loading -> show()
+        else -> hide()
     }
 }
 

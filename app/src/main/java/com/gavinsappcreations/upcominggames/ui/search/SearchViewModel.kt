@@ -28,10 +28,6 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
         gameRepository.searchGameList(it)
     }
 
-    // TODO: handle network errors in search and detail fragments
-
-    // TODO: create class called GameSearchResult to wrap search result and error state
-
     fun onSearchQueryChanged(newSearchQuery: String) {
         searchQuery.value = newSearchQuery
     }

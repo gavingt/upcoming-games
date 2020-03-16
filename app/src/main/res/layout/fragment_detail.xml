@@ -6,7 +6,8 @@
 
     <data>
 
-        <import type="com.gavinsappcreations.upcominggames.utilities.NetworkState"/>
+        <import type="com.gavinsappcreations.upcominggames.utilities.NetworkState" />
+
         <import type="android.view.View" />
 
         <variable
@@ -18,13 +19,45 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/error_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:gravity="center"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
+            android:text="@string/no_network_connection"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:visibility="@{viewModel.networkState == NetworkState.Failure ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toTopOf="@id/retryButton"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <Button
+            android:id="@+id/retryButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="?attr/colorAccent"
+            android:onClick="@{()-> viewModel.downloadGameDetailData()}"
+            android:text="@string/retry"
+            android:textAllCaps="false"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:visibility="@{viewModel.networkState == NetworkState.Failure ? View.VISIBLE : View.GONE}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/error_textView" />
+
         <ImageButton
             android:id="@+id/up_navigation_imageButton"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
+            android:layout_marginStart="@dimen/margin_normal"
             android:layout_marginTop="@dimen/margin_extra_small"
             android:layout_marginBottom="@dimen/margin_extra_small"
-            android:layout_marginStart="@dimen/margin_normal"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/nav_app_bar_navigate_up_description"
             android:src="@drawable/ic_left_arrow"
@@ -37,21 +70,22 @@
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:layout_marginTop="@dimen/margin_extra_small"
-            android:layout_marginBottom="@dimen/margin_extra_small"
             android:layout_marginEnd="@dimen/margin_normal"
+            android:layout_marginBottom="@dimen/margin_extra_small"
             android:background="?selectableItemBackgroundBorderless"
             android:contentDescription="@string/more_options"
             android:src="@drawable/link"
             android:tint="?attr/colorOnBackground"
+            android:visibility="@{viewModel.networkState == NetworkState.Success ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@id/up_navigation_imageButton"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/up_navigation_imageButton" />
 
         <com.gavinsappcreations.upcominggames.ui.detail.NestedScrollingParentScrollView
             android:id="@+id/scrollView"
-            android:visibility="@{viewModel.networkState == NetworkState.Success ? View.VISIBLE : View.INVISIBLE}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:visibility="@{viewModel.networkState == NetworkState.Success ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="@id/horizontal_line_view">
 
@@ -134,11 +168,11 @@
                             inGameDetailFragment="@{true}"
                             releaseDateInMillis="@{viewModel.gameDetail.releaseDateInMillis}"
                             android:layout_width="0dp"
-                            app:layout_constraintRight_toRightOf="parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/margin_large"
                             android:textSize="15sp"
                             app:layout_constraintLeft_toRightOf="@id/release_date_label_textView"
+                            app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toTopOf="@id/release_date_label_textView"
                             tools:text="September 19, 2020" />
 
@@ -156,10 +190,10 @@
                             android:id="@+id/platforms_value_textView"
                             platformList="@{viewModel.gameDetail.platforms}"
                             android:layout_width="0dp"
-                            app:layout_constraintRight_toRightOf="parent"
                             android:layout_height="wrap_content"
                             android:textSize="15sp"
                             app:layout_constraintLeft_toLeftOf="@id/release_date_value_textView"
+                            app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toTopOf="@id/platforms_label_textView"
                             tools:text="Xbox One\nPC\nNES" />
 
@@ -177,10 +211,10 @@
                             android:id="@+id/developers_value_textView"
                             gameDetailList="@{viewModel.gameDetail.developers}"
                             android:layout_width="0dp"
-                            app:layout_constraintRight_toRightOf="parent"
                             android:layout_height="wrap_content"
                             android:textSize="15sp"
                             app:layout_constraintLeft_toLeftOf="@id/release_date_value_textView"
+                            app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toTopOf="@id/developers_label_textView"
                             tools:text="Bungie\nBlizzard\nTurn10" />
 
@@ -198,10 +232,10 @@
                             android:id="@+id/publishers_value_textView"
                             gameDetailList="@{viewModel.gameDetail.publishers}"
                             android:layout_width="0dp"
-                            app:layout_constraintRight_toRightOf="parent"
                             android:layout_height="wrap_content"
                             android:textSize="15sp"
                             app:layout_constraintLeft_toLeftOf="@id/release_date_value_textView"
+                            app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toTopOf="@id/publishers_label_textView"
                             tools:text="Microsoft\nSony\nActivision" />
 
@@ -219,10 +253,10 @@
                             android:id="@+id/genres_value_textView"
                             gameDetailList="@{viewModel.gameDetail.genres}"
                             android:layout_width="0dp"
-                            app:layout_constraintRight_toRightOf="parent"
                             android:layout_height="wrap_content"
                             android:textSize="15sp"
                             app:layout_constraintLeft_toLeftOf="@id/release_date_value_textView"
+                            app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toTopOf="@id/genres_label_textView"
                             tools:text="Microsoft\nSony\nActivision" />
 
@@ -240,10 +274,10 @@
                             android:id="@+id/ratings_value_textView"
                             gameDetailList="@{viewModel.gameDetail.gameRating}"
                             android:layout_width="0dp"
-                            app:layout_constraintRight_toRightOf="parent"
                             android:layout_height="wrap_content"
                             android:textSize="15sp"
                             app:layout_constraintLeft_toLeftOf="@id/release_date_value_textView"
+                            app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toTopOf="@id/ratings_label_textView"
                             tools:text="ESRB: T\nPEGI: 16" />
 

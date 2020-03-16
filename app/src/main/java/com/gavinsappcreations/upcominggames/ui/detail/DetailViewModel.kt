@@ -9,7 +9,7 @@ import com.gavinsappcreations.upcominggames.utilities.Event
 import com.gavinsappcreations.upcominggames.utilities.NetworkState
 import kotlinx.coroutines.launch
 
-class DetailViewModel(application: Application, guid: String) : AndroidViewModel(application) {
+class DetailViewModel(application: Application, val guid: String) : AndroidViewModel(application) {
 
     private val gamesRepository = GameRepository.getInstance(application)
 
@@ -30,6 +30,10 @@ class DetailViewModel(application: Application, guid: String) : AndroidViewModel
         get() = _navigateToScreenshotFragment
 
     init {
+        downloadGameDetailData()
+    }
+
+    fun downloadGameDetailData() {
         _networkState.value = NetworkState.Loading
         viewModelScope.launch {
             try {
