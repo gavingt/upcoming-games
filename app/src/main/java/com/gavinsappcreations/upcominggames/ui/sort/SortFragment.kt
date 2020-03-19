@@ -65,7 +65,7 @@ class SortFragment : Fragment() {
         }
 
         viewModel.popBackStack.observe(viewLifecycleOwner, Observer {
-            hideKeyboard(requireActivity())
+            hideKeyboard(binding.startDateTextInputEditText)
             findNavController().popBackStack()
         })
 
@@ -74,7 +74,7 @@ class SortFragment : Fragment() {
             it.getContentIfNotHandled()?.let {updateSortOptions ->
                 if (updateSortOptions) {
                     viewModel.saveNewSortOptions()
-                    hideKeyboard(requireActivity())
+                    hideKeyboard(binding.startDateTextInputEditText)
                     findNavController().popBackStack()
                 } else {
                     displayInvalidDateToast()
@@ -89,7 +89,7 @@ class SortFragment : Fragment() {
 
     private fun displayInvalidDateToast() {
         Toast.makeText(
-            App.applicationContext,
+            requireContext(),
             "Before proceeding, you must enter valid dates in the \"Release date\" section.",
             Toast.LENGTH_LONG
         ).show()

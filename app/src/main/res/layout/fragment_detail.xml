@@ -106,7 +106,7 @@
                     <ImageView
                         android:id="@+id/main_imageView"
                         imageUrl="@{viewModel.gameDetail.mainImageUrl}"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="170dp"
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/game_cover"

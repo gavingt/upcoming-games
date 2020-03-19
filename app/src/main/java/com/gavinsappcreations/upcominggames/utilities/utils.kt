@@ -79,10 +79,10 @@ fun fetchReleaseDateInMillis(
 }
 
 
-fun hideKeyboard(activity: Activity) {
+fun hideKeyboard(view: View) {
     val inputMethodManager =
-        activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-    inputMethodManager.hideSoftInputFromWindow(activity.currentFocus!!.windowToken, 0)
+        view.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
 }
 
 fun showSoftKeyboard(view: View) {

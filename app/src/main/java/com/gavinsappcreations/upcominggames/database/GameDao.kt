@@ -67,8 +67,8 @@ fun buildGameListQuery(
                 ""
             } else {
                 // These two lines constrain the games returned to be within the date range requested.
-                "Game.releaseDateInMillis > $startReleaseDateMillis " +
-                        "AND Game.releaseDateInMillis < $endReleaseDateMillis AND "
+                "Game.releaseDateInMillis >= $startReleaseDateMillis " +
+                        "AND Game.releaseDateInMillis <= $endReleaseDateMillis AND "
             }
 
     val queryMiddle = if (platformsIndices.isEmpty()) {

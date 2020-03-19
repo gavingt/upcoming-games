@@ -69,7 +69,7 @@ class SearchFragment : Fragment() {
 
         viewModel.navigateToDetailFragment.observe(viewLifecycleOwner, Observer {
             it.getContentIfNotHandled()?.let { game ->
-                hideKeyboard(requireActivity())
+                hideKeyboard(binding.searchEditText)
                 NavHostFragment.findNavController(this).navigate(
                     SearchFragmentDirections.actionSearchFragmentToDetailFragment(game.guid)
                 )
@@ -77,7 +77,7 @@ class SearchFragment : Fragment() {
         })
 
         viewModel.popBackStack.observe(viewLifecycleOwner, Observer {
-            hideKeyboard(requireActivity())
+            hideKeyboard(binding.searchEditText)
             findNavController().popBackStack()
         })
 

@@ -12,10 +12,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.gavinsappcreations.upcominggames.databinding.FragmentDetailBinding
 
-// TODO: handle network errors in DetailFragment
-
-// TODO: create class called GameDetailResult to wrap game result and error state
-
 class DetailFragment : Fragment() {
 
     private val viewModel: DetailViewModel by lazy {

@@ -1,8 +1,8 @@
 package com.gavinsappcreations.upcominggames.repository
 
-import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
@@ -14,6 +14,7 @@ import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.domain.GameDetail
 import com.gavinsappcreations.upcominggames.domain.SortOptions
 import com.gavinsappcreations.upcominggames.network.GameNetwork
+import com.gavinsappcreations.upcominggames.network.NetworkGameContainer
 import com.gavinsappcreations.upcominggames.network.asDatabaseModel
 import com.gavinsappcreations.upcominggames.network.asDomainModel
 import com.gavinsappcreations.upcominggames.utilities.*
@@ -22,23 +23,48 @@ import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 
-class GameRepository private constructor(application: Application) {
+
+class GameRepository private constructor(application: Context) {
 
     private val database = getDatabase(application)
 
-    private val prefs: SharedPreferences =
+    val prefs: SharedPreferences =
         application.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
 
     private val _sortOptions = MutableLiveData<SortOptions>()
     val sortOptions: LiveData<SortOptions>
         get() = _sortOptions
 
-    private val _loadingState = MutableLiveData(DatabaseState.Loading)
+    // TODO: get rid of this
+    private val _databaseState = MutableLiveData(DatabaseState.Loading)
     val databaseState: LiveData<DatabaseState>
-        get() = _loadingState
+        get() = _databaseState
+
+/*    private val _loadingState = MutableLiveData(LoadingState.UpdatingFromApi())
+    val databaseState: LiveData<DatabaseState>
+        get() = _loadingState*/
+
+    // TODO: grab DATE_LAST_UPDATED from Prefs. If it's over a few days old, change LoadingState value to a unique state that will show a banner in ListFragment.
 
 
     init {
+
+        // Initialize _loadingState.
+        val dateLastUpdated = prefs.getString(KEY_DATE_LAST_UPDATED, ORIGINAL_DATE_LAST_UPDATED)!!
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        val calendar: Calendar = Calendar.getInstance()
+        calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - 2)
+        val twoDaysAgoInMillis = calendar.timeInMillis
+
+        calendar.time = formatter.parse(dateLastUpdated)!!
+        val dateLastUpdatedInMillis = calendar.timeInMillis
+        if (twoDaysAgoInMillis > dateLastUpdatedInMillis) {
+            // TODO: uncomment
+            //_loadingState.value = LoadingState.DataStale
+        }
+
+
+
         // Fetch sort options from SharedPrefs
         val releaseDateType: ReleaseDateType = enumValueOf(
             prefs.getString(KEY_RELEASE_DATE_TYPE, ReleaseDateType.RecentAndUpcoming.name)!!
@@ -73,7 +99,7 @@ class GameRepository private constructor(application: Application) {
     // Update value of _sortOptions and also save that value to SharedPrefs.
     fun saveNewSortOptions(newSortOptions: SortOptions) {
 
-        _loadingState.value = DatabaseState.LoadingSortChange
+        _databaseState.value = DatabaseState.LoadingSortChange
 
         _sortOptions.value = newSortOptions
 
@@ -91,7 +117,7 @@ class GameRepository private constructor(application: Application) {
 
 
     fun updateDatabaseState(newState: DatabaseState) {
-        _loadingState.value = newState
+        _databaseState.value = newState
     }
 
 
@@ -150,15 +176,21 @@ class GameRepository private constructor(application: Application) {
         var dateEndMillis: Long?
 
         val calendar: Calendar = Calendar.getInstance()
+        // Make it so hour, minute, second, and millisecond don't affect the timeInMillis returned.
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+
         val currentTimeMillis = calendar.timeInMillis
 
         when (sortOptions.releaseDateType) {
             ReleaseDateType.RecentAndUpcoming -> {
-                // dateFilterStart is set to one week before current day.
+                // dateStartMillis is set to one week before current day.
                 calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - 7)
                 dateStartMillis = calendar.timeInMillis
 
-                // dateFilterEnd is set to a far-off date so that every future game will be listed.
+                // dateEndMillis is set to a far-off date so that every future game will be listed.
                 calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + 100)
                 dateEndMillis = calendar.timeInMillis
             }
@@ -167,30 +199,35 @@ class GameRepository private constructor(application: Application) {
                 dateEndMillis = null
             }
             ReleaseDateType.PastMonth -> {
-                // dateFilterStart is set to one month before current day.
+                // dateStartMillis is set to one month before current day.
                 calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1)
                 dateStartMillis = calendar.timeInMillis
 
-                // dateFilterEnd is set to current time.
+                // dateEndMillis is set to current time.
                 dateEndMillis = currentTimeMillis
             }
             ReleaseDateType.PastYear -> {
-                // dateFilterStart is set to one year before current day.
+                // dateStartMillis is set to one year before current day.
                 calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) - 1)
                 dateStartMillis = calendar.timeInMillis
 
-                // dateFilterEnd is set to current time.
+                // dateEndMillis is set to current time.
                 dateEndMillis = currentTimeMillis
             }
             ReleaseDateType.CustomDate -> {
-                val df = SimpleDateFormat("MM/dd/yyyy")
+                val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.US)
 
                 val startDateString = sortOptions.customDateStart
-                calendar.time = df.parse(startDateString)!!
+                calendar.time = formatter.parse(startDateString)!!
                 dateStartMillis = calendar.timeInMillis
 
                 val endDateString = sortOptions.customDateEnd
-                calendar.time = df.parse(endDateString)!!
+                calendar.time = formatter.parse(endDateString)!!
+
+                // To get the last millisecond of the day, we add a day and subtract a millisecond.
+                calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1)
+                calendar.set(Calendar.MILLISECOND, calendar.get(Calendar.MILLISECOND) - 1)
+
                 dateEndMillis = calendar.timeInMillis
 
                 // If the end date is before the start date, just flip them.
@@ -206,24 +243,124 @@ class GameRepository private constructor(application: Application) {
     }
 
 
-    // TODO: modify this to fetch new games with WorkManager (query API using lastUpdated field as filter)
-    suspend fun downloadGameListData(offset: Int) {
-        val gameList = GameNetwork.gameData.getGameListData(
+    /**
+     * We build a query for games that have been updated in the database since the last time we
+     * checked. But to reduce the data to be loaded, we further filter the query by games whose
+     * release dates are either less than two months old or still upcoming (since we assume that
+     * any game that's been out for at least two months already has its release date set correctly
+     * in the database). */
+    suspend fun updateGameListData() {
+
+        // TODO: set _updateNetworkState.value to NetworkState.LOADING(0)
+
+        var offset = 0
+
+        /**
+         * First we assemble the starting and ending dates for the "date_last_updated" filter
+         * field of the API. We select the date range starting from the date we last updated our
+         * local database and ending on the current date plus two days (to account for any time zone
+         * weirdness or possible edge cases).
+         */
+
+        val startingDateLastUpdated =
+            prefs.getString(KEY_DATE_LAST_UPDATED, ORIGINAL_DATE_LAST_UPDATED)!!
+
+        var calendar: Calendar = Calendar.getInstance()
+        // Add two days to current day, just to ensure we're getting all the newest data.
+        calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + 2)
+        val desiredPatternFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        val currentDate = desiredPatternFormatter.format(calendar.time)
+
+        /**
+         * Next we assemble the starting and ending dates for the "original_release_date" filter
+         * field of the API. We somewhat arbitrarily select this range to start at the date we last
+         * updated the database minus 2 months, and the ending day to be 100 years in the future
+         * (to account for all unreleased games).
+         */
+        calendar.time = desiredPatternFormatter.parse(startingDateLastUpdated)!!
+        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 2)
+        val startingOriginalReleaseDate = desiredPatternFormatter.format(calendar.time)
+
+        // endingOriginalReleaseDate is set to a far-off date so that every future game will be returned.
+        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + 100)
+        val endingOriginalReleaseDate = desiredPatternFormatter.format(calendar.time)
+
+        // Initially set this to NETWORK_PAGE_SIZE so that the WHILE loop runs at least once.
+        var numResultsInCurrentRequest = NETWORK_PAGE_SIZE
+        var numTotalResults: Int? = null
+
+        try {
+            while (numResultsInCurrentRequest == NETWORK_PAGE_SIZE) {
+
+                Log.d("MYLOG", "updated, offset $offset")
+
+                val networkGameContainer = requestAndSaveGameList(
+                    offset,
+                    startingDateLastUpdated,
+                    currentDate,
+                    startingOriginalReleaseDate,
+                    endingOriginalReleaseDate
+                )
+
+                // Set numTotalResults only on first iteration of WHILE loop.
+                if (numTotalResults == null) {
+                    numTotalResults = networkGameContainer.numberOfTotalResults
+                }
+                numResultsInCurrentRequest = networkGameContainer.numberOfPageResults
+
+                offset += NETWORK_PAGE_SIZE
+
+                // TODO: set _updateNetworkState.value to NetworkState.LOADING(offset/numTotalResults)
+            }
+
+            /**
+             * If all updates are successful, generate and save a new DATE_LAST_UPDATED by subtracting
+             * two days from the current day (again, to account for any unforeseen edge cases).
+             */
+            calendar = Calendar.getInstance()
+            calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - 2)
+            val newDateLastUpdated = desiredPatternFormatter.format(calendar.time)
+
+            prefs.edit().putString(KEY_DATE_LAST_UPDATED, newDateLastUpdated).apply()
+
+            // TODO: set _updateNetworkState.value to NetworkState.Success
+
+        } catch (exception: Exception) {
+            Log.d("MYLOG", "error occurred in updateGameListData")
+            // TODO: set _updateNetworkState.value to NetworkState.FAILURE
+            // TODO: if DATE_LAST_UPDATED is over a few days old, change LoadingState value to LoadingState.StaleData
+        }
+
+    }
+
+
+    private suspend fun requestAndSaveGameList(
+        offset: Int,
+        dateLastUpdated: String,
+        currentDate: String,
+        startingOriginalReleaseDate: String,
+        endingOriginalReleaseDate: String
+    ): NetworkGameContainer {
+        val networkGameContainer = GameNetwork.gameData.getGameListData(
             API_KEY,
             ApiField.Json.field,
-            "${ApiField.OriginalReleaseDate.field}:${SortDirection.Ascending.direction}",
-            "",
+            "${ApiField.DateLastUpdated.field}:${SortDirection.Ascending.direction}",
+            "${ApiField.DateLastUpdated.field}:${dateLastUpdated}|${currentDate}," +
+                    "${ApiField.OriginalReleaseDate.field}:" +
+                    "${startingOriginalReleaseDate}|${endingOriginalReleaseDate}",
             "${ApiField.Id.field},${ApiField.Guid.field},${ApiField.Name.field}," +
                     "${ApiField.Image.field},${ApiField.Platforms.field}," +
                     "${ApiField.OriginalReleaseDate.field},${ApiField.ExpectedReleaseDay.field}," +
                     "${ApiField.ExpectedReleaseMonth.field},${ApiField.ExpectedReleaseYear.field}," +
                     ApiField.ExpectedReleaseQuarter.field,
             offset
-        ).body()!!.games
+        ).body()!!
 
         withContext(Dispatchers.IO) {
-            database.gameDao.insertAll(gameList.asDatabaseModel())
+            database.gameDao.insertAll(networkGameContainer.games.asDatabaseModel())
         }
+
+        return networkGameContainer
     }
 
 
@@ -257,7 +394,7 @@ class GameRepository private constructor(application: Application) {
         @Volatile
         private var instance: GameRepository? = null
 
-        fun getInstance(application: Application) =
+        fun getInstance(application: Context) =
             instance ?: synchronized(this) {
                 instance ?: GameRepository(application).also { instance = it }
             }
