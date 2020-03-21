@@ -6,7 +6,7 @@
 
     <data>
 
-        <import type="com.gavinsappcreations.upcominggames.utilities.NetworkState" />
+        <import type="com.gavinsappcreations.upcominggames.ui.detail.DetailNetworkState" />
 
         <import type="android.view.View" />
 
@@ -29,7 +29,7 @@
             android:paddingEnd="@dimen/margin_normal"
             android:text="@string/no_network_connection"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-            android:visibility="@{viewModel.networkState == NetworkState.Failure ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.detailNetworkState == DetailNetworkState.Failure ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toTopOf="@id/retryButton"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -45,7 +45,7 @@
             android:text="@string/retry"
             android:textAllCaps="false"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-            android:visibility="@{viewModel.networkState == NetworkState.Failure ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.detailNetworkState == DetailNetworkState.Failure ? View.VISIBLE : View.GONE}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -76,7 +76,7 @@
             android:contentDescription="@string/more_options"
             android:src="@drawable/link"
             android:tint="?attr/colorOnBackground"
-            android:visibility="@{viewModel.networkState == NetworkState.Success ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.detailNetworkState == DetailNetworkState.Success ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@id/up_navigation_imageButton"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/up_navigation_imageButton" />
@@ -85,7 +85,7 @@
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:visibility="@{viewModel.networkState == NetworkState.Success ? View.VISIBLE : View.INVISIBLE}"
+            android:visibility="@{viewModel.detailNetworkState == DetailNetworkState.Success ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="@id/horizontal_line_view">
 
@@ -350,7 +350,7 @@
 
         <androidx.core.widget.ContentLoadingProgressBar
             style="?android:attr/progressBarStyleLarge"
-            gameDetailProgressBarVisibility="@{viewModel.networkState}"
+            gameDetailProgressBarVisibility="@{viewModel.detailNetworkState}"
             android:layout_width="96dp"
             android:layout_height="96dp"
             app:layout_constraintBottom_toBottomOf="parent"

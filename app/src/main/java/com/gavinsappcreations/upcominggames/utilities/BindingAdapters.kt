@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.gavinsappcreations.upcominggames.R
 import com.gavinsappcreations.upcominggames.domain.Game
+import com.gavinsappcreations.upcominggames.ui.detail.DetailNetworkState
 import com.gavinsappcreations.upcominggames.ui.detail.ScreenshotAdapter
 import com.gavinsappcreations.upcominggames.ui.list.GameGridAdapter
 import com.gavinsappcreations.upcominggames.ui.search.SearchAdapter
@@ -122,9 +123,9 @@ fun RecyclerView.bindScreenshotRecyclerView(data: List<String>?) {
 
 
 @BindingAdapter("gameDetailProgressBarVisibility")
-fun ContentLoadingProgressBar.bindGameDetailProgressBarVisibility(networkState: NetworkState) {
-    when (networkState) {
-        NetworkState.Loading -> show()
+fun ContentLoadingProgressBar.bindGameDetailProgressBarVisibility(detailNetworkState: DetailNetworkState) {
+    when (detailNetworkState) {
+        DetailNetworkState.Loading -> show()
         else -> hide()
     }
 }

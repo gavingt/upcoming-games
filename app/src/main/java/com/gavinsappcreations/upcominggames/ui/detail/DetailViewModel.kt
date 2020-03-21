@@ -6,7 +6,6 @@ import androidx.lifecycle.*
 import com.gavinsappcreations.upcominggames.domain.GameDetail
 import com.gavinsappcreations.upcominggames.repository.GameRepository
 import com.gavinsappcreations.upcominggames.utilities.Event
-import com.gavinsappcreations.upcominggames.utilities.NetworkState
 import kotlinx.coroutines.launch
 
 class DetailViewModel(application: Application, val guid: String) : AndroidViewModel(application) {
@@ -17,8 +16,8 @@ class DetailViewModel(application: Application, val guid: String) : AndroidViewM
     val gameDetail: LiveData<GameDetail?>
         get() = _gameDetail
 
-    private val _networkState = MutableLiveData<NetworkState>()
-    val networkState: LiveData<NetworkState>
+    private val _networkState = MutableLiveData<DetailNetworkState>()
+    val detailNetworkState: LiveData<DetailNetworkState>
         get() = _networkState
 
     private val _popBackStack = MutableLiveData<Event<Boolean>>()
@@ -34,14 +33,14 @@ class DetailViewModel(application: Application, val guid: String) : AndroidViewM
     }
 
     fun downloadGameDetailData() {
-        _networkState.value = NetworkState.Loading
+        _networkState.value = DetailNetworkState.Loading
         viewModelScope.launch {
             try {
                 _gameDetail.value = gamesRepository.downloadGameDetailData(guid)
-                _networkState.value = NetworkState.Success
+                _networkState.value = DetailNetworkState.Success
             } catch (e: Exception) {
                 Log.d("LOG", "Error: ${e.message ?: "No message"}")
-                _networkState.value = NetworkState.Failure
+                _networkState.value = DetailNetworkState.Failure
             }
         }
     }
