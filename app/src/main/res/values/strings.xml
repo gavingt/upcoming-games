@@ -48,6 +48,7 @@
     <string name="retry">Retry</string>
     <string name="update">update</string>
     <string name="last_updated">This data was last updated %s.</string>
+    <string name="updating_game_database">Updating game database…</string>
 
 
 </resources>

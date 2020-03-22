@@ -22,6 +22,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.Math.ceil
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -89,7 +90,7 @@ class GameRepository private constructor(application: Context) {
 
         // If user is running app for the first time, we need to update the database.
         if (timeLastUpdated == ORIGINAL_TIME_LAST_UPDATED_IN_MILLIS) {
-            _updateState.value = UpdateState.Updating(0)
+            _updateState.value = UpdateState.Updating(0, 0)
             CoroutineScope(Dispatchers.Default).launch {
                 updateGameListData()
             }
@@ -262,7 +263,7 @@ class GameRepository private constructor(application: Context) {
      * in the database). */
     suspend fun updateGameListData() {
 
-        _updateState.postValue(UpdateState.Updating(0))
+        _updateState.postValue(UpdateState.Updating(0, 0))
 
         var offset = 0
 
@@ -306,6 +307,7 @@ class GameRepository private constructor(application: Context) {
         // Initially set this to NETWORK_PAGE_SIZE so that the WHILE loop runs at least once.
         var numResultsInCurrentRequest = NETWORK_PAGE_SIZE
         var numTotalResults: Int? = null
+        var oldProgress = 0
 
         try {
             while (numResultsInCurrentRequest == NETWORK_PAGE_SIZE) {
@@ -328,10 +330,16 @@ class GameRepository private constructor(application: Context) {
 
                 offset += NETWORK_PAGE_SIZE
 
-                // Find current progress by taking the ceiling of offset/numTotalResults
-                val currentProgress = kotlin.math.ceil(offset / numTotalResults.toDouble()).toInt()
+                val currentProgress = if (numTotalResults - offset < NETWORK_PAGE_SIZE) {
+                    // If we're downloading the last page from the API, set progress to 100.
+                    100
+                } else {
+                    // Find current progress by taking the ceiling of offset/numTotalResults.
+                    ((offset / numTotalResults.toDouble()) * 100).toInt()
+                }
 
-                _updateState.postValue(UpdateState.Updating(currentProgress))
+                _updateState.postValue(UpdateState.Updating(oldProgress, currentProgress))
+                oldProgress = currentProgress
             }
 
             /**

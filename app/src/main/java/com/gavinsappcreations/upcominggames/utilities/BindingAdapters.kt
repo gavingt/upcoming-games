@@ -1,8 +1,10 @@
 package com.gavinsappcreations.upcominggames.utilities
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.SharedPreferences
 import android.view.View
+import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import android.widget.RadioGroup
 import android.widget.TextView
@@ -121,13 +123,33 @@ fun RecyclerView.bindListRecyclerView(
 }
 
 
-@BindingAdapter("gameListProgressBarVisibility")
-fun ContentLoadingProgressBar.bindGameListProgressBarVisibility(databaseState: DatabaseState) {
-    when (databaseState) {
-        DatabaseState.Success -> hide()
-        else -> show()
+@BindingAdapter("databaseState", "updateState")
+fun ContentLoadingProgressBar.bindIndeterminateProgressBarVisibility(databaseState: DatabaseState, updateState: UpdateState) {
+    if (updateState is UpdateState.Updating) {
+        hide()
+    } else {
+        when (databaseState) {
+            DatabaseState.Success -> hide()
+            else -> show()
+        }
     }
+}
 
+
+
+@BindingAdapter("determinateProgressBarVisibility")
+fun ContentLoadingProgressBar.bindDeterminateProgressBarVisibility(updateState: UpdateState) {
+    when (updateState) {
+        is UpdateState.Updating -> {
+            progress = updateState.currentProgress
+            val animation = ObjectAnimator.ofInt(this, "progress", updateState.oldProgress, updateState.currentProgress)
+            animation.duration = LOADING_PROGRESS_ANIMATION_TIME
+            animation.interpolator = DecelerateInterpolator()
+            animation.start()
+            show()
+        }
+        else -> hide()
+    }
 }
 
 

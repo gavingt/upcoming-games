@@ -7,6 +7,7 @@
     <data>
 
         <import type="android.view.View" />
+        <import type="com.gavinsappcreations.upcominggames.utilities.UpdateState" />
 
         <variable
             name="viewModel"
@@ -123,8 +124,10 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.core.widget.ContentLoadingProgressBar
+            android:id="@+id/indeterminate_progressBar"
             style="?android:attr/progressBarStyleLarge"
-            gameListProgressBarVisibility="@{viewModel.databaseState}"
+            databaseState="@{viewModel.databaseState}"
+            updateState="@{viewModel.updateState}"
             android:layout_width="96dp"
             android:layout_height="96dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -132,17 +135,33 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-<!--        TODO: below-->
 
-<!--        <androidx.core.widget.ContentLoadingProgressBar
-            style="?android:attr/progressBarStyleLarge"
-            gameListProgressBarVisibility="@{viewModel.databaseState}"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
+        <androidx.core.widget.ContentLoadingProgressBar
+            android:id="@+id/determinate_progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            determinateProgressBarVisibility="@{viewModel.updateState}"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />-->
+            app:layout_constraintTop_toBottomOf="@id/updating_textView" />
+
+
+        <TextView
+            android:id="@+id/updating_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.updateState instanceof UpdateState.Updating ? View.VISIBLE : View.GONE}"
+            android:text="@string/updating_game_database"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            app:layout_constraintBottom_toTopOf="@id/determinate_progressBar"
+            app:layout_constraintLeft_toLeftOf="@id/determinate_progressBar"
+            app:layout_constraintRight_toRightOf="@id/determinate_progressBar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
