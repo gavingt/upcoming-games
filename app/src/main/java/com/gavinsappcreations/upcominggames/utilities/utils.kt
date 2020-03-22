@@ -93,6 +93,19 @@ fun showSoftKeyboard(view: View) {
 }
 
 
+/**
+ *  Returns true if database hasn't been updated in over two days.
+ *  @param: [timeLastUpdatedInMillis] The time in millis when the database was last updated.
+ */
+fun isDataStale(timeLastUpdatedInMillis: Long): Boolean {
+    val calendar: Calendar = Calendar.getInstance()
+    calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - 2)
+    val twoDaysAgoInMillis = calendar.timeInMillis
+
+    return twoDaysAgoInMillis > timeLastUpdatedInMillis
+}
+
+
 
 // We can call this to notify observers after we've changed, for example, a single item in a MutableLiveData<List<T>>
 fun <T> MutableLiveData<T>.notifyObserver() {

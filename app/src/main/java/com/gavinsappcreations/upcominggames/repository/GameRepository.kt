@@ -18,7 +18,9 @@ import com.gavinsappcreations.upcominggames.network.NetworkGameContainer
 import com.gavinsappcreations.upcominggames.network.asDatabaseModel
 import com.gavinsappcreations.upcominggames.network.asDomainModel
 import com.gavinsappcreations.upcominggames.utilities.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
@@ -35,37 +37,23 @@ class GameRepository private constructor(application: Context) {
     val sortOptions: LiveData<SortOptions>
         get() = _sortOptions
 
-    // TODO: get rid of this
     private val _databaseState = MutableLiveData(DatabaseState.Loading)
     val databaseState: LiveData<DatabaseState>
         get() = _databaseState
 
-/*    private val _loadingState = MutableLiveData(LoadingState.UpdatingFromApi())
-    val databaseState: LiveData<DatabaseState>
-        get() = _loadingState*/
-
-    // TODO: grab DATE_LAST_UPDATED from Prefs. If it's over a few days old, change LoadingState value to a unique state that will show a banner in ListFragment.
+    private val _updateState = MutableLiveData<UpdateState>()
+    val updateState: LiveData<UpdateState>
+        get() = _updateState
 
 
     init {
-
-        // Initialize _loadingState.
-        val dateLastUpdated = prefs.getString(KEY_DATE_LAST_UPDATED, ORIGINAL_DATE_LAST_UPDATED)!!
-        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-        val calendar: Calendar = Calendar.getInstance()
-        calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - 2)
-        val twoDaysAgoInMillis = calendar.timeInMillis
-
-        calendar.time = formatter.parse(dateLastUpdated)!!
-        val dateLastUpdatedInMillis = calendar.timeInMillis
-        if (twoDaysAgoInMillis > dateLastUpdatedInMillis) {
-            // TODO: uncomment
-            //_loadingState.value = LoadingState.DataStale
-        }
+        initializeSortOptions()
+        initializeUpdateState()
+    }
 
 
-
-        // Fetch sort options from SharedPrefs
+    // Fetch sort options from SharedPrefs
+    private fun initializeSortOptions() {
         val releaseDateType: ReleaseDateType = enumValueOf(
             prefs.getString(KEY_RELEASE_DATE_TYPE, ReleaseDateType.RecentAndUpcoming.name)!!
         )
@@ -84,7 +72,6 @@ class GameRepository private constructor(application: Context) {
                 it.toInt()
             }.toMutableSet()
 
-
         // Set all sort options to _sortOptions at once
         _sortOptions.value = SortOptions(
             releaseDateType,
@@ -95,6 +82,28 @@ class GameRepository private constructor(application: Context) {
             platformIndices
         )
     }
+
+    private fun initializeUpdateState() {
+        val timeLastUpdated =
+            prefs.getLong(KEY_TIME_LAST_UPDATED_IN_MILLIS, ORIGINAL_TIME_LAST_UPDATED_IN_MILLIS)
+
+        // If user is running app for the first time, we need to update the database.
+        if (timeLastUpdated == ORIGINAL_TIME_LAST_UPDATED_IN_MILLIS) {
+            _updateState.value = UpdateState.Updating(0)
+            CoroutineScope(Dispatchers.Default).launch {
+                updateGameListData()
+            }
+        } else {
+            if (isDataStale(timeLastUpdated)) {
+                // If database hasn't been updated in over 2 days, this will alert the user.
+                _updateState.value = UpdateState.DataStale
+            } else {
+                // If database is recently updated, this will show the ProgressBar.
+                _updateState.value = UpdateState.Updated
+            }
+        }
+    }
+
 
     // Update value of _sortOptions and also save that value to SharedPrefs.
     fun saveNewSortOptions(newSortOptions: SortOptions) {
@@ -251,7 +260,7 @@ class GameRepository private constructor(application: Context) {
      * in the database). */
     suspend fun updateGameListData() {
 
-        // TODO: set _updateNetworkState.value to NetworkState.LOADING(0)
+        _updateState.postValue(UpdateState.Updating(0))
 
         var offset = 0
 
@@ -262,14 +271,21 @@ class GameRepository private constructor(application: Context) {
          * weirdness or possible edge cases).
          */
 
-        val startingDateLastUpdated =
-            prefs.getString(KEY_DATE_LAST_UPDATED, ORIGINAL_DATE_LAST_UPDATED)!!
-
         var calendar: Calendar = Calendar.getInstance()
+        val desiredPatternFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+
+        val timeLastUpdated =
+            prefs.getLong(KEY_TIME_LAST_UPDATED_IN_MILLIS, ORIGINAL_TIME_LAST_UPDATED_IN_MILLIS)
+
+        calendar.timeInMillis = timeLastUpdated
+        val startingDateLastUpdated = desiredPatternFormatter.format(calendar.time)
+
+        // Reinitialize calendar
+        calendar = Calendar.getInstance()
         // Add two days to current day, just to ensure we're getting all the newest data.
         calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + 2)
-        val desiredPatternFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-        val currentDate = desiredPatternFormatter.format(calendar.time)
+        val endingDateLastUpdated = desiredPatternFormatter.format(calendar.time)
+
 
         /**
          * Next we assemble the starting and ending dates for the "original_release_date" filter
@@ -277,7 +293,7 @@ class GameRepository private constructor(application: Context) {
          * updated the database minus 2 months, and the ending day to be 100 years in the future
          * (to account for all unreleased games).
          */
-        calendar.time = desiredPatternFormatter.parse(startingDateLastUpdated)!!
+        calendar.timeInMillis = timeLastUpdated
         calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 2)
         val startingOriginalReleaseDate = desiredPatternFormatter.format(calendar.time)
 
@@ -297,7 +313,7 @@ class GameRepository private constructor(application: Context) {
                 val networkGameContainer = requestAndSaveGameList(
                     offset,
                     startingDateLastUpdated,
-                    currentDate,
+                    endingDateLastUpdated,
                     startingOriginalReleaseDate,
                     endingOriginalReleaseDate
                 )
@@ -310,25 +326,43 @@ class GameRepository private constructor(application: Context) {
 
                 offset += NETWORK_PAGE_SIZE
 
-                // TODO: set _updateNetworkState.value to NetworkState.LOADING(offset/numTotalResults)
+                // Find current progress by taking the ceiling of offset/numTotalResults
+                val currentProgress = kotlin.math.ceil(offset / numTotalResults.toDouble()).toInt()
+
+                _updateState.postValue(UpdateState.Updating(currentProgress))
             }
 
             /**
              * If all updates are successful, generate and save a new DATE_LAST_UPDATED by subtracting
              * two days from the current day (again, to account for any unforeseen edge cases).
              */
+
+            // Reinitialize calendar
             calendar = Calendar.getInstance()
             calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - 2)
-            val newDateLastUpdated = desiredPatternFormatter.format(calendar.time)
+            val newTimeLastUpdatedInMillis = calendar.timeInMillis
 
-            prefs.edit().putString(KEY_DATE_LAST_UPDATED, newDateLastUpdated).apply()
+            prefs.edit().putLong(KEY_TIME_LAST_UPDATED_IN_MILLIS, newTimeLastUpdatedInMillis)
+                .apply()
 
-            // TODO: set _updateNetworkState.value to NetworkState.Success
+            _updateState.postValue(UpdateState.Updated)
 
         } catch (exception: Exception) {
             Log.d("MYLOG", "error occurred in updateGameListData")
-            // TODO: set _updateNetworkState.value to NetworkState.FAILURE
-            // TODO: if DATE_LAST_UPDATED is over a few days old, change LoadingState value to LoadingState.StaleData
+
+            val timeLastUpdatedInMillis =
+                prefs.getLong(KEY_TIME_LAST_UPDATED_IN_MILLIS, ORIGINAL_TIME_LAST_UPDATED_IN_MILLIS)
+
+            /**
+             * Check how long it's been since database was updated. If it's been over two days,
+             * we consider the data stale. Otherwise, we ignore the error and consider the database
+             * to be updated.
+             */
+            if (isDataStale(timeLastUpdatedInMillis)) {
+                _updateState.postValue(UpdateState.DataStale)
+            } else {
+                _updateState.postValue(UpdateState.Updated)
+            }
         }
 
     }

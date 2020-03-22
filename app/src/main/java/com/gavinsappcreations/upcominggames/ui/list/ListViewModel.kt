@@ -1,33 +1,15 @@
 package com.gavinsappcreations.upcominggames.ui.list
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
 import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.repository.GameRepository
 import com.gavinsappcreations.upcominggames.utilities.DatabaseState
 import com.gavinsappcreations.upcominggames.utilities.Event
-import com.gavinsappcreations.upcominggames.utilities.KEY_DATE_LAST_UPDATED
-import com.gavinsappcreations.upcominggames.utilities.ORIGINAL_DATE_LAST_UPDATED
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class ListViewModel(application: Application) : AndroidViewModel(application) {
 
     private val gameRepository = GameRepository.getInstance(application)
-
-    init {
-        viewModelScope.launch {
-
-            val startingDateLastUpdated =
-                gameRepository.prefs.getString(KEY_DATE_LAST_UPDATED, ORIGINAL_DATE_LAST_UPDATED)!!
-
-            // If app database has never been updated before, we immediately update the game list.
-            if (startingDateLastUpdated == ORIGINAL_DATE_LAST_UPDATED) {
-                gameRepository.updateGameListData()
-            }
-        }
-    }
 
     val databaseState = gameRepository.databaseState
 
