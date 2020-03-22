@@ -7,7 +7,6 @@
     <data>
 
         <import type="android.view.View" />
-        <import type="com.gavinsappcreations.upcominggames.utilities.DatabaseState" />
 
         <variable
             name="viewModel"
@@ -24,13 +23,12 @@
             android:id="@+id/search_cardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
             android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_small"
             android:layout_marginEnd="@dimen/margin_small"
-            android:layout_marginBottom="@dimen/margin_extra_extra_small"
             app:cardElevation="4dp"
             app:contentPadding="4dp"
-            app:layout_constraintBottom_toTopOf="@id/game_recyclerView"
+            app:layout_constraintBottom_toTopOf="@id/date_stale_textView"
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
@@ -47,6 +45,7 @@
                     android:drawableStart="@drawable/search"
                     android:drawablePadding="16dp"
                     android:drawableTint="?attr/colorOnBackgroundVeryHighContrast"
+                    android:onClick="@{() -> viewModel.onNavigateToSearchFragment()}"
                     android:text="@string/search_all_games"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                     android:textColor="?attr/colorOnBackgroundVeryHighContrast" />
@@ -58,6 +57,7 @@
                     android:layout_gravity="end"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/filter"
+                    android:onClick="@{() -> viewModel.onNavigateToSortFragment()}"
                     android:padding="4dp"
                     android:src="@drawable/filter"
                     android:tint="?attr/colorOnBackgroundVeryHighContrast" />
@@ -66,19 +66,48 @@
 
         </com.google.android.material.card.MaterialCardView>
 
+        <TextView
+            android:id="@+id/date_stale_textView"
+            dataStaleDateText="@{viewModel.updateState}"
+            dataStaleViewVisibility="@{viewModel.updateState}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_normal"
+            android:textColor="?attr/colorOnBackgroundHighContrast"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/search_cardView"
+            tools:text="@string/last_updated" />
+
+        <Button
+            android:id="@+id/options_button"
+            style="@style/MyTextButtonTheme"
+            dataStaleViewVisibility="@{viewModel.updateState}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_normal"
+            android:letterSpacing="0"
+            android:onClick="@{() -> viewModel.onRequestUpdateDatabase()}"
+            android:text="@string/update"
+            android:textColor="?attr/colorAccent"
+            android:textSize="@dimen/text_button_size"
+            app:layout_constraintBottom_toBottomOf="@id/date_stale_textView"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/date_stale_textView" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/game_recyclerView"
-            gameListData="@{viewModel.gameList}"
             databaseState="@{viewModel.databaseState}"
-            android:visibility="@{viewModel.databaseState == DatabaseState.Success ? View.VISIBLE : View.INVISIBLE}"
+            gameListData="@{viewModel.gameList}"
+            updateState="@{viewModel.updateState}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="@dimen/margin_extra_extra_small"
             android:clipToPadding="false"
-            android:padding="6dp"
             android:overScrollMode="never"
+            android:padding="6dp"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/search_cardView"
+            app:layout_constraintTop_toBottomOf="@id/date_stale_textView"
             app:spanCount="2"
             tools:itemCount="16"
             tools:listitem="@layout/grid_list_item" />
@@ -94,14 +123,26 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.core.widget.ContentLoadingProgressBar
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             style="?android:attr/progressBarStyleLarge"
             gameListProgressBarVisibility="@{viewModel.databaseState}"
             android:layout_width="96dp"
-            android:layout_height="96dp"/>
+            android:layout_height="96dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+<!--        TODO: below-->
+
+<!--        <androidx.core.widget.ContentLoadingProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            gameListProgressBarVisibility="@{viewModel.databaseState}"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

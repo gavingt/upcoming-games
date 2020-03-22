@@ -38,16 +38,6 @@ class ListFragment : Fragment() {
 
         binding.gameRecyclerView.adapter = adapter
 
-        binding.sortImageButton.setOnClickListener {
-            viewModel.onNavigateToSortFragment()
-        }
-
-        binding.searchTextView.setOnClickListener {
-            viewModel.onNavigateToSearchFragment()
-
-            //viewModel.getAllGames()
-        }
-
         viewModel.gameList.observe(viewLifecycleOwner, Observer {
             viewModel.updateDatabaseState()
         })
@@ -71,6 +61,12 @@ class ListFragment : Fragment() {
         viewModel.navigateToSearchFragment.observe(viewLifecycleOwner, Observer {
             it.getContentIfNotHandled()?.let {
                 findNavController(this).navigate(ListFragmentDirections.actionListFragmentToSearchFragment())
+            }
+        })
+
+        viewModel.requestUpdateDatabase.observe(viewLifecycleOwner, Observer {
+            it.getContentIfNotHandled()?.let {
+                viewModel.updateDatabase()
             }
         })
 

@@ -102,6 +102,8 @@ class GameRepository private constructor(application: Context) {
                 _updateState.value = UpdateState.Updated
             }
         }
+
+
     }
 
 
@@ -271,7 +273,7 @@ class GameRepository private constructor(application: Context) {
          * weirdness or possible edge cases).
          */
 
-        var calendar: Calendar = Calendar.getInstance()
+        val calendar: Calendar = Calendar.getInstance()
         val desiredPatternFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
 
         val timeLastUpdated =
@@ -280,8 +282,8 @@ class GameRepository private constructor(application: Context) {
         calendar.timeInMillis = timeLastUpdated
         val startingDateLastUpdated = desiredPatternFormatter.format(calendar.time)
 
-        // Reinitialize calendar
-        calendar = Calendar.getInstance()
+        // Set calendar to current time in order to calculate endingDateLastUpdated.
+        calendar.timeInMillis = System.currentTimeMillis()
         // Add two days to current day, just to ensure we're getting all the newest data.
         calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + 2)
         val endingDateLastUpdated = desiredPatternFormatter.format(calendar.time)
@@ -333,16 +335,9 @@ class GameRepository private constructor(application: Context) {
             }
 
             /**
-             * If all updates are successful, generate and save a new DATE_LAST_UPDATED by subtracting
-             * two days from the current day (again, to account for any unforeseen edge cases).
+             * If all updates are successful, save the current time to TIME_LAST_UPDATED_IN_MILLIS.
              */
-
-            // Reinitialize calendar
-            calendar = Calendar.getInstance()
-            calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - 2)
-            val newTimeLastUpdatedInMillis = calendar.timeInMillis
-
-            prefs.edit().putLong(KEY_TIME_LAST_UPDATED_IN_MILLIS, newTimeLastUpdatedInMillis)
+            prefs.edit().putLong(KEY_TIME_LAST_UPDATED_IN_MILLIS, System.currentTimeMillis())
                 .apply()
 
             _updateState.postValue(UpdateState.Updated)

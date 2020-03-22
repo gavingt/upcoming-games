@@ -1,5 +1,7 @@
 package com.gavinsappcreations.upcominggames.utilities
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.view.View
 import android.widget.ImageView
 import android.widget.RadioGroup
@@ -13,6 +15,7 @@ import androidx.paging.PagedList
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.gavinsappcreations.upcominggames.App.Companion.applicationContext
 import com.gavinsappcreations.upcominggames.R
 import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.ui.detail.DetailNetworkState
@@ -85,8 +88,22 @@ fun TextView.formatReleaseDateString(
 
 
 //This BindingAdapter function gets called automatically whenever gameList changes.
-@BindingAdapter("gameListData", "databaseState")
-fun RecyclerView.bindListRecyclerView(gameList: PagedList<Game>?, databaseState: DatabaseState) {
+@BindingAdapter("gameListData", "databaseState", "updateState")
+fun RecyclerView.bindListRecyclerView(
+    gameList: PagedList<Game>?,
+    databaseState: DatabaseState,
+    updateState: UpdateState
+) {
+
+    visibility = if (databaseState == DatabaseState.Success &&
+        (updateState == UpdateState.Updated || updateState == UpdateState.DataStale)
+    ) {
+        View.VISIBLE
+    } else {
+        View.INVISIBLE
+    }
+
+
     val adapter = adapter as GameGridAdapter
 
     /**
@@ -104,12 +121,39 @@ fun RecyclerView.bindListRecyclerView(gameList: PagedList<Game>?, databaseState:
 }
 
 
-
 @BindingAdapter("gameListProgressBarVisibility")
 fun ContentLoadingProgressBar.bindGameListProgressBarVisibility(databaseState: DatabaseState) {
     when (databaseState) {
         DatabaseState.Success -> hide()
         else -> show()
+    }
+
+}
+
+
+@BindingAdapter("dataStaleViewVisibility")
+fun View.bindDataStaleViewVisibility(updateState: UpdateState) {
+    visibility = when (updateState) {
+        UpdateState.DataStale -> View.VISIBLE
+        else -> View.GONE
+    }
+}
+
+
+@BindingAdapter("dataStaleDateText")
+fun TextView.bindDataStaleDateText(updateState: UpdateState) {
+    if (updateState == UpdateState.DataStale) {
+        val prefs: SharedPreferences =
+            applicationContext.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+
+        val timeLastUpdatedInMillis =
+            prefs.getLong(KEY_TIME_LAST_UPDATED_IN_MILLIS, ORIGINAL_TIME_LAST_UPDATED_IN_MILLIS)
+
+        val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.US)
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = timeLastUpdatedInMillis
+        //text = "This data was last updated ${formatter.format(calendar.time)}"
+        text = resources.getString(R.string.last_updated, formatter.format(calendar.time))
     }
 }
 
@@ -168,7 +212,6 @@ fun TextInputLayout.setCustomDateVisibility(releaseDateType: ReleaseDateType) {
         View.GONE
     }
 }
-
 
 
 // This runs every time the LiveData value changes, and its job is to change the RadioGroup's checkedId.
@@ -306,7 +349,6 @@ fun RadioGroup.setPlatformTypeListeners(listener: InverseBindingListener) {
         listener.onChange()
     }
 }
-
 
 
 //This BindingAdapter function gets called automatically whenever searchResults changes.

@@ -6,12 +6,17 @@ import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.repository.GameRepository
 import com.gavinsappcreations.upcominggames.utilities.DatabaseState
 import com.gavinsappcreations.upcominggames.utilities.Event
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ListViewModel(application: Application) : AndroidViewModel(application) {
 
     private val gameRepository = GameRepository.getInstance(application)
 
     val databaseState = gameRepository.databaseState
+    val updateState = gameRepository.updateState
+
 
     // When the sortOptions LiveData changes, switchMap sets gameList = gameRepository.getGameList(it).
     val gameList = Transformations.switchMap(gameRepository.sortOptions) {
@@ -30,6 +35,11 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     val navigateToSearchFragment: LiveData<Event<Boolean>>
         get() = _navigateToSearchFragment
 
+    private val _requestUpdateDatabase = MutableLiveData<Event<Boolean>>()
+    val requestUpdateDatabase: LiveData<Event<Boolean>>
+        get() = _requestUpdateDatabase
+
+    // TODO: create toast if user hits UPDATE button, indicating success or failure.
 
     fun onNavigateToDetailFragment(game: Game) {
         _navigateToDetailFragment.value = Event(game)
@@ -43,6 +53,16 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
         _navigateToSearchFragment.value = Event(true)
     }
 
+    fun onRequestUpdateDatabase() {
+        _requestUpdateDatabase.value = Event(true)
+    }
+
+    // When the database is stale and the user presses the UPDATE button, this updates the database.
+    fun updateDatabase() {
+        CoroutineScope(Dispatchers.Default).launch {
+            gameRepository.updateGameListData()
+        }
+    }
 
     /**
      * The observer that triggers this method fires once under normal circumstances, but fires

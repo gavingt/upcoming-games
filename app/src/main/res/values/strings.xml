@@ -46,6 +46,8 @@
     <string name="search_item">search item</string>
     <string name="no_network_connection">No network connection.</string>
     <string name="retry">Retry</string>
+    <string name="update">update</string>
+    <string name="last_updated">This data was last updated %s.</string>
 
 
 </resources>
