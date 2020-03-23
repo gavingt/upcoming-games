@@ -97,13 +97,12 @@ fun RecyclerView.bindListRecyclerView(
     updateState: UpdateState
 ) {
 
-    visibility = if (databaseState == DatabaseState.Success &&
-        (updateState == UpdateState.Updated || updateState == UpdateState.DataStale)
-    ) {
-        View.VISIBLE
-    } else {
-        View.INVISIBLE
-    }
+    visibility =
+        if (databaseState == DatabaseState.Success && updateState !is UpdateState.Updating) {
+            View.VISIBLE
+        } else {
+            View.INVISIBLE
+        }
 
 
     val adapter = adapter as GameGridAdapter
@@ -124,7 +123,10 @@ fun RecyclerView.bindListRecyclerView(
 
 
 @BindingAdapter("databaseState", "updateState")
-fun ContentLoadingProgressBar.bindIndeterminateProgressBarVisibility(databaseState: DatabaseState, updateState: UpdateState) {
+fun ContentLoadingProgressBar.bindIndeterminateProgressBarVisibility(
+    databaseState: DatabaseState,
+    updateState: UpdateState
+) {
     if (updateState is UpdateState.Updating) {
         hide()
     } else {
@@ -136,13 +138,17 @@ fun ContentLoadingProgressBar.bindIndeterminateProgressBarVisibility(databaseSta
 }
 
 
-
 @BindingAdapter("determinateProgressBarVisibility")
 fun ContentLoadingProgressBar.bindDeterminateProgressBarVisibility(updateState: UpdateState) {
     when (updateState) {
         is UpdateState.Updating -> {
             progress = updateState.currentProgress
-            val animation = ObjectAnimator.ofInt(this, "progress", updateState.oldProgress, updateState.currentProgress)
+            val animation = ObjectAnimator.ofInt(
+                this,
+                "progress",
+                updateState.oldProgress,
+                updateState.currentProgress
+            )
             animation.duration = LOADING_PROGRESS_ANIMATION_TIME
             animation.interpolator = DecelerateInterpolator()
             animation.start()
@@ -156,7 +162,7 @@ fun ContentLoadingProgressBar.bindDeterminateProgressBarVisibility(updateState: 
 @BindingAdapter("dataStaleViewVisibility")
 fun View.bindDataStaleViewVisibility(updateState: UpdateState) {
     visibility = when (updateState) {
-        UpdateState.DataStale -> View.VISIBLE
+        UpdateState.DataStale, UpdateState.DataStaleUserInvokedUpdate -> View.VISIBLE
         else -> View.GONE
     }
 }
@@ -164,7 +170,7 @@ fun View.bindDataStaleViewVisibility(updateState: UpdateState) {
 
 @BindingAdapter("dataStaleDateText")
 fun TextView.bindDataStaleDateText(updateState: UpdateState) {
-    if (updateState == UpdateState.DataStale) {
+    if (updateState == UpdateState.DataStale || updateState == UpdateState.DataStaleUserInvokedUpdate) {
         val prefs: SharedPreferences =
             applicationContext.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
 
@@ -174,13 +180,19 @@ fun TextView.bindDataStaleDateText(updateState: UpdateState) {
         val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.US)
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = timeLastUpdatedInMillis
-        //text = "This data was last updated ${formatter.format(calendar.time)}"
-        text = resources.getString(R.string.last_updated, formatter.format(calendar.time))
+
+        text = if (updateState == UpdateState.DataStale) {
+            resources.getString(R.string.last_updated_data_stale, formatter.format(calendar.time))
+        } else {
+            resources.getString(
+                R.string.last_updated_data_stale_user_invoked_update,
+                formatter.format(calendar.time)
+            )
+        }
     }
 }
 
 
-//This BindingAdapter function gets called automatically whenever "data" changes, since BindingAdapters are equivalent to Observers
 @BindingAdapter("screenshotData")
 fun RecyclerView.bindScreenshotRecyclerView(data: List<String>?) {
     val adapter = adapter as ScreenshotAdapter

@@ -39,7 +39,11 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     val requestUpdateDatabase: LiveData<Event<Boolean>>
         get() = _requestUpdateDatabase
 
-    // TODO: create toast if user hits UPDATE button, indicating success or failure.
+    // TODO: create toast if an update fails.
+    // TODO: or instead change data stale text if update fails?
+    // TODO: do I need another UpdateState just for this?
+
+    // TODO: should I check for network and dynamically change button text?
 
     fun onNavigateToDetailFragment(game: Game) {
         _navigateToDetailFragment.value = Event(game)
@@ -58,9 +62,12 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     // When the database is stale and the user presses the UPDATE button, this updates the database.
-    fun updateDatabase() {
+    fun updateDatabaseManually() {
+
+        // TODO: check for network access. If none, show snackbar.
+
         CoroutineScope(Dispatchers.Default).launch {
-            gameRepository.updateGameListData()
+            gameRepository.updateGameListData(true)
         }
     }
 

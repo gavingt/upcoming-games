@@ -66,7 +66,7 @@ class ListFragment : Fragment() {
 
         viewModel.requestUpdateDatabase.observe(viewLifecycleOwner, Observer {
             it.getContentIfNotHandled()?.let {
-                viewModel.updateDatabase()
+                viewModel.updateDatabaseManually()
             }
         })
 

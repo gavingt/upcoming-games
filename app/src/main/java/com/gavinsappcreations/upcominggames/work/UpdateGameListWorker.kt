@@ -38,7 +38,7 @@ class UpdateGameListWorker(appContext: Context, params: WorkerParameters) :
         val repository = GameRepository.getInstance(applicationContext)
 
         return try {
-            repository.updateGameListData()
+            repository.updateGameListData(false)
             Result.success()
         } catch (e: HttpException) {
             Result.retry()

@@ -92,7 +92,7 @@ class GameRepository private constructor(application: Context) {
         if (timeLastUpdated == ORIGINAL_TIME_LAST_UPDATED_IN_MILLIS) {
             _updateState.value = UpdateState.Updating(0, 0)
             CoroutineScope(Dispatchers.Default).launch {
-                updateGameListData()
+                updateGameListData(false)
             }
         } else {
             if (isDataStale(timeLastUpdated)) {
@@ -261,7 +261,7 @@ class GameRepository private constructor(application: Context) {
      * release dates are either less than two months old or still upcoming (since we assume that
      * any game that's been out for at least two months already has its release date set correctly
      * in the database). */
-    suspend fun updateGameListData() {
+    suspend fun updateGameListData(userInvokedUpdate: Boolean) {
 
         _updateState.postValue(UpdateState.Updating(0, 0))
 
@@ -362,7 +362,11 @@ class GameRepository private constructor(application: Context) {
              * to be updated.
              */
             if (isDataStale(timeLastUpdatedInMillis)) {
-                _updateState.postValue(UpdateState.DataStale)
+                if (userInvokedUpdate) {
+                    _updateState.postValue(UpdateState.DataStaleUserInvokedUpdate)
+                } else {
+                    _updateState.postValue(UpdateState.DataStale)
+                }
             } else {
                 _updateState.postValue(UpdateState.Updated)
             }
