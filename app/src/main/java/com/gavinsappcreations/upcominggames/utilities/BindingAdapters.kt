@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.core.net.toUri
@@ -91,7 +92,7 @@ fun TextView.formatReleaseDateString(
 
 //This BindingAdapter function gets called automatically whenever gameList changes.
 @BindingAdapter("gameListData", "databaseState", "updateState")
-fun RecyclerView.bindListRecyclerView(
+fun RecyclerView.bindGameListRecyclerView(
     gameList: PagedList<Game>?,
     databaseState: DatabaseState,
     updateState: UpdateState
@@ -111,7 +112,20 @@ fun RecyclerView.bindListRecyclerView(
      * We need to null out the old list or else the old games will briefly appear on screen
      * after the ProgressBar disappears.
      */
-    adapter.submitList(null)
+    // TODO: if we scroll down the list, select a game, add it as a favorite, and navigate back, list is scrolled to top,
+    //       and this line is the reason it's happening.
+
+    val currentListIds = adapter.currentList?.map {
+        it?.gameId
+    }
+
+    val newListIds = gameList?.map {
+        it?.gameId
+    }
+
+    if (currentListIds != newListIds) {
+        adapter.submitList(null)
+    }
 
     adapter.submitList(gameList) {
         // This Runnable moves the list back to the top when changing sort options
@@ -119,6 +133,16 @@ fun RecyclerView.bindListRecyclerView(
             scrollToPosition(0)
         }
     }
+}
+
+
+//This BindingAdapter function gets called automatically whenever favoriteList changes.
+@BindingAdapter("favoriteListData")
+fun RecyclerView.bindFavoriteListRecyclerView(
+    favoriteList: PagedList<Game>?
+) {
+    val adapter = adapter as GameGridAdapter
+    adapter.submitList(favoriteList)
 }
 
 
@@ -139,7 +163,7 @@ fun ContentLoadingProgressBar.bindIndeterminateProgressBarVisibility(
 
 
 @BindingAdapter("determinateProgressBarVisibility")
-fun ContentLoadingProgressBar.bindDeterminateProgressBarVisibility(updateState: UpdateState) {
+fun ProgressBar.bindDeterminateProgressBarVisibility(updateState: UpdateState) {
     when (updateState) {
         is UpdateState.Updating -> {
             progress = updateState.currentProgress
@@ -152,9 +176,9 @@ fun ContentLoadingProgressBar.bindDeterminateProgressBarVisibility(updateState: 
             animation.duration = LOADING_PROGRESS_ANIMATION_TIME
             animation.interpolator = DecelerateInterpolator()
             animation.start()
-            show()
+            visibility = View.VISIBLE
         }
-        else -> hide()
+        else -> visibility = View.GONE
     }
 }
 

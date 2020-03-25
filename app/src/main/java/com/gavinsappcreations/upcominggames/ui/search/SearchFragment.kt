@@ -71,7 +71,9 @@ class SearchFragment : Fragment() {
             it.getContentIfNotHandled()?.let { game ->
                 hideKeyboard(binding.searchEditText)
                 NavHostFragment.findNavController(this).navigate(
-                    SearchFragmentDirections.actionSearchFragmentToDetailFragment(game.guid)
+                    SearchFragmentDirections.actionSearchFragmentToDetailFragment(
+                        game.guid
+                    )
                 )
             }
         })

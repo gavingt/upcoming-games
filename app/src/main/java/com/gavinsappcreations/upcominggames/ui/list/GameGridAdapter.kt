@@ -63,7 +63,9 @@ class GameGridAdapter(private val onClickListener: OnClickListener) :
         }
 
         override fun areContentsTheSame(oldItem: Game, newItem: Game): Boolean {
-            return oldItem == newItem
+            return oldItem.gameName == newItem.gameName
+                    && oldItem.platforms == newItem.platforms
+                    && oldItem.releaseDateInMillis == newItem.releaseDateInMillis
         }
     }
 

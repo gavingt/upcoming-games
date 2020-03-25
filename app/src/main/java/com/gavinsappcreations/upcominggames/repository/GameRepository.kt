@@ -151,6 +151,22 @@ class GameRepository private constructor(application: Context) {
     }
 
 
+    fun getFavoriteList(): LiveData<PagedList<Game>> {
+        val dataSourceFactory: DataSource.Factory<Int, Game> = database.gameDao.getFavoriteList()
+        return LivePagedListBuilder(dataSourceFactory, DATABASE_PAGE_SIZE)
+            .build()
+    }
+
+    fun getIsFavorite(guid: String): Boolean {
+        return database.gameDao.getIsFavorite(guid)
+    }
+
+    // Returns the number of rows updated
+    fun updateFavorite(isFavorite: Boolean, guid: String): Int {
+        return database.gameDao.updateFavorite(isFavorite, guid)
+    }
+
+
     fun searchGameList(searchString: String): LiveData<PagedList<Game>> {
 
         val query = if (searchString.trim().isEmpty()) {

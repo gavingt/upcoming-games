@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.gavinsappcreations.upcominggames.ui.favorite.FavoriteViewModel" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:id="@+id/up_navigation_imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginTop="@dimen/margin_extra_small"
+            android:layout_marginBottom="@dimen/margin_extra_small"
+            android:layout_marginStart="@dimen/margin_normal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:onClick="@{() -> viewModel.onPopBackStack()}"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/nav_app_bar_navigate_up_description"
+            android:src="@drawable/ic_left_arrow"
+            android:tint="?attr/colorOnBackground" />
+
+        <TextView
+            android:id="@+id/toolbar_title_textView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_normal"
+            app:layout_constraintTop_toTopOf="@id/up_navigation_imageButton"
+            app:layout_constraintBottom_toBottomOf="@id/up_navigation_imageButton"
+            app:layout_constraintLeft_toRightOf="@id/up_navigation_imageButton"
+            android:layout_weight="1"
+            android:text="@string/favorites"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+
+        <View
+            android:id="@+id/horizontal_line_view"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:alpha="0.5"
+            android:background="@drawable/drop_shadow"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/up_navigation_imageButton" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/game_recyclerView"
+            favoriteListData="@{viewModel.favoriteList}"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/margin_extra_extra_small"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:padding="6dp"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/horizontal_line_view"
+            app:spanCount="@integer/grid_span_count"
+            tools:itemCount="16"
+            tools:listitem="@layout/grid_list_item" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

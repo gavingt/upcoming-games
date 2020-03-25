@@ -41,7 +41,7 @@
     <string name="all">All</string>
     <string name="unknown">Unknown</string>
     <string name="any">Any</string>
-    <string name="more_options">more options</string>
+    <string name="web_link">web link</string>
     <string name="search_by_game_title">Search by game title</string>
     <string name="search_item">search item</string>
     <string name="no_network_connection">No network connection.</string>
@@ -50,6 +50,7 @@
     <string name="last_updated_data_stale">This data was last updated %s.</string>
     <string name="last_updated_data_stale_user_invoked_update">Update failed. Check your network connection.\n\nThis data was last updated %s.</string>
     <string name="updating_game_database">Updating game database…</string>
+    <string name="favorites">Favorites</string>
 
 
 </resources>

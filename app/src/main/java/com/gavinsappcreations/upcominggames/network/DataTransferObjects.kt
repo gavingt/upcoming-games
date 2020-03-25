@@ -149,7 +149,8 @@ fun List<NetworkGame>.asDatabaseModel(): List<Game> {
             },
             releaseDateInMillis = releaseDateArray[0] as Long?,
             dateFormat = (releaseDateArray[1] as DateFormat).formatCode,
-            guid = networkGame.guid
+            guid = networkGame.guid,
+            isFavorite = null
         )
     }
 }

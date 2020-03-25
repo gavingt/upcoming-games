@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "179e21f287bb743f258e0b8669ec028b",
+    "identityHash": "8143ed0a46180b4d1e204e8dc5865b8a",
     "entities": [
       {
         "tableName": "Game",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`gameId` INTEGER NOT NULL, `gameName` TEXT NOT NULL, `mainImageUrl` TEXT NOT NULL, `platforms` TEXT, `releaseDateInMillis` INTEGER, `dateFormat` INTEGER NOT NULL, `guid` TEXT NOT NULL, PRIMARY KEY(`gameId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`gameId` INTEGER NOT NULL, `gameName` TEXT NOT NULL, `mainImageUrl` TEXT NOT NULL, `platforms` TEXT, `releaseDateInMillis` INTEGER, `dateFormat` INTEGER NOT NULL, `guid` TEXT NOT NULL, `isFavorite` INTEGER, PRIMARY KEY(`gameId`))",
         "fields": [
           {
             "fieldPath": "gameId",
@@ -49,6 +49,12 @@
             "columnName": "guid",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "isFavorite",
+            "columnName": "isFavorite",
+            "affinity": "INTEGER",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -64,7 +70,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '179e21f287bb743f258e0b8669ec028b')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8143ed0a46180b4d1e204e8dc5865b8a')"
     ]
   }
 }

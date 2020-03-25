@@ -3,7 +3,9 @@ package com.gavinsappcreations.upcominggames.database
 import android.content.Context
 import androidx.paging.DataSource
 import androidx.room.*
+import androidx.room.migration.Migration
 import androidx.sqlite.db.SimpleSQLiteQuery
+import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.utilities.allKnownPlatforms
@@ -21,6 +23,18 @@ interface GameDao {
     @Query("SELECT * FROM Game WHERE Game.gameName LIKE :query ORDER BY Game.releaseDateInMillis DESC")
     fun searchGameList(query: String): DataSource.Factory<Int, Game>
 
+
+    @Query("SELECT * FROM Game WHERE Game.isFavorite = 1 ORDER BY Game.releaseDateInMillis ASC")
+    fun getFavoriteList(): DataSource.Factory<Int, Game>
+
+    @Query("SELECT isFavorite FROM Game WHERE guid = :gameDetailGuid")
+    fun getIsFavorite(gameDetailGuid: String): Boolean
+
+    @Query("UPDATE Game SET isFavorite = :isFavorite WHERE guid = :gameDetailGuid")
+    fun updateFavorite(isFavorite: Boolean, gameDetailGuid: String): Int
+
+
+
 /*        @Query("SELECT * from Game")
     fun getAllGames(): List<Game>
 
@@ -35,6 +49,8 @@ interface GameDao {
 abstract class GamesDatabase : RoomDatabase() {
     abstract val gameDao: GameDao
 }
+
+
 
 private lateinit var INSTANCE: GamesDatabase
 

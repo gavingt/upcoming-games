@@ -11,6 +11,8 @@ import com.gavinsappcreations.upcominggames.utilities.Event
 import com.gavinsappcreations.upcominggames.utilities.PropertyAwareMutableLiveData
 import com.gavinsappcreations.upcominggames.utilities.ReleaseDateType
 
+// TODO: all inputs should be maintained across process death.
+
 class SortViewModel(application: Application) : ViewModel() {
 
     private val gameRepository = GameRepository.getInstance(application)

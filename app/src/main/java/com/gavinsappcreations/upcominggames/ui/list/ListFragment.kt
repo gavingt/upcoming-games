@@ -27,7 +27,7 @@ class ListFragment : Fragment() {
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
         binding.lifecycleOwner = this
 
-        // Giving the binding access to the GameListViewModel
+        // Giving the binding access to the ListViewModel
         binding.viewModel = viewModel
 
         binding.gameRecyclerView.itemAnimator = null
@@ -61,6 +61,12 @@ class ListFragment : Fragment() {
         viewModel.navigateToSearchFragment.observe(viewLifecycleOwner, Observer {
             it.getContentIfNotHandled()?.let {
                 findNavController(this).navigate(ListFragmentDirections.actionListFragmentToSearchFragment())
+            }
+        })
+
+        viewModel.navigateToFavoriteFragment.observe(viewLifecycleOwner, Observer {
+            it.getContentIfNotHandled()?.let {
+                findNavController(this).navigate(ListFragmentDirections.actionListFragmentToFavoriteFragment())
             }
         })
 

@@ -45,11 +45,24 @@
                     android:layout_weight="1"
                     android:drawableStart="@drawable/search"
                     android:drawablePadding="16dp"
-                    android:drawableTint="?attr/colorOnBackgroundVeryHighContrast"
+                    android:drawableTint="?attr/colorOnBackground"
                     android:onClick="@{() -> viewModel.onNavigateToSearchFragment()}"
                     android:text="@string/search_all_games"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                     android:textColor="?attr/colorOnBackgroundVeryHighContrast" />
+
+                <ImageButton
+                    android:id="@+id/favorite_imageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/favorites"
+                    android:onClick="@{() -> viewModel.onNavigateToFavoriteFragment()}"
+                    android:padding="4dp"
+                    android:layout_marginEnd="@dimen/margin_extra_small"
+                    android:src="@drawable/star"
+                    android:tint="?attr/colorOnBackground" />
 
                 <ImageButton
                     android:id="@+id/sort_imageButton"
@@ -60,8 +73,8 @@
                     android:contentDescription="@string/filter"
                     android:onClick="@{() -> viewModel.onNavigateToSortFragment()}"
                     android:padding="4dp"
-                    android:src="@drawable/filter"
-                    android:tint="?attr/colorOnBackgroundVeryHighContrast" />
+                    android:src="@drawable/sort"
+                    android:tint="?attr/colorOnBackground" />
 
             </LinearLayout>
 
@@ -111,7 +124,7 @@
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/date_stale_textView"
-            app:spanCount="2"
+            app:spanCount="@integer/grid_span_count"
             tools:itemCount="16"
             tools:listitem="@layout/grid_list_item" />
 
@@ -137,7 +150,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.core.widget.ContentLoadingProgressBar
+        <ProgressBar
             android:id="@+id/determinate_progressBar"
             style="?android:attr/progressBarStyleHorizontal"
             determinateProgressBarVisibility="@{viewModel.updateState}"

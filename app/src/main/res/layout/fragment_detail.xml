@@ -58,6 +58,7 @@
             android:layout_marginStart="@dimen/margin_normal"
             android:layout_marginTop="@dimen/margin_extra_small"
             android:layout_marginBottom="@dimen/margin_extra_small"
+            android:onClick="@{() -> viewModel.onPopBackStack()}"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/nav_app_bar_navigate_up_description"
             android:src="@drawable/ic_left_arrow"
@@ -66,14 +67,34 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
+            android:id="@+id/favorite_imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginTop="@dimen/margin_extra_small"
+            android:layout_marginEnd="@dimen/margin_extra_small"
+            android:layout_marginBottom="@dimen/margin_extra_small"
+            android:background="?selectableItemBackgroundBorderless"
+            android:onClick="@{() -> viewModel.updateFavorite()}"
+            android:contentDescription="@string/favorites"
+            android:padding="@dimen/margin_extra_small"
+            android:src="@{viewModel.isFavorite == true ? @drawable/star : @drawable/star_border}"
+            android:tint="?attr/colorOnBackground"
+            tools:src="@drawable/star_border"
+            android:visibility="@{viewModel.detailNetworkState == DetailNetworkState.Success ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/up_navigation_imageButton"
+            app:layout_constraintRight_toLeftOf="@id/game_link_imageButton"
+            app:layout_constraintTop_toTopOf="@id/up_navigation_imageButton" />
+
+        <ImageButton
             android:id="@+id/game_link_imageButton"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:layout_marginTop="@dimen/margin_extra_small"
             android:layout_marginEnd="@dimen/margin_normal"
             android:layout_marginBottom="@dimen/margin_extra_small"
+            android:padding="@dimen/margin_extra_small"
             android:background="?selectableItemBackgroundBorderless"
-            android:contentDescription="@string/more_options"
+            android:contentDescription="@string/web_link"
             android:src="@drawable/link"
             android:tint="?attr/colorOnBackground"
             android:visibility="@{viewModel.detailNetworkState == DetailNetworkState.Success ? View.VISIBLE : View.GONE}"

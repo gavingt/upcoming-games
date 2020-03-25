@@ -1,6 +1,7 @@
 package com.gavinsappcreations.upcominggames.ui.list
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.*
 import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.repository.GameRepository
@@ -9,6 +10,7 @@ import com.gavinsappcreations.upcominggames.utilities.Event
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ListViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -35,15 +37,13 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     val navigateToSearchFragment: LiveData<Event<Boolean>>
         get() = _navigateToSearchFragment
 
+    private val _navigateToFavoriteFragment = MutableLiveData<Event<Boolean>>()
+    val navigateToFavoriteFragment: LiveData<Event<Boolean>>
+        get() = _navigateToFavoriteFragment
+
     private val _requestUpdateDatabase = MutableLiveData<Event<Boolean>>()
     val requestUpdateDatabase: LiveData<Event<Boolean>>
         get() = _requestUpdateDatabase
-
-    // TODO: create toast if an update fails.
-    // TODO: or instead change data stale text if update fails?
-    // TODO: do I need another UpdateState just for this?
-
-    // TODO: should I check for network and dynamically change button text?
 
     fun onNavigateToDetailFragment(game: Game) {
         _navigateToDetailFragment.value = Event(game)
@@ -57,15 +57,16 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
         _navigateToSearchFragment.value = Event(true)
     }
 
+    fun onNavigateToFavoriteFragment() {
+        _navigateToFavoriteFragment.value = Event(true)
+    }
+
     fun onRequestUpdateDatabase() {
         _requestUpdateDatabase.value = Event(true)
     }
 
     // When the database is stale and the user presses the UPDATE button, this updates the database.
     fun updateDatabaseManually() {
-
-        // TODO: check for network access. If none, show snackbar.
-
         CoroutineScope(Dispatchers.Default).launch {
             gameRepository.updateGameListData(true)
         }

@@ -38,10 +38,6 @@ class DetailFragment : Fragment() {
         // Giving the binding access to the DetailListViewModel
         binding.viewModel = viewModel
 
-        binding.upNavigationImageButton.setOnClickListener {
-            viewModel.onPopBackStack()
-        }
-
         binding.gameLinkImageButton.setOnClickListener {
             val url = viewModel.gameDetail.value?.detailUrl
             url?.let {
@@ -64,6 +60,7 @@ class DetailFragment : Fragment() {
                     View.GONE
                 }
         }
+
 
         viewModel.popBackStack.observe(viewLifecycleOwner, Observer {
             if (it.getContentIfNotHandled() == true) {
