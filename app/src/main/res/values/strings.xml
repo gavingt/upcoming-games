@@ -51,6 +51,8 @@
     <string name="last_updated_data_stale_user_invoked_update">Update failed. Check your network connection.\n\nThis data was last updated %s.</string>
     <string name="updating_game_database">Updating game database…</string>
     <string name="favorites">Favorites</string>
+    <string name="no_favorites_added_yet">Your favorites will show up here</string>
+    <string name="no_games_match_sort_options">No games found matching your sort options</string>
 
 
 </resources>

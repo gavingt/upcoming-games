@@ -70,6 +70,22 @@
             tools:itemCount="16"
             tools:listitem="@layout/grid_list_item" />
 
+        <TextView
+            android:id="@+id/empty_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            emptyViewVisibility="@{viewModel.favoriteList}"
+            android:text="@string/no_favorites_added_yet"
+            android:drawableTop="@drawable/empty_list"
+            android:drawablePadding="@dimen/margin_normal"
+            android:layout_marginBottom="@dimen/margin_large"
+            app:layout_constraintTop_toBottomOf="@id/horizontal_line_view"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

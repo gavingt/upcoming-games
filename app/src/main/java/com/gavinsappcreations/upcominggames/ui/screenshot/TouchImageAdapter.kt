@@ -8,7 +8,7 @@ import androidx.viewpager.widget.PagerAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.gavinsappcreations.upcominggames.R
-import com.gavinsappcreations.upcominggames.utilities.NO_IMG_URL
+import com.gavinsappcreations.upcominggames.utilities.NO_IMG_FILE_NAME
 import com.ortiz.touchview.TouchImageView
 
 class TouchImageAdapter(val images: List<String>) : PagerAdapter() {
@@ -30,17 +30,16 @@ class TouchImageAdapter(val images: List<String>) : PagerAdapter() {
             imageToLoad.let {
                 val imgUri = imageToLoad.toUri().buildUpon().scheme("https").build()
                 Glide.with(context)
-                    .load(if (imageToLoad == NO_IMG_URL) R.drawable.ic_broken_image else imgUri)
+                    .load(if (imageToLoad.contains(NO_IMG_FILE_NAME)) R.drawable.broken_image else imgUri)
                     .apply(
                         RequestOptions()
                             .placeholder(R.drawable.loading_animation)
-                            .error(R.drawable.ic_broken_image)
+                            .error(R.drawable.broken_image)
                     )
                     .into(this)
                 this.tag = position
             }
         }
-
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {

@@ -27,15 +27,7 @@ data class Game(
     val dateFormat: Int,
     val guid: String,
     val isFavorite: Boolean?
-) {
-/*    override fun equals(other: Any?): Boolean {
-        return this.guid == (other as Game).guid
-    }
-
-    override fun hashCode(): Int {
-        return super.hashCode()
-    }*/
-}
+)
 
 
 data class GameDetail(

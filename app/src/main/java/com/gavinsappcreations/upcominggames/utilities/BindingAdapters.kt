@@ -35,12 +35,12 @@ fun ImageView.bindImage(imgUrl: String?) {
     imgUrl?.let {
         val imgUri = imgUrl.toUri().buildUpon().scheme("https").build()
         Glide.with(context)
-            .load(if (imgUrl == NO_IMG_URL) R.drawable.ic_broken_image else imgUri)
+            .load(if (imgUrl.contains(NO_IMG_FILE_NAME)) R.drawable.broken_image else imgUri)
             .fitCenter()
             .apply(
                 RequestOptions()
                     .placeholder(R.drawable.loading_animation)
-                    .error(R.drawable.ic_broken_image)
+                    .error(R.drawable.broken_image)
             )
             .into(this)
     }
@@ -109,12 +109,14 @@ fun RecyclerView.bindGameListRecyclerView(
     val adapter = adapter as GameGridAdapter
 
     /**
-     * We need to null out the old list or else the old games will briefly appear on screen
-     * after the ProgressBar disappears.
+     * If we change the sorting options, we need to null out the old list before displaying the
+     * new list. Otherwise, the old list will briefly flash on screen after the ProgressBar
+     * disappears. However, we don't want to null out the list when we change the "isFavorite"
+     * property of a game, so we compare the gameId fields of all list items before nulling
+     * out the list. If these are equal, we know the games being shown haven't changed.
      */
-    // TODO: if we scroll down the list, select a game, add it as a favorite, and navigate back, list is scrolled to top,
-    //       and this line is the reason it's happening.
 
+    // Compare the current list and new list by gameId.
     val currentListIds = adapter.currentList?.map {
         it?.gameId
     }
@@ -143,6 +145,14 @@ fun RecyclerView.bindFavoriteListRecyclerView(
 ) {
     val adapter = adapter as GameGridAdapter
     adapter.submitList(favoriteList)
+}
+
+
+@BindingAdapter("emptyViewVisibility")
+fun TextView.bindEmptyViewVisibility(gameList: PagedList<Game>?) {
+    gameList?.let {
+        visibility = if (gameList.isEmpty()) View.VISIBLE else View.GONE
+    }
 }
 
 
