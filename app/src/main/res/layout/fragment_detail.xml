@@ -107,8 +107,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:visibility="@{viewModel.detailNetworkState == DetailNetworkState.Success ? View.VISIBLE : View.INVISIBLE}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="@id/horizontal_line_view">
+            app:layout_constraintBottom_toTopOf="@id/bottom_horizontal_line_view"
+            app:layout_constraintTop_toTopOf="@id/top_horizontal_line_view">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -361,7 +361,7 @@
         </com.gavinsappcreations.upcominggames.ui.detail.NestedScrollingParentScrollView>
 
         <View
-            android:id="@+id/horizontal_line_view"
+            android:id="@+id/top_horizontal_line_view"
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:alpha="0.5"
@@ -378,6 +378,14 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/bottom_horizontal_line_view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:alpha="@dimen/bottom_horizontal_bar_alpha"
+            android:background="?attr/colorOnBackgroundMediumContrast"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

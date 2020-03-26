@@ -13,4 +13,5 @@
     <dimen name="corner_radius">4dp</dimen>
     <dimen name="text_button_size">17sp</dimen>
     <dimen name="radio_button_height">36dp</dimen>
+    <item name="bottom_horizontal_bar_alpha" format="float" type="dimen">0.4</item>
 </resources>

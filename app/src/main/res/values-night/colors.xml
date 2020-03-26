@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorAccent">#29b6f6</color>
+    <color name="colorBackground">#141414</color>
+    <color name="colorBackgroundVariant">#202020</color>
+    <color name="colorOnBackgroundVeryHighContrast">#BBBBBB</color>
+    <color name="colorOnBackgroundHighContrast">#AEAEAE</color>
+    <color name="colorOnBackgroundMediumContrast">#999999</color>
+    <color name="colorOnBackgroundLowContrast">#777777</color>
+</resources>

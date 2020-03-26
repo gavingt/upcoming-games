@@ -46,7 +46,7 @@
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
 
         <View
-            android:id="@+id/horizontal_line_view"
+            android:id="@+id/top_horizontal_line_view"
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:alpha="0.5"
@@ -64,8 +64,8 @@
             android:overScrollMode="never"
             android:padding="6dp"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/horizontal_line_view"
+            app:layout_constraintBottom_toTopOf="@id/bottom_horizontal_line_view"
+            app:layout_constraintTop_toBottomOf="@id/top_horizontal_line_view"
             app:spanCount="@integer/grid_span_count"
             tools:itemCount="16"
             tools:listitem="@layout/grid_list_item" />
@@ -79,12 +79,20 @@
             android:drawableTop="@drawable/empty_list"
             android:drawablePadding="@dimen/margin_normal"
             android:layout_marginBottom="@dimen/margin_large"
-            app:layout_constraintTop_toBottomOf="@id/horizontal_line_view"
+            app:layout_constraintTop_toBottomOf="@id/top_horizontal_line_view"
             app:layout_constraintBottom_toBottomOf="parent"
             android:visibility="gone"
             tools:visibility="visible"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
+
+        <View
+            android:id="@+id/bottom_horizontal_line_view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:alpha="@dimen/bottom_horizontal_bar_alpha"
+            android:background="?attr/colorOnBackgroundMediumContrast"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

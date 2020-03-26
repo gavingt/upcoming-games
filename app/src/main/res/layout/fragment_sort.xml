@@ -62,8 +62,8 @@
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView"
-            app:layout_constraintTop_toTopOf="@id/horizontal_line_view"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@id/top_horizontal_line_view"
+            app:layout_constraintBottom_toTopOf="@id/bottom_horizontal_line_view"
             android:layout_width="match_parent"
             android:layout_height="0dp">
 
@@ -302,13 +302,21 @@
         </androidx.core.widget.NestedScrollView>
 
         <View
-            android:id="@+id/horizontal_line_view"
+            android:id="@+id/top_horizontal_line_view"
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:alpha="0.5"
             android:background="@drawable/drop_shadow"
             android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/up_navigation_imageButton" />
+
+        <View
+            android:id="@+id/bottom_horizontal_line_view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:alpha="@dimen/bottom_horizontal_bar_alpha"
+            android:background="?attr/colorOnBackgroundMediumContrast"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

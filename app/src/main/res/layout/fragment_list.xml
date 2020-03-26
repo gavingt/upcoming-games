@@ -122,7 +122,7 @@
             android:overScrollMode="never"
             android:padding="6dp"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/bottom_horizontal_line_view"
             app:layout_constraintTop_toBottomOf="@id/date_stale_textView"
             app:spanCount="@integer/grid_span_count"
             tools:itemCount="16"
@@ -192,6 +192,14 @@
             app:layout_constraintRight_toRightOf="@id/determinate_progressBar"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed" />
+
+        <View
+            android:id="@+id/bottom_horizontal_line_view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:alpha="@dimen/bottom_horizontal_bar_alpha"
+            android:background="?attr/colorOnBackgroundMediumContrast"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

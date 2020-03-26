@@ -53,7 +53,7 @@ class DetailFragment : Fragment() {
             })
 
         binding.scrollView.setOnScrollChangeListener { scrollView, _, _, _, _ ->
-            binding.horizontalLineView.visibility =
+            binding.topHorizontalLineView.visibility =
                 if (scrollView.canScrollVertically(-1)) {
                     View.VISIBLE
                 } else {
