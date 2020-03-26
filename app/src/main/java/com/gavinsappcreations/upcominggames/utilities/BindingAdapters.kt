@@ -148,10 +148,21 @@ fun RecyclerView.bindFavoriteListRecyclerView(
 }
 
 
-@BindingAdapter("emptyViewVisibility")
-fun TextView.bindEmptyViewVisibility(gameList: PagedList<Game>?) {
+/**
+ * We use this BindingAdapter in both ListFragment and FavoriteFragment to set the visibility of
+ * the empty View. We use the "requireAll" flag because FavoriteFragment doesn't contain a
+ * DatabaseState property while ListFragment does. So in the FavoriteFragment, databaseState will
+ * equal null.
+ */
+@BindingAdapter(value = ["gameList", "databaseState"], requireAll = false)
+fun TextView.bindEmptyViewVisibility(gameList: PagedList<Game>?, databaseState: DatabaseState?) {
     gameList?.let {
-        visibility = if (gameList.isEmpty()) View.VISIBLE else View.GONE
+        visibility =
+            if (gameList.isEmpty() && (databaseState == null || databaseState == DatabaseState.Success)) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
     }
 }
 

@@ -74,7 +74,7 @@
             android:id="@+id/empty_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            emptyViewVisibility="@{viewModel.favoriteList}"
+            gameList="@{viewModel.favoriteList}"
             android:text="@string/no_favorites_added_yet"
             android:drawableTop="@drawable/empty_list"
             android:drawablePadding="@dimen/margin_normal"
