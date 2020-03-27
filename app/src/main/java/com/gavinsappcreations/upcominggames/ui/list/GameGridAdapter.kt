@@ -46,7 +46,7 @@ class GameGridAdapter(private val onClickListener: OnClickListener) :
 
             for (platform in platforms) {
                 val textView = LayoutInflater.from(binding.root.context).inflate(
-                    R.layout.platform_textview_layout,
+                    R.layout.platform_chip_layout,
                     flexboxLayout, false
                 ) as TextView
 

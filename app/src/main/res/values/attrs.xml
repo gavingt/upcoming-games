@@ -6,6 +6,8 @@
     <attr name="colorOnBackgroundHighContrast" format="color" />
     <attr name="colorOnBackgroundMediumContrast" format="color" />
     <attr name="colorOnBackgroundLowContrast" format="color" />
+    <attr name="colorPlatformChipBackground" format="color" />
+    <attr name="colorPlatformChipBorder" format="color" />
 
 </resources>
 

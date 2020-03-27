@@ -7,5 +7,6 @@
     <color name="colorOnBackgroundHighContrast">#909090</color>
     <color name="colorOnBackgroundMediumContrast">#AAAAAA</color>
     <color name="colorOnBackgroundLowContrast">#E0E0E0</color>
-    <!--<color name="mtrl_textinput_default_box_stroke_color" tools:override="true">#fff</color>-->
+    <color name="colorPlatformChipBackground">#E0E0E0</color>
+    <color name="colorPlatformChipBorder">#AAAAAA</color>
 </resources>

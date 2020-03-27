@@ -9,6 +9,8 @@
         <item name="colorOnBackgroundHighContrast">@color/colorOnBackgroundHighContrast</item>
         <item name="colorOnBackgroundMediumContrast">@color/colorOnBackgroundMediumContrast</item>
         <item name="colorOnBackgroundLowContrast">@color/colorOnBackgroundLowContrast</item>
+        <item name="colorPlatformChipBackground">@color/colorPlatformChipBackground</item>
+        <item name="colorPlatformChipBorder">@color/colorPlatformChipBorder</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 

@@ -98,29 +98,23 @@ fun RecyclerView.bindGameListRecyclerView(
     updateState: UpdateState
 ) {
 
-/*    visibility =
-        if (databaseState == DatabaseState.Success && updateState !is UpdateState.Updating) {
-            View.VISIBLE
-        } else {
-            View.INVISIBLE
-        }*/
+    val shouldShowRecyclerView =
+        databaseState == DatabaseState.Success && updateState !is UpdateState.Updating
 
-    if (databaseState != DatabaseState.Success || updateState is UpdateState.Updating) {
+    if (!shouldShowRecyclerView) {
         visibility = View.INVISIBLE
     }
 
     val adapter = adapter as GameGridAdapter
 
-    // TODO: the above lists aren't paged lists, they're literally every gameID in the sort!
-    // TODO: if we scroll down far enough and add a favorite, the list scrolls back to the top!
-
-    //adapter.submitList(null)
-
-    adapter.submitList(gameList) {
-        // This Runnable moves the list back to the top when changing sort options
+    adapter.submitList(gameList) { // This is a runnable that executes after new list is committed.
         if (databaseState == DatabaseState.Loading) {
+            /**
+             * We only reach here after a sort change, and in that case we want to scroll the list
+             * back to the top.
+             */
             scrollToPosition(0)
-        } else if (databaseState == DatabaseState.Success && updateState !is UpdateState.Updating) {
+        } else if (shouldShowRecyclerView) {
             visibility = View.VISIBLE
         }
     }

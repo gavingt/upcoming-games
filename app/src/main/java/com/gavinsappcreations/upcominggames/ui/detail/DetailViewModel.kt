@@ -11,8 +11,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.sql.SQLDataException
 
-// TODO: if we clicked on a game with no cover art, it should show the normal "no image" image rather than the GB logo
-
 class DetailViewModel(application: Application, val guid: String) :
     AndroidViewModel(application) {
 

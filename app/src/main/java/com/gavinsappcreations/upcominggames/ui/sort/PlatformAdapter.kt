@@ -53,7 +53,7 @@ class PlatformAdapter (private val unsavedSortOptions: PropertyAwareMutableLiveD
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val view = layoutInflater
-                    .inflate(R.layout.platform_list_item, parent, false)
+                    .inflate(R.layout.platform_check_list_item, parent, false)
                 return ViewHolder(view)
             }
         }
