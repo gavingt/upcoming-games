@@ -23,14 +23,14 @@
 
     <!-- Change ripple color on TextButtons -->
     <style name="MyTextButtonTheme" parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="rippleColor">@color/colorOnBackgroundMediumContrast</item>
+        <item name="rippleColor">?attr/colorOnBackgroundMediumContrast</item>
     </style>
 
 
     <!-- Changes the TextInputLayout to use colorAccent for its outline and hint text -->
     <style name="TextInputLayoutAppearance" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
-        <item name="hintTextColor">@color/colorAccent</item>
-        <item name="boxStrokeColor">@color/colorAccent</item>
+        <item name="hintTextColor">?attr/colorAccent</item>
+        <item name="boxStrokeColor">@color/text_input_layout_box_stroke</item>
         <item name="materialThemeOverlay">
             @style/ThemeOverlay.AppTheme.TextInputEditText.FilledBox.Dense
         </item>
@@ -38,7 +38,7 @@
 
     <!-- We need a ThemeOverlay to change the cursor color in the TextInputLayout -->
     <style name="ThemeOverlay.AppTheme.TextInputEditText.FilledBox.Dense" parent="ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox.Dense">
-        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="colorControlActivated">?attr/colorAccent</item>
     </style>
 
 </resources>

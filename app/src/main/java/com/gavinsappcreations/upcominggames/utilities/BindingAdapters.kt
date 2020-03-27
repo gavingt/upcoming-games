@@ -98,41 +98,30 @@ fun RecyclerView.bindGameListRecyclerView(
     updateState: UpdateState
 ) {
 
-    visibility =
+/*    visibility =
         if (databaseState == DatabaseState.Success && updateState !is UpdateState.Updating) {
             View.VISIBLE
         } else {
             View.INVISIBLE
-        }
+        }*/
 
+    if (databaseState != DatabaseState.Success || updateState is UpdateState.Updating) {
+        visibility = View.INVISIBLE
+    }
 
     val adapter = adapter as GameGridAdapter
 
-    /**
-     * If we change the sorting options, we need to null out the old list before displaying the
-     * new list. Otherwise, the old list will briefly flash on screen after the ProgressBar
-     * disappears. However, we don't want to null out the list when we change the "isFavorite"
-     * property of a game, so we compare the gameId fields of all list items before nulling
-     * out the list. If these are equal, we know the games being shown haven't changed.
-     */
+    // TODO: the above lists aren't paged lists, they're literally every gameID in the sort!
+    // TODO: if we scroll down far enough and add a favorite, the list scrolls back to the top!
 
-    // Compare the current list and new list by gameId.
-    val currentListIds = adapter.currentList?.map {
-        it?.gameId
-    }
-
-    val newListIds = gameList?.map {
-        it?.gameId
-    }
-
-    if (currentListIds != newListIds) {
-        adapter.submitList(null)
-    }
+    //adapter.submitList(null)
 
     adapter.submitList(gameList) {
         // This Runnable moves the list back to the top when changing sort options
         if (databaseState == DatabaseState.Loading) {
             scrollToPosition(0)
+        } else if (databaseState == DatabaseState.Success && updateState !is UpdateState.Updating) {
+            visibility = View.VISIBLE
         }
     }
 }

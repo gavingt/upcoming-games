@@ -5,3 +5,5 @@
     <corners android:radius="3dp"/>
     <padding android:left="0dp" android:top="0dp" android:right="0dp" android:bottom="0dp" />
 </shape>
+
+<!--TODO: make custom colors for these items so they look good in both themes-->
