@@ -5,26 +5,22 @@ import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.gavinsappcreations.upcominggames.App
 import com.gavinsappcreations.upcominggames.databinding.FragmentSortBinding
 import com.gavinsappcreations.upcominggames.utilities.hideKeyboard
 
 
 class SortFragment : Fragment() {
 
-    private val viewModel: SortViewModel by lazy {
-        ViewModelProvider(this, SortViewModel.Factory(requireActivity().application)).get(
-            SortViewModel::class.java
-        )
-    }
+    private val viewModel: SortViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,21 +34,21 @@ class SortFragment : Fragment() {
         // Giving the binding access to the SortViewModel
         binding.viewModel = viewModel
 
-        binding.platformRecyclerView.adapter = PlatformAdapter(viewModel.unsavedSortOptions)
+        binding.executePendingBindings()
+
+        binding.platformRecyclerView.adapter =
+            PlatformAdapter(viewModel.unsavedSortOptions, viewModel.state)
 
         DateInputTextWatcher(binding.startDateTextInputEditText).listen()
         DateInputTextWatcher(binding.endDateTextInputEditText).listen()
-
-        binding.upNavigationImageButton.setOnClickListener {
-            viewModel.onPopBackStack()
-        }
 
         binding.applyButton.setOnClickListener {
             viewModel.onUpdateSortOptions(
                 binding.startDateTextInputEditText.error?.toString(),
                 binding.startDateTextInputEditText.text?.toString(),
                 binding.endDateTextInputEditText.error?.toString(),
-                binding.endDateTextInputEditText.text?.toString())
+                binding.endDateTextInputEditText.text?.toString()
+            )
         }
 
         binding.nestedScrollView.setOnScrollChangeListener { scrollView, _, _, _, _ ->
@@ -71,7 +67,7 @@ class SortFragment : Fragment() {
 
         viewModel.updateSortOptions.observe(viewLifecycleOwner, Observer {
 
-            it.getContentIfNotHandled()?.let {updateSortOptions ->
+            it.getContentIfNotHandled()?.let { updateSortOptions ->
                 if (updateSortOptions) {
                     viewModel.saveNewSortOptions()
                     hideKeyboard(binding.startDateTextInputEditText)
@@ -84,7 +80,6 @@ class SortFragment : Fragment() {
 
         return binding.root
     }
-
 
 
     private fun displayInvalidDateToast() {
@@ -107,6 +102,7 @@ class SortFragment : Fragment() {
             vibrator?.vibrate(200)
         }
     }
+
 
 }
 

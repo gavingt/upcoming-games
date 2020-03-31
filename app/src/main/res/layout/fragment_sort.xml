@@ -27,6 +27,7 @@
             android:layout_marginStart="@dimen/margin_normal"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:onClick="@{() -> viewModel.onPopBackStack()}"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/nav_app_bar_navigate_up_description"
             android:src="@drawable/ic_left_arrow"

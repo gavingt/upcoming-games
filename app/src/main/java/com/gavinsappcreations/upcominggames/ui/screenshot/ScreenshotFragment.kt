@@ -14,18 +14,6 @@ import com.ortiz.touchview.TouchImageView
 
 class ScreenshotFragment : Fragment() {
 
-/*    private val viewModel: ImageViewerViewModel by lazy {
-        ViewModelProvider(
-            this,
-            ImageViewerViewModel.Factory(
-                ImageViewerFragmentArgs.fromBundle(arguments!!).images,
-                ImageViewerFragmentArgs.fromBundle(arguments!!).currentImageIndex
-            )
-        ).get(
-            ImageViewerViewModel::class.java
-        )
-    }*/
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -65,11 +53,6 @@ class ScreenshotFragment : Fragment() {
                 currentView?.resetZoom()
             }
         })
-
-/*        viewModel.currentImageIndex.observe(viewLifecycleOwner, Observer {
-
-        })*/
-
 
         return binding.root
     }

@@ -1,8 +1,10 @@
 package com.gavinsappcreations.upcominggames.ui.list
 
 import android.app.Application
-import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.repository.GameRepository
 import com.gavinsappcreations.upcominggames.utilities.DatabaseState
@@ -10,15 +12,17 @@ import com.gavinsappcreations.upcominggames.utilities.Event
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class ListViewModel(application: Application) : AndroidViewModel(application) {
 
     private val gameRepository = GameRepository.getInstance(application)
 
-    val databaseState = gameRepository.databaseState
     val updateState = gameRepository.updateState
+    val databaseState = gameRepository.databaseState
 
+    init {
+        checkForProcessDeath()
+    }
 
     // When the sortOptions LiveData changes, switchMap sets gameList = gameRepository.getGameList(it).
     val gameList = Transformations.switchMap(gameRepository.sortOptions) {
@@ -87,40 +91,25 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
+    private fun checkForProcessDeath() {
+        /**
+         * This condition indicates process death, because the value of @link [databaseState] would not
+         * normally be @link [DatabaseState.LoadingSortChange] upon initialization of ListViewModel
+         * (since ListFragment should be on the back stack, and hence already initialized, any
+         * time a user changes the sorting options).
+         */
+        val systemInitiatedProcessDeathOccurred =
+            databaseState.value == DatabaseState.LoadingSortChange
 
-/*    fun getAllGames() {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                val allGames = gameRepository.getAllGames()
-
-                for (game in allGames) {
-
-                    if (game.gameName == "Ember Sword") {
-                        val newPlatformList = mutableListOf<String>()
-                        newPlatformList.addAll(game.platforms!!)
-                        newPlatformList.add("FAKE")
-
-                        val newGame = Game(game.gameId, game.gameName, game.mainImageUrl, newPlatformList, game.releaseDateInMillis, game.dateFormat,game.guid)
-                        gameRepository.updateGame(newGame)
-                    }
-                }
-
-                Log.d("LOG", "hello")
-            }
-        }
-    }*/
-
-
-    //Factory for constructing ListViewModel with Application parameter.
-    class Factory(private val application: Application) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(ListViewModel::class.java)) {
-                @Suppress("UNCHECKED_CAST")
-                return ListViewModel(
-                    application
-                ) as T
-            }
-            throw IllegalArgumentException("Unable to construct viewmodel")
+        if (systemInitiatedProcessDeathOccurred) {
+            /**
+             * If system-initiated process death occurs while in SortFragment and the user then presses
+             * APPLY, this ensures that the ProgressBar and RecyclerView visibilities are still set
+             * correctly. This is required because @link [gameList] will be null in this case, so the
+             * @link [DatabaseState.LoadingSortChange] state needs to be bypassed (as the observer
+             * observing @link [gameList] won't emit a value).
+             */
+            updateDatabaseState()
         }
     }
 }

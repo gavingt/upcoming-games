@@ -44,18 +44,4 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
     fun onShowKeyboard() {
         _showKeyboard.value = _showKeyboard.value == null
     }
-
-    //Factory for constructing ListViewModel with Application parameter.
-    class Factory(private val application: Application) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(SearchViewModel::class.java)) {
-                @Suppress("UNCHECKED_CAST")
-                return SearchViewModel(
-                    application
-                ) as T
-            }
-            throw IllegalArgumentException("Unable to construct viewModel")
-        }
-    }
-
 }

@@ -7,22 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.gavinsappcreations.upcominggames.databinding.FragmentDetailBinding
 
 class DetailFragment : Fragment() {
 
-    private val viewModel: DetailViewModel by lazy {
-        ViewModelProvider(
-            this,
-            DetailViewModel.Factory(
-                requireActivity().application,
-                DetailFragmentArgs.fromBundle(arguments!!).guid
-            )
-        ).get(
-            DetailViewModel::class.java
+    private val viewModel: DetailViewModel by viewModels {
+        DetailViewModel.Factory(
+            requireActivity().application,
+            DetailFragmentArgs.fromBundle(arguments!!).guid
         )
     }
 

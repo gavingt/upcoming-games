@@ -4,14 +4,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import androidx.lifecycle.SavedStateHandle
 import androidx.recyclerview.widget.RecyclerView
 import com.gavinsappcreations.upcominggames.R
 import com.gavinsappcreations.upcominggames.domain.Platform
 import com.gavinsappcreations.upcominggames.domain.SortOptions
+import com.gavinsappcreations.upcominggames.utilities.KEY_SAVED_STATE_PLATFORM_INDICES
 import com.gavinsappcreations.upcominggames.utilities.PropertyAwareMutableLiveData
 import com.gavinsappcreations.upcominggames.utilities.allKnownPlatforms
 
-class PlatformAdapter (private val unsavedSortOptions: PropertyAwareMutableLiveData<SortOptions>) :
+class PlatformAdapter(
+    private val unsavedSortOptions: PropertyAwareMutableLiveData<SortOptions>,
+    private val state: SavedStateHandle
+) :
     RecyclerView.Adapter<PlatformAdapter.ViewHolder>() {
 
     val data = allKnownPlatforms
@@ -27,12 +32,16 @@ class PlatformAdapter (private val unsavedSortOptions: PropertyAwareMutableLiveD
         checkBox.isChecked = unsavedSortOptions.value!!.platformIndices.contains(position)
         checkBox.jumpDrawablesToCurrentState()
 
-        checkBox.setOnCheckedChangeListener{ _, isChecked ->
+        state.set(KEY_SAVED_STATE_PLATFORM_INDICES, mutableSetOf<Int>())
+
+        checkBox.setOnCheckedChangeListener { _, isChecked ->
+            val platformIndices = unsavedSortOptions.value!!.platformIndices
             if (isChecked) {
-                unsavedSortOptions.value!!.platformIndices.add(position)
+                platformIndices.add(position)
             } else {
-                unsavedSortOptions.value!!.platformIndices.remove(position)
+                platformIndices.remove(position)
             }
+            state.set(KEY_SAVED_STATE_PLATFORM_INDICES, platformIndices)
         }
 
         holder.bind(item)
@@ -42,7 +51,7 @@ class PlatformAdapter (private val unsavedSortOptions: PropertyAwareMutableLiveD
         return ViewHolder.from(parent)
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val checkBox: CheckBox = itemView.findViewById(R.id.platform_checkBox)
 
         fun bind(item: Platform) {
@@ -59,7 +68,7 @@ class PlatformAdapter (private val unsavedSortOptions: PropertyAwareMutableLiveD
         }
     }
 
-    class OnCheckedChangeListener (val checkedChangeListener: (platformIndices: MutableSet<Int>) -> Unit) {
+    class OnCheckedChangeListener(val checkedChangeListener: (platformIndices: MutableSet<Int>) -> Unit) {
         fun onCheck(platformIndices: MutableSet<Int>) = checkedChangeListener(platformIndices)
     }
 }

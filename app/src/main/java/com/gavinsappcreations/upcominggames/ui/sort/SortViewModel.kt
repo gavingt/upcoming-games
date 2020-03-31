@@ -1,30 +1,43 @@
 package com.gavinsappcreations.upcominggames.ui.sort
 
 import android.app.Application
+import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.SavedStateHandle
 import com.gavinsappcreations.upcominggames.domain.SortOptions
 import com.gavinsappcreations.upcominggames.repository.GameRepository
 import com.gavinsappcreations.upcominggames.utilities.Event
+import com.gavinsappcreations.upcominggames.utilities.KEY_SAVED_STATE_PLATFORM_INDICES
 import com.gavinsappcreations.upcominggames.utilities.PropertyAwareMutableLiveData
 import com.gavinsappcreations.upcominggames.utilities.ReleaseDateType
 
-// TODO: all inputs should be maintained across process death.
+// TODO: verify workManager is actually working in the background
+// TODO: check every fragment by initiating process death and pressing back button to see what happens
 
-class SortViewModel(application: Application) : ViewModel() {
+class SortViewModel(application: Application, val state: SavedStateHandle) :
+    AndroidViewModel(application) {
 
     private val gameRepository = GameRepository.getInstance(application)
     private val originalSortOptions = gameRepository.sortOptions.value!!
 
+    private val savedStatePlatformIndices = state.get<MutableSet<Int>>(
+        KEY_SAVED_STATE_PLATFORM_INDICES
+    )
+
     val unsavedSortOptions = PropertyAwareMutableLiveData(
         SortOptions(
-            originalSortOptions.releaseDateType, originalSortOptions.sortDirection,
-            originalSortOptions.customDateStart, originalSortOptions.customDateEnd,
-            originalSortOptions.platformType, originalSortOptions.platformIndices
+            originalSortOptions.releaseDateType,
+            originalSortOptions.sortDirection,
+            originalSortOptions.customDateStart,
+            originalSortOptions.customDateEnd,
+            originalSortOptions.platformType,
+            // Use SavedStateHandle version if not null
+            savedStatePlatformIndices ?: originalSortOptions.platformIndices
         )
     )
+
 
     private val _popBackStack = MutableLiveData<Event<Boolean>>()
     val popBackStack: LiveData<Event<Boolean>>
@@ -38,6 +51,8 @@ class SortViewModel(application: Application) : ViewModel() {
         gameRepository.saveNewSortOptions(unsavedSortOptions.value!!)
     }
 
+
+
     fun onPopBackStack() {
         _popBackStack.value = Event(true)
     }
@@ -50,27 +65,14 @@ class SortViewModel(application: Application) : ViewModel() {
     ) {
         if (unsavedSortOptions.value!!.releaseDateType == ReleaseDateType.CustomDate) {
             if (startDateError == null && !startDateText.isNullOrBlank()
-                && endDateError == null && !endDateText.isNullOrBlank()) {
+                && endDateError == null && !endDateText.isNullOrBlank()
+            ) {
                 _updateSortOptions.value = Event(true)
             } else {
                 _updateSortOptions.value = Event(false)
             }
         } else {
             _updateSortOptions.value = Event(true)
-        }
-    }
-
-
-    //Factory for constructing ListViewModel with Application parameter.
-    class Factory(private val application: Application) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(SortViewModel::class.java)) {
-                @Suppress("UNCHECKED_CAST")
-                return SortViewModel(
-                    application
-                ) as T
-            }
-            throw IllegalArgumentException("Unable to construct viewmodel")
         }
     }
 

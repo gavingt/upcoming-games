@@ -3,6 +3,7 @@ package com.gavinsappcreations.upcominggames.utilities
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
@@ -97,7 +98,6 @@ fun RecyclerView.bindGameListRecyclerView(
     databaseState: DatabaseState,
     updateState: UpdateState
 ) {
-
     val shouldShowRecyclerView =
         databaseState == DatabaseState.Success && updateState !is UpdateState.Updating
 
@@ -279,9 +279,6 @@ fun TextInputLayout.setCustomDateVisibility(releaseDateType: ReleaseDateType) {
 // This runs every time the LiveData value changes, and its job is to change the RadioGroup's checkedId.
 @BindingAdapter("releaseDateType")
 fun RadioGroup.bindReleaseDateType(type: ReleaseDateType) {
-
-    val isInitializing = checkedRadioButtonId == -1
-
     val newCheckedId = when (type) {
         ReleaseDateType.RecentAndUpcoming -> R.id.recent_and_upcoming_releases_radioButton
         ReleaseDateType.PastMonth -> R.id.past_month_radioButton
@@ -293,11 +290,6 @@ fun RadioGroup.bindReleaseDateType(type: ReleaseDateType) {
     // Prevent infinite loops
     if (checkedRadioButtonId != newCheckedId) {
         check(newCheckedId)
-    }
-
-    // This prevents the animation from playing when SortFragment first opens
-    if (isInitializing) {
-        jumpDrawablesToCurrentState()
     }
 }
 
@@ -328,9 +320,6 @@ fun RadioGroup.setReleaseDateTypeListeners(listener: InverseBindingListener) {
 // This runs every time the LiveData value changes, and its job is to change the RadioGroup's checkedId.
 @BindingAdapter("sortDirection")
 fun RadioGroup.bindSortDirection(sortDirection: SortDirection) {
-
-    val isInitializing = checkedRadioButtonId == -1
-
     val newCheckedId = when (sortDirection) {
         SortDirection.Ascending -> R.id.sort_ascending_radioButton
         SortDirection.Descending -> R.id.sort_descending_radioButton
@@ -339,11 +328,6 @@ fun RadioGroup.bindSortDirection(sortDirection: SortDirection) {
     // Prevent infinite loops
     if (checkedRadioButtonId != newCheckedId) {
         check(newCheckedId)
-    }
-
-    // This prevents the animation from playing when SortFragment first opens
-    if (isInitializing) {
-        jumpDrawablesToCurrentState()
     }
 }
 
@@ -371,9 +355,6 @@ fun RadioGroup.setSortDirectionListeners(listener: InverseBindingListener) {
 // This runs every time the LiveData value changes, and its job is to change the RadioGroup's checkedId.
 @BindingAdapter("platformType")
 fun RadioGroup.bindPlatformType(platformType: PlatformType) {
-
-    val isInitializing = checkedRadioButtonId == -1
-
     val newCheckedId = when (platformType) {
         PlatformType.CurrentGeneration -> R.id.current_generation_radioButton
         PlatformType.All -> R.id.all_platforms_radioButton
@@ -383,11 +364,6 @@ fun RadioGroup.bindPlatformType(platformType: PlatformType) {
     // Prevent infinite loops
     if (checkedRadioButtonId != newCheckedId) {
         check(newCheckedId)
-    }
-
-    // This prevents the animation from playing when SortFragment first opens
-    if (isInitializing) {
-        jumpDrawablesToCurrentState()
     }
 }
 

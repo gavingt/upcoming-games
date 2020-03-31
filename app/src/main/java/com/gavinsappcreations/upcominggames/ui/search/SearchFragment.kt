@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
@@ -18,11 +19,7 @@ import com.gavinsappcreations.upcominggames.utilities.showSoftKeyboard
 
 class SearchFragment : Fragment() {
 
-    private val viewModel: SearchViewModel by lazy {
-        ViewModelProvider(this, SearchViewModel.Factory(requireActivity().application)).get(
-            SearchViewModel::class.java
-        )
-    }
+    private val viewModel: SearchViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

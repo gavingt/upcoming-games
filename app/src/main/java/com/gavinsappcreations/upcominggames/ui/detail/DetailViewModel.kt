@@ -88,7 +88,7 @@ class DetailViewModel(application: Application, val guid: String) :
         _navigateToScreenshotFragment.value = Event(imageIndex)
     }
 
-    //Factory for constructing DetailViewModel with Application parameter.
+    //Factory for constructing DetailViewModel with Application parameter and guid parameters.
     class Factory(
         private val application: Application,
         private val guid: String

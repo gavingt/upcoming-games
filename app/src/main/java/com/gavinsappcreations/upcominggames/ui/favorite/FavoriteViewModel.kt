@@ -27,20 +27,6 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
     fun onNavigateToDetailFragment(game: Game) {
         _navigateToDetailFragment.value = Event(game)
     }
-
-    //Factory for constructing FavoriteViewModel with Application parameter.
-    class Factory(private val application: Application) :
-        ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(FavoriteViewModel::class.java)) {
-                @Suppress("UNCHECKED_CAST")
-                return FavoriteViewModel(
-                    application
-                ) as T
-            }
-            throw IllegalArgumentException("Unable to construct viewmodel")
-        }
-    }
 }
 
 

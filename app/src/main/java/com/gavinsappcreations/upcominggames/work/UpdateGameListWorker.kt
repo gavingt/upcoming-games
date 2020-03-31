@@ -17,13 +17,15 @@ class UpdateGameListWorker(appContext: Context, params: WorkerParameters) :
         fun setUpRecurringWork() {
             val constraints = Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.UNMETERED)
+                .setRequiresDeviceIdle(true)
                 .setRequiresBatteryNotLow(true)
                 .build()
 
+            // TODO: change back to DAYS instead of HOURS
             val repeatingRequest =
-                PeriodicWorkRequestBuilder<UpdateGameListWorker>(1, TimeUnit.DAYS)
+                PeriodicWorkRequestBuilder<UpdateGameListWorker>(1, TimeUnit.HOURS)
                     .setConstraints(constraints)
-                    .setInitialDelay(1, TimeUnit.DAYS)
+                    .setInitialDelay(1, TimeUnit.HOURS)
                     .build()
 
             WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(

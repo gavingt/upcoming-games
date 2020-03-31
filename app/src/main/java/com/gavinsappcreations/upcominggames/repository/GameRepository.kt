@@ -26,12 +26,11 @@ import java.lang.Math.ceil
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 class GameRepository private constructor(application: Context) {
 
     private val database = getDatabase(application)
 
-    val prefs: SharedPreferences =
+    private val prefs: SharedPreferences =
         application.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
 
     private val _sortOptions = MutableLiveData<SortOptions>()
@@ -103,8 +102,6 @@ class GameRepository private constructor(application: Context) {
                 _updateState.value = UpdateState.Updated
             }
         }
-
-
     }
 
 
@@ -112,7 +109,6 @@ class GameRepository private constructor(application: Context) {
     fun saveNewSortOptions(newSortOptions: SortOptions) {
 
         _databaseState.value = DatabaseState.LoadingSortChange
-
         _sortOptions.value = newSortOptions
 
         prefs.edit().putString(KEY_RELEASE_DATE_TYPE, newSortOptions.releaseDateType.name)

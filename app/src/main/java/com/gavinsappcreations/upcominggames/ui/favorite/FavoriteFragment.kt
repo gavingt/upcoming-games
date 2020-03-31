@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
@@ -15,11 +16,7 @@ import com.gavinsappcreations.upcominggames.ui.list.ListFragmentDirections
 
 class FavoriteFragment : Fragment() {
 
-    private val viewModel: FavoriteViewModel by lazy {
-        ViewModelProvider(this, FavoriteViewModel.Factory(requireActivity().application)).get(
-            FavoriteViewModel::class.java
-        )
-    }
+    private val viewModel: FavoriteViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

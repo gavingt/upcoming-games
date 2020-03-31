@@ -92,7 +92,7 @@ dependencies {
     implementation("com.google.guava:guava:28.2-android")
 
     //Paging
-    implementation "androidx.paging:paging-runtime:$paging_version"
+    implementation "androidx.paging:paging-runtime:$version_paging"
 
     // WorkManager
     implementation "androidx.work:work-runtime-ktx:$version_work"
