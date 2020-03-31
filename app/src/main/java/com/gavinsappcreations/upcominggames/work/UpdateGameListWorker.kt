@@ -16,16 +16,15 @@ class UpdateGameListWorker(appContext: Context, params: WorkerParameters) :
 
         fun setUpRecurringWork() {
             val constraints = Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.UNMETERED)
-                .setRequiresDeviceIdle(true)
+                .setRequiresStorageNotLow(true)
+                .setRequiredNetworkType(NetworkType.CONNECTED)
                 .setRequiresBatteryNotLow(true)
                 .build()
 
-            // TODO: change back to DAYS instead of HOURS
             val repeatingRequest =
-                PeriodicWorkRequestBuilder<UpdateGameListWorker>(1, TimeUnit.HOURS)
+                PeriodicWorkRequestBuilder<UpdateGameListWorker>(1, TimeUnit.DAYS)
                     .setConstraints(constraints)
-                    .setInitialDelay(1, TimeUnit.HOURS)
+                    .setInitialDelay(1, TimeUnit.DAYS)
                     .build()
 
             WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
@@ -40,6 +39,7 @@ class UpdateGameListWorker(appContext: Context, params: WorkerParameters) :
         val repository = GameRepository.getInstance(applicationContext)
 
         return try {
+            Log.d("MYLOG", "doWork")
             repository.updateGameListData(false)
             Result.success()
         } catch (e: HttpException) {

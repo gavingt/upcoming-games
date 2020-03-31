@@ -13,9 +13,6 @@ import com.gavinsappcreations.upcominggames.utilities.KEY_SAVED_STATE_PLATFORM_I
 import com.gavinsappcreations.upcominggames.utilities.PropertyAwareMutableLiveData
 import com.gavinsappcreations.upcominggames.utilities.ReleaseDateType
 
-// TODO: verify workManager is actually working in the background
-// TODO: check every fragment by initiating process death and pressing back button to see what happens
-
 class SortViewModel(application: Application, val state: SavedStateHandle) :
     AndroidViewModel(application) {
 
