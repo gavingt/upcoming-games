@@ -34,6 +34,7 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
 
 
     fun onNavigateToDetailFragment(game: Game) {
+        gameRepository.updateRecentSearches(game.gameName)
         _navigateToDetailFragment.value = Event(game)
     }
 

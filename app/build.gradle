@@ -60,40 +60,43 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$version_navigation"
     implementation "androidx.navigation:navigation-ui-ktx:$version_navigation"
 
-    //contains ViewModel and LiveData
+    // ViewModel and LiveData
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
     // Moshi for parsing the JSON format
     implementation "com.squareup.moshi:moshi:$version_moshi"
     implementation "com.squareup.moshi:moshi-kotlin:$version_moshi"
 
-    // Coroutines for getting off the UI thread
+    // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version_kotlin_coroutines"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version_kotlin_coroutines"
 
-    // Retrofit for networking
+    // Retrofit
     implementation "com.squareup.retrofit2:retrofit:$version_retrofit"
     implementation "com.squareup.retrofit2:converter-moshi:$version_retrofit"
 
     // Material design components
     implementation "com.google.android.material:material:$version_material"
 
-    //Glide
+    // Glide
     implementation "com.github.bumptech.glide:glide:$version_glide"
 
-    //RecyclerView
+    // RecyclerView
     implementation "androidx.recyclerview:recyclerview:$version_recyclerview"
 
     // Room database
     implementation "androidx.room:room-runtime:$version_room"
     kapt "androidx.room:room-compiler:$version_room"
 
-    //Guava
+    // Guava (for RateLimiter)
     implementation("com.google.guava:guava:28.2-android")
 
-    //Paging
+    // Paging
     implementation "androidx.paging:paging-runtime:$version_paging"
 
     // WorkManager
     implementation "androidx.work:work-runtime-ktx:$version_work"
+
+    // Gson
+    implementation 'com.google.code.gson:gson:2.8.6'
 }

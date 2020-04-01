@@ -18,11 +18,12 @@ import com.gavinsappcreations.upcominggames.network.NetworkGameContainer
 import com.gavinsappcreations.upcominggames.network.asDatabaseModel
 import com.gavinsappcreations.upcominggames.network.asDomainModel
 import com.gavinsappcreations.upcominggames.utilities.*
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.lang.Math.ceil
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -129,6 +130,23 @@ class GameRepository private constructor(application: Context) {
     }
 
 
+    fun getRecentSearches(): ArrayList<String> {
+        val recentSearchesString = prefs.getString(KEY_RECENT_SEARCHES, null)
+        val type = object : TypeToken<List<String>>() {}.type
+        return Gson().fromJson(recentSearchesString, type)
+    }
+
+
+    fun updateRecentSearches(newSearch: String) {
+        val recentSearches = getRecentSearches()
+        if (!recentSearches.contains(newSearch)) {
+            recentSearches.add(0, newSearch)
+            val jsonText: String = Gson().toJson(recentSearches)
+            prefs.edit().putString(KEY_RECENT_SEARCHES, jsonText).apply()
+        }
+    }
+
+
     fun getGameList(newSortOptions: SortOptions): LiveData<PagedList<Game>> {
 
         val dateConstraints = fetchDateConstraints(newSortOptions)
@@ -164,7 +182,6 @@ class GameRepository private constructor(application: Context) {
 
 
     fun searchGameList(searchString: String): LiveData<PagedList<Game>> {
-
         val query = if (searchString.trim().isEmpty()) {
             ""
         } else {

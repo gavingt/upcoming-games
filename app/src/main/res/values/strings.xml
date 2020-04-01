@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">UpcomingGames</string>
+    <string name="app_name">Upcoming Games</string>
     <string name="upcoming">Upcoming</string>
     <string name="recent">Recent</string>
     <string name="search">Search</string>

@@ -393,11 +393,5 @@ fun RadioGroup.setPlatformTypeListeners(listener: InverseBindingListener) {
 @BindingAdapter("searchResults")
 fun RecyclerView.bindSearchRecyclerView(gameList: PagedList<Game>?) {
     val adapter = adapter as SearchAdapter
-
-    adapter.submitList(gameList) {
-        // This Runnable moves the list back to the top when changing sort options
-/*        if (databaseState == DatabaseState.Loading) {
-            scrollToPosition(0)
-        }*/
-    }
+    adapter.submitList(gameList)
 }
