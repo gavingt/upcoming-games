@@ -48,6 +48,12 @@ data class GameDetail(
 )
 
 
+data class SearchResult(
+    val game: Game,
+    var isRecentSearch: Boolean
+)
+
+
 data class Platform(val abbreviation: String, val fullName: String)
 
 /**

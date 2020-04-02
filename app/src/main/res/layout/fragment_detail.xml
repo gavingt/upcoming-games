@@ -106,6 +106,7 @@
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:overScrollMode="never"
             android:visibility="@{viewModel.detailNetworkState == DetailNetworkState.Success ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toTopOf="@id/bottom_horizontal_line_view"
             app:layout_constraintTop_toTopOf="@id/top_horizontal_line_view">
@@ -349,7 +350,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_normal"
                     android:orientation="horizontal"
-                    android:overScrollMode="never"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/summary_cardView"

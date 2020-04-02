@@ -22,6 +22,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.gavinsappcreations.upcominggames.App.Companion.applicationContext
 import com.gavinsappcreations.upcominggames.R
 import com.gavinsappcreations.upcominggames.domain.Game
+import com.gavinsappcreations.upcominggames.domain.SearchResult
 import com.gavinsappcreations.upcominggames.ui.detail.DetailNetworkState
 import com.gavinsappcreations.upcominggames.ui.detail.ScreenshotAdapter
 import com.gavinsappcreations.upcominggames.ui.list.GameGridAdapter
@@ -391,7 +392,9 @@ fun RadioGroup.setPlatformTypeListeners(listener: InverseBindingListener) {
 
 //This BindingAdapter function gets called automatically whenever searchResults changes.
 @BindingAdapter("searchResults")
-fun RecyclerView.bindSearchRecyclerView(gameList: PagedList<Game>?) {
+fun RecyclerView.bindSearchRecyclerView(gameList: List<SearchResult>?) {
     val adapter = adapter as SearchAdapter
-    adapter.submitList(gameList)
+    adapter.submitList(gameList) {
+        scrollToPosition(0)
+    }
 }

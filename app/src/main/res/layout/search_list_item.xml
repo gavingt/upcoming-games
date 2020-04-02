@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="game"
-            type="com.gavinsappcreations.upcominggames.domain.Game" />
+            name="searchResult"
+            type="com.gavinsappcreations.upcominggames.domain.SearchResult" />
     </data>
 
     <TextView
@@ -17,7 +17,7 @@
         android:layout_marginStart="@dimen/margin_normal"
         android:layout_marginEnd="@dimen/margin_normal"
         android:background="?android:attr/selectableItemBackground"
-        android:drawableStart="@drawable/search"
+        android:drawableStart="@{searchResult.recentSearch ? @drawable/history : @drawable/search}"
         android:drawablePadding="@dimen/margin_normal"
         android:drawableTint="?attr/colorOnBackgroundHighContrast"
         android:ellipsize="end"
@@ -26,7 +26,7 @@
         android:paddingTop="@dimen/margin_normal"
         android:paddingEnd="@dimen/margin_extra_small"
         android:paddingBottom="@dimen/margin_normal"
-        android:text="@{game.gameName}"
+        android:text="@{searchResult.game.gameName}"
         android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Subtitle"
         tools:text="Halo Infinite" />
 

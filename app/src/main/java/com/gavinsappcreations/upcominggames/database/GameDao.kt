@@ -1,6 +1,8 @@
 package com.gavinsappcreations.upcominggames.database
 
 import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import androidx.room.*
 import androidx.room.migration.Migration
@@ -20,8 +22,8 @@ interface GameDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(games: List<Game>)
 
-    @Query("SELECT * FROM Game WHERE Game.gameName LIKE :query ORDER BY Game.releaseDateInMillis DESC")
-    fun searchGameList(query: String): DataSource.Factory<Int, Game>
+    @Query("SELECT * FROM Game WHERE Game.gameName LIKE :query ORDER BY Game.releaseDateInMillis DESC LIMIT 200")
+    fun searchGameList(query: String): List<Game>
 
 
     @Query("SELECT * FROM Game WHERE Game.isFavorite = 1 ORDER BY Game.releaseDateInMillis ASC")

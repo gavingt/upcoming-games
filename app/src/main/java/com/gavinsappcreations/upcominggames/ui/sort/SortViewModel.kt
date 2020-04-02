@@ -16,8 +16,6 @@ import com.gavinsappcreations.upcominggames.utilities.ReleaseDateType
 // TODO: move API key to a file that isn’t committed to Github
 // TODO: clean up code to make it more readable and add comments for everything
 
-// TODO: test platform indices on process death
-// TODO: show recent searches
 
 class SortViewModel(application: Application, val state: SavedStateHandle) :
     AndroidViewModel(application) {

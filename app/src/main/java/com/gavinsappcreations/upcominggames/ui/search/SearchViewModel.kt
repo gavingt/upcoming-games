@@ -3,8 +3,11 @@ package com.gavinsappcreations.upcominggames.ui.search
 import android.app.Application
 import androidx.lifecycle.*
 import com.gavinsappcreations.upcominggames.domain.Game
+import com.gavinsappcreations.upcominggames.domain.SearchResult
 import com.gavinsappcreations.upcominggames.repository.GameRepository
 import com.gavinsappcreations.upcominggames.utilities.Event
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SearchViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -22,20 +25,21 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
 
     private val gameRepository = GameRepository.getInstance(application)
 
-    private val searchQuery = MutableLiveData<String>()
-
-    val searchResults = Transformations.switchMap(searchQuery) {
-        gameRepository.searchGameList(it)
-    }
+    val searchResults = MutableLiveData<ArrayList<SearchResult>>()
 
     fun onSearchQueryChanged(newSearchQuery: String) {
-        searchQuery.value = newSearchQuery
+        searchGameList(newSearchQuery)
     }
 
+    private fun searchGameList(searchQuery: String) {
+        viewModelScope.launch {
+            searchResults.value = gameRepository.searchGameList(searchQuery)
+        }
+    }
 
-    fun onNavigateToDetailFragment(game: Game) {
-        gameRepository.updateRecentSearches(game.gameName)
-        _navigateToDetailFragment.value = Event(game)
+    fun onNavigateToDetailFragment(searchResult: SearchResult) {
+        gameRepository.updateRecentSearches(searchResult)
+        _navigateToDetailFragment.value = Event(searchResult.game)
     }
 
     fun onPopBackStack() {

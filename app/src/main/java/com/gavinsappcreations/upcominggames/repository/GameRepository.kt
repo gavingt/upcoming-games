@@ -12,6 +12,7 @@ import com.gavinsappcreations.upcominggames.database.buildGameListQuery
 import com.gavinsappcreations.upcominggames.database.getDatabase
 import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.domain.GameDetail
+import com.gavinsappcreations.upcominggames.domain.SearchResult
 import com.gavinsappcreations.upcominggames.domain.SortOptions
 import com.gavinsappcreations.upcominggames.network.GameNetwork
 import com.gavinsappcreations.upcominggames.network.NetworkGameContainer
@@ -20,10 +21,7 @@ import com.gavinsappcreations.upcominggames.network.asDomainModel
 import com.gavinsappcreations.upcominggames.utilities.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -33,6 +31,15 @@ class GameRepository private constructor(application: Context) {
 
     private val prefs: SharedPreferences =
         application.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+
+    /**
+     * Every time the user changes the search term, we check whether the previous @link [Job] is
+     * still active. If it is, we cancel the old @link [Job] and create a new one.
+     */
+    private var searchJob = Job()
+
+    // Stores the recent games searched for by the user.
+    private var recentSearches = fetchRecentSearches()
 
     private val _sortOptions = MutableLiveData<SortOptions>()
     val sortOptions: LiveData<SortOptions>
@@ -108,7 +115,6 @@ class GameRepository private constructor(application: Context) {
 
     // Update value of _sortOptions and also save that value to SharedPrefs.
     fun saveNewSortOptions(newSortOptions: SortOptions) {
-
         _databaseState.value = DatabaseState.LoadingSortChange
         _sortOptions.value = newSortOptions
 
@@ -130,25 +136,7 @@ class GameRepository private constructor(application: Context) {
     }
 
 
-    fun getRecentSearches(): ArrayList<String> {
-        val recentSearchesString = prefs.getString(KEY_RECENT_SEARCHES, null)
-        val type = object : TypeToken<List<String>>() {}.type
-        return Gson().fromJson(recentSearchesString, type)
-    }
-
-
-    fun updateRecentSearches(newSearch: String) {
-        val recentSearches = getRecentSearches()
-        if (!recentSearches.contains(newSearch)) {
-            recentSearches.add(0, newSearch)
-            val jsonText: String = Gson().toJson(recentSearches)
-            prefs.edit().putString(KEY_RECENT_SEARCHES, jsonText).apply()
-        }
-    }
-
-
     fun getGameList(newSortOptions: SortOptions): LiveData<PagedList<Game>> {
-
         val dateConstraints = fetchDateConstraints(newSortOptions)
 
         val query = buildGameListQuery(
@@ -180,18 +168,78 @@ class GameRepository private constructor(application: Context) {
         return database.gameDao.updateFavorite(isFavorite, guid)
     }
 
+    private fun fetchRecentSearches(): ArrayList<SearchResult> {
+        val recentSearchesString = prefs.getString(KEY_RECENT_SEARCHES, null)
+        return if (recentSearchesString == null) {
+            arrayListOf()
+        } else {
+            val type = object : TypeToken<ArrayList<SearchResult>>() {}.type
+            Gson().fromJson(recentSearchesString, type)
+        }
+    }
 
-    fun searchGameList(searchString: String): LiveData<PagedList<Game>> {
+
+    fun updateRecentSearches(newSearch: SearchResult) {
+        newSearch.isRecentSearch = true
+        if (!recentSearches.contains(newSearch)) {
+            recentSearches.add(newSearch)
+            val recentSearchesTrimmed = if (recentSearches.size > 4) {
+                recentSearches.subList(recentSearches.size - 4, recentSearches.size)
+            } else {
+                recentSearches
+            }
+            val jsonText: String = Gson().toJson(recentSearchesTrimmed)
+            prefs.edit().putString(KEY_RECENT_SEARCHES, jsonText).apply()
+        }
+    }
+
+
+
+    suspend fun searchGameList(searchString: String): ArrayList<SearchResult> {
         val query = if (searchString.trim().isEmpty()) {
-            ""
+            searchString
         } else {
             "%${searchString.replace(' ', '%')}%"
         }
 
-        val dataSourceFactory: DataSource.Factory<Int, Game> =
-            database.gameDao.searchGameList(query)
+        /**
+         * If previous job hasn't been completed, cancel it. This ensures that coroutines don't
+         * finish out of order if the user types quickly into the search box, leading to incorrect
+         * search results being displayed.
+         */
+        if (searchJob.isActive) {
+            searchJob.cancel()
+            // Create a new Job and searchCoroutineScope from the Job.
+            searchJob = Job()
+        }
 
-        return LivePagedListBuilder(dataSourceFactory, DATABASE_PAGE_SIZE).build()
+
+        val searchCoroutineScope = CoroutineScope(searchJob + Dispatchers.IO)
+
+        val searchResults =
+            withContext(searchCoroutineScope.coroutineContext) {
+                database.gameDao.searchGameList(query).map {
+                    SearchResult(it, false)
+                } as ArrayList<SearchResult>
+            }
+
+        val recentSearchResults = fetchRecentSearches()
+        recentSearchResults.reverse()
+        if (searchString.isEmpty()) {
+            searchResults.addAll(recentSearchResults)
+        } else {
+            for (recentResult in recentSearchResults) {
+                if (recentResult.game.gameName.contains(searchString, true)) {
+                    searchResults.remove(recentResult)
+                    val matchingSearchResult = searchResults.find {
+                        it.game == recentResult.game
+                    }
+                    matchingSearchResult?.isRecentSearch = true
+                }
+            }
+        }
+
+        return searchResults
     }
 
 
@@ -200,7 +248,6 @@ class GameRepository private constructor(application: Context) {
 
         return when (sortOptions.platformType) {
             PlatformType.CurrentGeneration -> {
-
                 platformIndices.apply {
                     addAll(currentGenerationPlatformRange)
                 }
@@ -432,15 +479,6 @@ class GameRepository private constructor(application: Context) {
 
         return networkGameContainer
     }
-
-
-/*    fun getAllGames(): List<Game> {
-        return database.gameDao.getAllGames()
-    }
-
-    fun updateGame(game: Game) {
-        database.gameDao.updateGame(game)
-    }*/
 
 
     suspend fun downloadGameDetailData(guid: String): GameDetail {

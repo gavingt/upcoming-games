@@ -65,6 +65,8 @@
             android:id="@+id/nestedScrollView"
             app:layout_constraintTop_toTopOf="@id/top_horizontal_line_view"
             app:layout_constraintBottom_toTopOf="@id/bottom_horizontal_line_view"
+            android:scrollbars="vertical"
+            android:overScrollMode="never"
             android:layout_width="match_parent"
             android:layout_height="0dp">
 

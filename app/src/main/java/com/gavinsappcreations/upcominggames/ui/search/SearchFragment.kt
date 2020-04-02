@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.gavinsappcreations.upcominggames.databinding.FragmentSearchBinding
+import com.gavinsappcreations.upcominggames.domain.SearchResult
 import com.gavinsappcreations.upcominggames.utilities.hideKeyboard
 import com.gavinsappcreations.upcominggames.utilities.showSoftKeyboard
 
@@ -48,6 +49,9 @@ class SearchFragment : Fragment() {
                 viewModel.onSearchQueryChanged(s.toString())
             }
         })
+
+        // We need to call this immediately to show recent search results.
+        viewModel.onSearchQueryChanged("")
 
         binding.upNavigationImageButton.setOnClickListener {
             viewModel.onPopBackStack()
