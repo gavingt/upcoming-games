@@ -10,13 +10,9 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.gavinsappcreations.upcominggames.database.buildGameListQuery
 import com.gavinsappcreations.upcominggames.database.getDatabase
-import com.gavinsappcreations.upcominggames.domain.Game
-import com.gavinsappcreations.upcominggames.domain.GameDetail
-import com.gavinsappcreations.upcominggames.domain.SearchResult
-import com.gavinsappcreations.upcominggames.domain.SortOptions
+import com.gavinsappcreations.upcominggames.domain.*
 import com.gavinsappcreations.upcominggames.network.GameNetwork
 import com.gavinsappcreations.upcominggames.network.NetworkGameContainer
-import com.gavinsappcreations.upcominggames.network.asDatabaseModel
 import com.gavinsappcreations.upcominggames.network.asDomainModel
 import com.gavinsappcreations.upcominggames.utilities.*
 import com.google.gson.Gson
@@ -24,6 +20,9 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
+
+// TODO: why does "Updating database" and progressBar come up on real device if we exit app and return later?
+//       do I just need to clear the cache to remove old 15-minute workManager requests?
 
 class GameRepository private constructor(application: Context) {
 
@@ -41,26 +40,35 @@ class GameRepository private constructor(application: Context) {
     // Stores the recent games searched for by the user.
     private var recentSearches = fetchRecentSearches()
 
+    // Stores the sorting/filtering options specified by the user in SortFragment.
     private val _sortOptions = MutableLiveData<SortOptions>()
     val sortOptions: LiveData<SortOptions>
         get() = _sortOptions
 
+    // Stores the state of database operations, allowing us to show a ProgressBar when loading.
     private val _databaseState = MutableLiveData(DatabaseState.Loading)
     val databaseState: LiveData<DatabaseState>
         get() = _databaseState
 
+    /**
+     * Stores the state of network operations which update the database, allowing us to show a
+     * ProgressBar when downloading data or to warn the user when the database is out-of-date.
+     */
     private val _updateState = MutableLiveData<UpdateState>()
     val updateState: LiveData<UpdateState>
         get() = _updateState
 
 
+    // Initialize sortOptions and updateState by reading from SharedPrefs.
     init {
         initializeSortOptions()
         initializeUpdateState()
     }
 
 
-    // Fetch sort options from SharedPrefs
+    /**
+     * Fetch [sortOptions] from SharedPrefs.
+     */
     private fun initializeSortOptions() {
         val releaseDateType: ReleaseDateType = enumValueOf(
             prefs.getString(KEY_RELEASE_DATE_TYPE, ReleaseDateType.RecentAndUpcoming.name)!!
@@ -80,7 +88,7 @@ class GameRepository private constructor(application: Context) {
                 it.toInt()
             }.toMutableSet()
 
-        // Set all sort options to _sortOptions at once
+        // Set all sort options fetched from SharedPrefs to _sortOptions at once.
         _sortOptions.value = SortOptions(
             releaseDateType,
             sortDirection,
@@ -91,11 +99,14 @@ class GameRepository private constructor(application: Context) {
         )
     }
 
+    /**
+     * Fetch [updateState] from SharedPrefs.
+     */
     private fun initializeUpdateState() {
         val timeLastUpdated =
             prefs.getLong(KEY_TIME_LAST_UPDATED_IN_MILLIS, ORIGINAL_TIME_LAST_UPDATED_IN_MILLIS)
 
-        // If user is running app for the first time, we need to update the database.
+        // If user is running app for the first time, we update the database immediately.
         if (timeLastUpdated == ORIGINAL_TIME_LAST_UPDATED_IN_MILLIS) {
             _updateState.value = UpdateState.Updating(0, 0)
             CoroutineScope(Dispatchers.Default).launch {
@@ -113,8 +124,10 @@ class GameRepository private constructor(application: Context) {
     }
 
 
-    // Update value of _sortOptions and also save that value to SharedPrefs.
-    fun saveNewSortOptions(newSortOptions: SortOptions) {
+    /**
+     * Update value of [sortOptions] and also save that value to SharedPrefs.
+     */
+    fun updateSortOptions(newSortOptions: SortOptions) {
         _databaseState.value = DatabaseState.LoadingSortChange
         _sortOptions.value = newSortOptions
 
@@ -136,6 +149,7 @@ class GameRepository private constructor(application: Context) {
     }
 
 
+    // Fetch list of games to display in ListFragment, based on sort options specified by user.
     fun getGameList(newSortOptions: SortOptions): LiveData<PagedList<Game>> {
         val dateConstraints = fetchDateConstraints(newSortOptions)
 
@@ -147,27 +161,38 @@ class GameRepository private constructor(application: Context) {
         )
 
         val dataSourceFactory: DataSource.Factory<Int, Game> = database.gameDao.getGameList(query)
-
         return LivePagedListBuilder(dataSourceFactory, DATABASE_PAGE_SIZE)
             .build()
     }
 
 
+    // Fetch list of user's favorite games to display in FavoriteFragment.
     fun getFavoriteList(): LiveData<PagedList<Game>> {
         val dataSourceFactory: DataSource.Factory<Int, Game> = database.gameDao.getFavoriteList()
         return LivePagedListBuilder(dataSourceFactory, DATABASE_PAGE_SIZE)
             .build()
     }
 
+    // Gets the isFavorite property of a Game, so we can display the correct star drawable in DetailFragment.
     fun getIsFavorite(guid: String): Boolean {
         return database.gameDao.getIsFavorite(guid)
     }
 
-    // Returns the number of rows updated
+    /**
+     * Updates the isFavorite property of a Game when user clicks the star drawable in DetailFragment.
+     * @param isFavorite true if game is currently a favorite, false if not.
+     * @param guid guid of current game being updated.
+     * @return number of rows updated, which should always be 1.
+     */
     fun updateFavorite(isFavorite: Boolean, guid: String): Int {
         return database.gameDao.updateFavorite(isFavorite, guid)
     }
 
+
+    /**
+     * Fetches list of user's recently searched games from SharedPrefs, so we can display them
+     * prominently in results in SearchFragment.
+     */
     private fun fetchRecentSearches(): ArrayList<SearchResult> {
         val recentSearchesString = prefs.getString(KEY_RECENT_SEARCHES, null)
         return if (recentSearchesString == null) {
@@ -179,6 +204,7 @@ class GameRepository private constructor(application: Context) {
     }
 
 
+    // Updates list of user's recent searches whenever user click on a result from SearchFragment.
     fun updateRecentSearches(newSearch: SearchResult) {
         newSearch.isRecentSearch = true
         if (!recentSearches.contains(newSearch)) {
@@ -194,8 +220,12 @@ class GameRepository private constructor(application: Context) {
     }
 
 
-
+    /**
+     * Gets games for SearchFragment, based on the search query typed by the user.
+     */
     suspend fun searchGameList(searchString: String): ArrayList<SearchResult> {
+
+        // Clean up search string and prepare it for use in SQLite query.
         val query = if (searchString.trim().isEmpty()) {
             searchString
         } else {
@@ -209,13 +239,14 @@ class GameRepository private constructor(application: Context) {
          */
         if (searchJob.isActive) {
             searchJob.cancel()
-            // Create a new Job and searchCoroutineScope from the Job.
+            // Create a new Job.
             searchJob = Job()
         }
 
-
+        // Create a new CoroutineScope from Job.
         val searchCoroutineScope = CoroutineScope(searchJob + Dispatchers.IO)
 
+        // Perform SQLite query.
         val searchResults =
             withContext(searchCoroutineScope.coroutineContext) {
                 database.gameDao.searchGameList(query).map {
@@ -223,14 +254,20 @@ class GameRepository private constructor(application: Context) {
                 } as ArrayList<SearchResult>
             }
 
+        // Fetch user's recent search results.
         val recentSearchResults = fetchRecentSearches()
         recentSearchResults.reverse()
+        // if searchString is empty, just show recentSearchResults in reverse order.
         if (searchString.isEmpty()) {
             searchResults.addAll(recentSearchResults)
         } else {
+            /**
+             * If searchString not empty, check if results contain games in recent searches. If
+             * they do, change their isRecentSearch properties to true so the correct drawable
+             * will appear to indicate they were recently searched for.
+             */
             for (recentResult in recentSearchResults) {
                 if (recentResult.game.gameName.contains(searchString, true)) {
-                    searchResults.remove(recentResult)
                     val matchingSearchResult = searchResults.find {
                         it.game == recentResult.game
                     }
@@ -243,6 +280,10 @@ class GameRepository private constructor(application: Context) {
     }
 
 
+    /**
+     * For the platforms selected by the user in SortFragment, this fetches their corresponding
+     * indices in the @link [allKnownPlatforms] list.
+     */
     private fun fetchPlatformIndices(sortOptions: SortOptions): Set<Int> {
         val platformIndices = mutableSetOf<Int>()
 
@@ -258,8 +299,11 @@ class GameRepository private constructor(application: Context) {
     }
 
 
+    /**
+     * Fetch the actual start and end dates to filter the games shown in ListFragment by, based on
+     * the sort options specified by the user in SortFragment.
+     */
     private fun fetchDateConstraints(sortOptions: SortOptions): Array<Long?> {
-
         var dateStartMillis: Long?
         var dateEndMillis: Long?
 
@@ -332,13 +376,12 @@ class GameRepository private constructor(application: Context) {
 
 
     /**
-     * We build a query for games that have been updated in the database since the last time we
+     * We build a query for games that have been updated in the API since the last time we
      * checked. But to reduce the data to be loaded, we further filter the query by games whose
      * release dates are either less than two months old or still upcoming (since we assume that
      * any game that's been out for at least two months already has its release date set correctly
-     * in the database). */
+     * in the API). */
     suspend fun updateGameListData(userInvokedUpdate: Boolean) {
-
         _updateState.postValue(UpdateState.Updating(0, 0))
 
         var offset = 0
@@ -365,7 +408,6 @@ class GameRepository private constructor(application: Context) {
         calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + 2)
         val endingDateLastUpdated = desiredPatternFormatter.format(calendar.time)
 
-
         /**
          * Next we assemble the starting and ending dates for the "original_release_date" filter
          * field of the API. We somewhat arbitrarily select this range to start at the date we last
@@ -390,7 +432,7 @@ class GameRepository private constructor(application: Context) {
 
                 Log.d("MYLOG", "updated, offset $offset")
 
-                val networkGameContainer = requestAndSaveGameList(
+                val networkGameContainer = downloadAndSaveGameList(
                     offset,
                     startingDateLastUpdated,
                     endingDateLastUpdated,
@@ -427,8 +469,6 @@ class GameRepository private constructor(application: Context) {
             _updateState.postValue(UpdateState.Updated)
 
         } catch (exception: Exception) {
-            Log.d("MYLOG", "error occurred in updateGameListData")
-
             val timeLastUpdatedInMillis =
                 prefs.getLong(KEY_TIME_LAST_UPDATED_IN_MILLIS, ORIGINAL_TIME_LAST_UPDATED_IN_MILLIS)
 
@@ -447,11 +487,11 @@ class GameRepository private constructor(application: Context) {
                 _updateState.postValue(UpdateState.Updated)
             }
         }
-
     }
 
 
-    private suspend fun requestAndSaveGameList(
+    // Downloads games from the "games" API endpoint and saves them to the "Game" SQLite table.
+    private suspend fun downloadAndSaveGameList(
         offset: Int,
         dateLastUpdated: String,
         currentDate: String,
@@ -474,13 +514,14 @@ class GameRepository private constructor(application: Context) {
         ).body()!!
 
         withContext(Dispatchers.IO) {
-            database.gameDao.insertAll(networkGameContainer.games.asDatabaseModel())
+            database.gameDao.insertAll(networkGameContainer.games.asDomainModel())
         }
 
         return networkGameContainer
     }
 
 
+    // Downloads game detail data from the "game" API endpoint, for display in DetailFragment.
     suspend fun downloadGameDetailData(guid: String): GameDetail {
         return GameNetwork.gameData.getGameDetailData(
             guid,
@@ -497,8 +538,8 @@ class GameRepository private constructor(application: Context) {
     }
 
 
+    // For Singleton instantiation of GameRepository.
     companion object {
-        // For Singleton instantiation
         @Volatile
         private var instance: GameRepository? = null
 

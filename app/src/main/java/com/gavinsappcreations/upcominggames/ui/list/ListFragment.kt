@@ -24,9 +24,9 @@ class ListFragment : Fragment() {
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
         binding.lifecycleOwner = this
 
-        // Giving the binding access to the ListViewModel
         binding.viewModel = viewModel
 
+        // Prevents jarring animations from occurring when changing sort options.
         binding.gameRecyclerView.itemAnimator = null
 
         val adapter = GameGridAdapter(GameGridAdapter.OnClickListener {
@@ -35,6 +35,7 @@ class ListFragment : Fragment() {
 
         binding.gameRecyclerView.adapter = adapter
 
+        // When gameList changes, we update databaseState to its next state.
         viewModel.gameList.observe(viewLifecycleOwner, Observer {
             viewModel.updateDatabaseState()
         })
@@ -68,6 +69,7 @@ class ListFragment : Fragment() {
             }
         })
 
+        // When user requests a manual update of the databas, process that request.
         viewModel.requestUpdateDatabase.observe(viewLifecycleOwner, Observer {
             it.getContentIfNotHandled()?.let {
                 viewModel.updateDatabaseManually()

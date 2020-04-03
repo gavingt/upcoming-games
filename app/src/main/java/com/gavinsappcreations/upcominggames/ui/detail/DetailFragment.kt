@@ -30,7 +30,6 @@ class DetailFragment : Fragment() {
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
         binding.lifecycleOwner = this
 
-        // Giving the binding access to the DetailListViewModel
         binding.viewModel = viewModel
 
         binding.gameLinkImageButton.setOnClickListener {
@@ -47,6 +46,7 @@ class DetailFragment : Fragment() {
                 viewModel.onNavigateToScreenshotFragment(currentImageIndex)
             })
 
+        // Sets topHorizontalLineView to visible only if scrollView isn't scrolled to top.
         binding.scrollView.setOnScrollChangeListener { scrollView, _, _, _, _ ->
             binding.topHorizontalLineView.visibility =
                 if (scrollView.canScrollVertically(-1)) {
@@ -55,7 +55,6 @@ class DetailFragment : Fragment() {
                     View.GONE
                 }
         }
-
 
         viewModel.popBackStack.observe(viewLifecycleOwner, Observer {
             if (it.getContentIfNotHandled() == true) {
@@ -75,7 +74,6 @@ class DetailFragment : Fragment() {
                 )
             }
         })
-
 
         return binding.root
     }

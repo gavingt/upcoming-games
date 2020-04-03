@@ -1,21 +1,19 @@
 package com.gavinsappcreations.upcominggames.ui.sort
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import com.gavinsappcreations.upcominggames.domain.ReleaseDateType
 import com.gavinsappcreations.upcominggames.domain.SortOptions
 import com.gavinsappcreations.upcominggames.repository.GameRepository
 import com.gavinsappcreations.upcominggames.utilities.Event
 import com.gavinsappcreations.upcominggames.utilities.KEY_SAVED_STATE_PLATFORM_INDICES
 import com.gavinsappcreations.upcominggames.utilities.PropertyAwareMutableLiveData
-import com.gavinsappcreations.upcominggames.utilities.ReleaseDateType
 
 // TODO: move API key to a file that isn’t committed to Github
 // TODO: clean up code to make it more readable and add comments for everything
-
 
 class SortViewModel(application: Application, val state: SavedStateHandle) :
     AndroidViewModel(application) {
@@ -49,7 +47,7 @@ class SortViewModel(application: Application, val state: SavedStateHandle) :
         get() = _updateSortOptions
 
     fun saveNewSortOptions() {
-        gameRepository.saveNewSortOptions(unsavedSortOptions.value!!)
+        gameRepository.updateSortOptions(unsavedSortOptions.value!!)
     }
 
 

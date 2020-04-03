@@ -3,6 +3,7 @@ package com.gavinsappcreations.upcominggames.ui.list
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.paging.PagedList
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -44,6 +45,7 @@ class GameGridAdapter(private val onClickListener: OnClickListener) :
             //Since ViewHolders are reused, we need to remove the previously added ones first.
             flexboxLayout.removeAllViews()
 
+            // Generate a TextView for each platform the game is on.
             for (platform in platforms) {
                 val textView = LayoutInflater.from(binding.root.context).inflate(
                     R.layout.platform_chip_layout,
@@ -55,7 +57,6 @@ class GameGridAdapter(private val onClickListener: OnClickListener) :
             }
         }
     }
-
 
     companion object DiffCallback : DiffUtil.ItemCallback<Game>() {
         override fun areItemsTheSame(oldItem: Game, newItem: Game): Boolean {

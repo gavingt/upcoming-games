@@ -27,13 +27,13 @@ class FavoriteFragment : Fragment() {
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
         binding.lifecycleOwner = this
 
-        // Giving the binding access to the FavoriteViewModel
         binding.viewModel = viewModel
 
         binding.upNavigationImageButton.setOnClickListener {
             viewModel.onPopBackStack()
         }
 
+        // Sets topHorizontalLineView to visible only if scrollView isn't scrolled to top.
         binding.gameRecyclerView.setOnScrollChangeListener { scrollView, _, _, _, _ ->
             binding.topHorizontalLineView.visibility =
                 if (scrollView.canScrollVertically(-1)) {

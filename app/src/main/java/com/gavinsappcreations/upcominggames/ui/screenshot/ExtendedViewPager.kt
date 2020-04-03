@@ -6,6 +6,10 @@ import android.view.View
 import androidx.viewpager.widget.ViewPager
 import com.ortiz.touchview.TouchImageView
 
+/**
+ * A subclass of ViewPager that plays nicely with TouchImageView. Paging between Views won't occur
+ * unless an image has been fully scrolled to its edge.
+ */
 class ExtendedViewPager : ViewPager {
 
     constructor(context: Context) : super(context)

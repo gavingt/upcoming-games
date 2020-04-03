@@ -7,7 +7,7 @@
     <data>
 
         <import type="android.view.View" />
-        <import type="com.gavinsappcreations.upcominggames.utilities.UpdateState" />
+        <import type="com.gavinsappcreations.upcominggames.domain.UpdateState" />
 
         <variable
             name="viewModel"

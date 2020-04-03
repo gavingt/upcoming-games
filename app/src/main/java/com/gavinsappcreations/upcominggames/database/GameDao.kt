@@ -12,38 +12,33 @@ import androidx.sqlite.db.SupportSQLiteQuery
 import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.utilities.allKnownPlatforms
 
-
 @Dao
 interface GameDao {
 
+    // Gets games for ListFragment, according to sort options specified by user.
     @RawQuery(observedEntities = [Game::class])
     fun getGameList(query: SupportSQLiteQuery): DataSource.Factory<Int, Game>
 
+    // Inserts all games retrieved from the API when updating the database.
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(games: List<Game>)
 
+    // Gets games for SearchFragment, based on the search query typed by the user.
     @Query("SELECT * FROM Game WHERE Game.gameName LIKE :query ORDER BY Game.releaseDateInMillis DESC LIMIT 200")
     fun searchGameList(query: String): List<Game>
 
-
+    // Gets games for FavoriteFragment, based on games favorited by the user.
     @Query("SELECT * FROM Game WHERE Game.isFavorite = 1 ORDER BY Game.releaseDateInMillis ASC")
     fun getFavoriteList(): DataSource.Factory<Int, Game>
 
+    // Gets the isFavorite property of a Game, so we can display the correct star drawable in DetailFragment.
     @Query("SELECT isFavorite FROM Game WHERE guid = :gameDetailGuid")
     fun getIsFavorite(gameDetailGuid: String): Boolean
 
+    // Updates the isFavorite property of a Game when user clicks the star drawable in DetailFragment.
     @Query("UPDATE Game SET isFavorite = :isFavorite WHERE guid = :gameDetailGuid")
     fun updateFavorite(isFavorite: Boolean, gameDetailGuid: String): Int
-
-
-
-/*        @Query("SELECT * from Game")
-    fun getAllGames(): List<Game>
-
-    @Update
-    fun updateGame(game: Game)*/
 }
-
 
 
 @Database(entities = [Game::class], version = 1)
@@ -51,7 +46,6 @@ interface GameDao {
 abstract class GamesDatabase : RoomDatabase() {
     abstract val gameDao: GameDao
 }
-
 
 
 private lateinit var INSTANCE: GamesDatabase
@@ -70,15 +64,21 @@ fun getDatabase(context: Context): GamesDatabase {
 }
 
 
-
-
+/**
+ * Build the game list raw query. We need a raw query here because we need to include an
+ * arbitrary number of LIKE clauses for matching different platforms.
+ * @param sortDirection direction of sort by release date, can be either ASC or DESC.
+ * @param startReleaseDateMillis timestamp of starting release date for which to fetch games.
+ * @param endReleaseDateMillis timestamp of ending release date for which to fetch games.
+ * @param platformsIndices indices of platforms in [allKnownPlatforms] we're sorting for.
+ * @return The SQLite query we'll use for fetching game list.
+ */
 fun buildGameListQuery(
     sortDirection: String,
     startReleaseDateMillis: Long?,
     endReleaseDateMillis: Long?,
     platformsIndices: Set<Int>
 ): SimpleSQLiteQuery {
-
     val queryBeginning = "SELECT * FROM Game WHERE " +
             if (startReleaseDateMillis == null) {
                 // If release date type is "any", don't restrict the release dates at all.

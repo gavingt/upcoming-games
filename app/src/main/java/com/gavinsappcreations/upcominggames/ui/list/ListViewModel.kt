@@ -5,9 +5,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import com.gavinsappcreations.upcominggames.domain.DatabaseState
 import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.repository.GameRepository
-import com.gavinsappcreations.upcominggames.utilities.DatabaseState
 import com.gavinsappcreations.upcominggames.utilities.Event
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,10 +21,11 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     val databaseState = gameRepository.databaseState
 
     init {
+        // Fixes a bug involving system-initiated process death.
         checkForProcessDeath()
     }
 
-    // When the sortOptions LiveData changes, switchMap sets gameList = gameRepository.getGameList(it).
+    // When the sortOptions LiveData changes, re-fetch gameList with new sortOptions.
     val gameList = Transformations.switchMap(gameRepository.sortOptions) {
         gameRepository.getGameList(it)
     }
@@ -91,6 +92,7 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
+    // This fixes a bug that would prevent gameList from showing on system-initiated process death.
     private fun checkForProcessDeath() {
         /**
          * This condition indicates process death, because the value of @link [databaseState] would not

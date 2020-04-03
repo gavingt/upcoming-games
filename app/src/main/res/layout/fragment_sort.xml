@@ -6,7 +6,7 @@
     <data>
 
         <import type="android.view.View"/>
-        <import type="com.gavinsappcreations.upcominggames.utilities.PlatformType"/>
+        <import type="com.gavinsappcreations.upcominggames.domain.PlatformType"/>
 
         <variable
             name="viewModel"

@@ -10,15 +10,6 @@ import java.io.IOException
  * An OkHttp [Interceptor] that conforms to Giant Bomb's API rate limit
  * specifications.
  *
- * This needs to be configured as a network interceptor so that it limits retries
- * as well:
- *
- * `
- * OkHttpClient client = new OkHttpClient.Builder()
- * .addNetworkInterceptor(new GiantBombApiRateLimitInterceptor())
- * .build();
-` *
- *
  * This implementation is best effort and will only work within the lifetime of
  * an [android.app.Application] instance. For example, if the app crashes
  * and requires a restart, then this could break the contract. In practice, this is

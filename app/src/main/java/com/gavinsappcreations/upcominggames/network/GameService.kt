@@ -15,6 +15,8 @@ import retrofit2.http.Query
  * A retrofit service to fetch game info.
  */
 interface GameService {
+
+    // Fetches a list of games from the "games" endpoint.
     @GET("games")
     suspend fun getGameListData(
         @Query("api_key") apiKey: String,
@@ -25,6 +27,7 @@ interface GameService {
         @Query("offset") offset: Int
     ): Response<NetworkGameContainer>
 
+    // Fetches a single game's details from the "game" endpoint.
     @GET("game/{guid}")
     suspend fun getGameDetailData(
         @Path("guid") guid: String,

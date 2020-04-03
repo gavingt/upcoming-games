@@ -6,7 +6,7 @@
 
     <data>
 
-        <import type="com.gavinsappcreations.upcominggames.ui.detail.DetailNetworkState" />
+        <import type="com.gavinsappcreations.upcominggames.domain.DetailNetworkState" />
 
         <import type="android.view.View" />
 

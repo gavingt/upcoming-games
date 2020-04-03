@@ -21,9 +21,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.gavinsappcreations.upcominggames.App.Companion.applicationContext
 import com.gavinsappcreations.upcominggames.R
-import com.gavinsappcreations.upcominggames.domain.Game
-import com.gavinsappcreations.upcominggames.domain.SearchResult
-import com.gavinsappcreations.upcominggames.ui.detail.DetailNetworkState
+import com.gavinsappcreations.upcominggames.domain.*
 import com.gavinsappcreations.upcominggames.ui.detail.ScreenshotAdapter
 import com.gavinsappcreations.upcominggames.ui.list.GameGridAdapter
 import com.gavinsappcreations.upcominggames.ui.search.SearchAdapter
@@ -91,6 +89,8 @@ fun TextView.formatReleaseDateString(
     }
 }
 
+// TODO: when we're searching for "Xbox One" with "Ascending" and the list is scrolled down,
+//       switching from "Recent and upcoming" to "Past month" doesn't scroll list up to top.
 
 //This BindingAdapter function gets called automatically whenever gameList changes.
 @BindingAdapter("gameListData", "databaseState", "updateState")
@@ -107,13 +107,14 @@ fun RecyclerView.bindGameListRecyclerView(
     }
 
     val adapter = adapter as GameGridAdapter
-
+    
     adapter.submitList(gameList) { // This is a runnable that executes after new list is committed.
         if (databaseState == DatabaseState.Loading) {
             /**
              * We only reach here after a sort change, and in that case we want to scroll the list
              * back to the top.
              */
+            // TODO: but this doesn't work in all cases!
             scrollToPosition(0)
         } else if (shouldShowRecyclerView) {
             visibility = View.VISIBLE
@@ -130,7 +131,6 @@ fun RecyclerView.bindFavoriteListRecyclerView(
     val adapter = adapter as GameGridAdapter
     adapter.submitList(favoriteList)
 }
-
 
 /**
  * We use this BindingAdapter in both ListFragment and FavoriteFragment to set the visibility of
@@ -240,7 +240,6 @@ fun ContentLoadingProgressBar.bindGameDetailProgressBarVisibility(detailNetworkS
 
 @BindingAdapter("platformList")
 fun TextView.bindPlatformList(platforms: List<String>?) {
-
     text = if (platforms != null) {
         val builder = StringBuilder()
         for (platformName in platforms) {

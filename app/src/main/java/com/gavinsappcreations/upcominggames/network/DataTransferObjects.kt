@@ -9,6 +9,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import java.util.*
 
+// Represents the root-level data returned from the "games" API endpoint.
 @JsonClass(generateAdapter = true)
 data class NetworkGameContainer(
     val error: String,
@@ -20,7 +21,7 @@ data class NetworkGameContainer(
     @Json(name = "results") val games: List<NetworkGame>
 )
 
-
+// Represents a single game's data returned from the "games" API endpoint.
 @JsonClass(generateAdapter = true)
 data class NetworkGame(
     @Json(name = "id") val gameId: Long,
@@ -35,7 +36,7 @@ data class NetworkGame(
     @Json(name = "expected_release_day") val expectedReleaseDay: Int?
 )
 
-
+// Represents the network rating returned from the API.
 @JsonClass(generateAdapter = true)
 data class NetworkRating(
     @Json(name = "api_detail_url") val apiDetailUrl: String,
@@ -43,6 +44,7 @@ data class NetworkRating(
     @Json(name = "name") val ratingName: String
 )
 
+// Represents various URLs for the main image of a game from the API.
 @JsonClass(generateAdapter = true)
 data class NetworkMainImage(
     @Json(name = "icon_url") val iconUrl: String,
@@ -57,6 +59,7 @@ data class NetworkMainImage(
     @Json(name = "image_tags") val imageTags: String?
 )
 
+// Represents a single platform from the API.
 @JsonClass(generateAdapter = true)
 data class NetworkPlatform(
     @Json(name = "api_detail_url") val apiDetailUrl: String,
@@ -66,7 +69,7 @@ data class NetworkPlatform(
     val abbreviation: String
 )
 
-
+// Represents the root-level data returned by the "game" API endpoint.
 @JsonClass(generateAdapter = true)
 data class NetworkGameDetailContainer(
     val error: String,
@@ -79,6 +82,7 @@ data class NetworkGameDetailContainer(
 )
 
 
+// Represents game details for a single game returned by the "game" API endpoint.
 @JsonClass(generateAdapter = true)
 data class NetworkGameDetail(
     @Json(name = "id") val gameId: Long,
@@ -101,7 +105,7 @@ data class NetworkGameDetail(
     @Json(name = "site_detail_url") val detailUrl: String?
 )
 
-
+// Represents a generic object returned by the API (several objects share these same properties).
 @JsonClass(generateAdapter = true)
 data class GenericContainer(
     @Json(name = "api_detail_url") val apiDetailUrl: String,
@@ -110,7 +114,7 @@ data class GenericContainer(
     @Json(name = "site_detail_url") val sideDetailUrl: String
 )
 
-
+// Represents a single image for a game from the "game" API endpoint, displayed at bottom of DetailFragment.
 @JsonClass(generateAdapter = true)
 data class NetworkImage(
     @Json(name = "icon_url") val iconUrl: String,
@@ -125,13 +129,9 @@ data class NetworkImage(
 )
 
 
-/**
- * Convert Network results to database objects that we can store in our database
- */
-fun List<NetworkGame>.asDatabaseModel(): List<Game> {
-
+// Converts network results from "games" API endpoint to domain objects.
+fun List<NetworkGame>.asDomainModel(): List<Game> {
     return map { networkGame ->
-
         val releaseDateArray = fetchReleaseDateInMillis(
             networkGame.originalReleaseDate,
             networkGame.expectedReleaseYear,
@@ -156,8 +156,8 @@ fun List<NetworkGame>.asDatabaseModel(): List<Game> {
 }
 
 
+// Converts network results from "game" API endpoint to domain objects.
 fun NetworkGameDetail.asDomainModel(): GameDetail {
-
     val releaseDateArray = fetchReleaseDateInMillis(
         this.originalReleaseDate,
         this.expectedReleaseYear,
@@ -193,8 +193,11 @@ fun NetworkGameDetail.asDomainModel(): GameDetail {
 }
 
 
+/**
+ * If the list of images for a GameDetail object has a size greater than 3, this returns only the
+ * images containing the tag "screenshot". If list size is less than 3, just return the whole list.
+ */
 fun List<NetworkImage>.filterImagesByTag(): List<String> {
-
     val filteredList = mutableListOf<String>()
 
     map {
@@ -214,6 +217,10 @@ fun List<NetworkImage>.filterImagesByTag(): List<String> {
 }
 
 
+/**
+ * Sorts the platforms for a Game by the order specified in [allKnownPlatforms]. This ensures that
+ * the platforms are listed with the most popular and relevant ones first.
+ */
 fun List<NetworkPlatform>.sortPlatformNamesByRelevance(): List<String> {
     val platformNamesSorted = mutableListOf<String>()
     val knownPlatformIndices = mutableListOf<Int>()
@@ -237,11 +244,14 @@ fun List<NetworkPlatform>.sortPlatformNamesByRelevance(): List<String> {
     }
 
     platformNamesSorted.addAll(knownPlatformsSorted)
-
     return platformNamesSorted
 }
 
 
+/**
+ * Sorts the platforms for a Game by the order specified in [allKnownPlatforms]. This ensures that
+ * the platforms are listed with the most popular and relevant ones first.
+ */
 fun List<String>.sortPlatformAbbreviationsByRelevance(): List<String> {
 
     val platformAbbreviationsSorted = mutableListOf<String>()
@@ -266,6 +276,5 @@ fun List<String>.sortPlatformAbbreviationsByRelevance(): List<String> {
     }
 
     platformAbbreviationsSorted.addAll(knownPlatformsSorted)
-
     return platformAbbreviationsSorted
 }

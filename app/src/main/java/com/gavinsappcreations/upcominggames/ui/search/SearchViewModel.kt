@@ -11,6 +11,8 @@ import kotlinx.coroutines.withContext
 
 class SearchViewModel(application: Application) : AndroidViewModel(application) {
 
+    // TODO: continue commenting from here -
+
     private val _navigateToDetailFragment = MutableLiveData<Event<Game>>()
     val navigateToDetailFragment: LiveData<Event<Game>>
         get() = _navigateToDetailFragment
