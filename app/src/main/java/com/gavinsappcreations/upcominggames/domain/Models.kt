@@ -139,6 +139,11 @@ sealed class UpdateState {
     object DataStaleUserInvokedUpdate: UpdateState()
 }
 
+// TODO: what if instead of going from LoadingSortChange to Loading, we add a progress counter for LoadingSortChange?
+//       That way we can keep track of whether a load is the result of a sort change.
+
+//
+
 // Holds the current state of loading data from the SQLite database.
 enum class DatabaseState {
     /**

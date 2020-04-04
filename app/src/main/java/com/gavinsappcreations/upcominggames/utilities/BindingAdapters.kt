@@ -107,14 +107,18 @@ fun RecyclerView.bindGameListRecyclerView(
     }
 
     val adapter = adapter as GameGridAdapter
-    
+
     adapter.submitList(gameList) { // This is a runnable that executes after new list is committed.
         if (databaseState == DatabaseState.Loading) {
             /**
              * We only reach here after a sort change, and in that case we want to scroll the list
              * back to the top.
              */
-            // TODO: but this doesn't work in all cases!
+
+
+            // TODO: this solves problem, but refactor it because we're submitting a list inside submitting a list!
+            adapter.submitList(null)
+
             scrollToPosition(0)
         } else if (shouldShowRecyclerView) {
             visibility = View.VISIBLE

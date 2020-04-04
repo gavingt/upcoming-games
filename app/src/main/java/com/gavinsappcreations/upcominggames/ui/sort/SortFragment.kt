@@ -31,7 +31,6 @@ class SortFragment : Fragment() {
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
         binding.lifecycleOwner = this
 
-        // Giving the binding access to the SortViewModel
         binding.viewModel = viewModel
 
         binding.executePendingBindings()

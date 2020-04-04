@@ -32,8 +32,6 @@ class PlatformAdapter(
         checkBox.isChecked = unsavedSortOptions.value!!.platformIndices.contains(position)
         checkBox.jumpDrawablesToCurrentState()
 
-        state.set(KEY_SAVED_STATE_PLATFORM_INDICES, mutableSetOf<Int>())
-
         checkBox.setOnCheckedChangeListener { _, isChecked ->
             val platformIndices = unsavedSortOptions.value!!.platformIndices
             if (isChecked) {

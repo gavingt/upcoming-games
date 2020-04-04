@@ -32,8 +32,9 @@ class SortViewModel(application: Application, val state: SavedStateHandle) :
             originalSortOptions.customDateStart,
             originalSortOptions.customDateEnd,
             originalSortOptions.platformType,
-            // Use SavedStateHandle version if not null
-            savedStatePlatformIndices ?: originalSortOptions.platformIndices
+            // Use SavedStateHandle version if not null. Otherwise create a new set from original.
+            savedStatePlatformIndices
+                ?: mutableSetOf<Int>().apply { addAll(originalSortOptions.platformIndices) }
         )
     )
 
@@ -49,7 +50,6 @@ class SortViewModel(application: Application, val state: SavedStateHandle) :
     fun saveNewSortOptions() {
         gameRepository.updateSortOptions(unsavedSortOptions.value!!)
     }
-
 
 
     fun onPopBackStack() {
