@@ -7,11 +7,8 @@ import com.gavinsappcreations.upcominggames.domain.SearchResult
 import com.gavinsappcreations.upcominggames.repository.GameRepository
 import com.gavinsappcreations.upcominggames.utilities.Event
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class SearchViewModel(application: Application) : AndroidViewModel(application) {
-
-    // TODO: continue commenting from here -
 
     private val _navigateToDetailFragment = MutableLiveData<Event<Game>>()
     val navigateToDetailFragment: LiveData<Event<Game>>
@@ -27,13 +24,11 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
 
     private val gameRepository = GameRepository.getInstance(application)
 
+    // Holds all the search results corresponding to the current search query typed by the user.
     val searchResults = MutableLiveData<ArrayList<SearchResult>>()
 
-    fun onSearchQueryChanged(newSearchQuery: String) {
-        searchGameList(newSearchQuery)
-    }
-
-    private fun searchGameList(searchQuery: String) {
+    // Search the database for games matching the search query.
+    fun searchGameList(searchQuery: String) {
         viewModelScope.launch {
             searchResults.value = gameRepository.searchGameList(searchQuery)
         }

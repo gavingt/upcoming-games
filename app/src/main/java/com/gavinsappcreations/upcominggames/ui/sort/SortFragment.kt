@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.gavinsappcreations.upcominggames.databinding.FragmentSortBinding
 import com.gavinsappcreations.upcominggames.utilities.hideKeyboard
 
+// TODO: change all instances of "Sort" to "Filter"
 
 class SortFragment : Fragment() {
 

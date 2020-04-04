@@ -45,12 +45,12 @@ class SearchFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 // When searchEditText changes, re-query the database.
-                viewModel.onSearchQueryChanged(s.toString())
+                viewModel.searchGameList(s.toString())
             }
         })
 
         // We need to call this immediately to show recent search results before user has typed anything.
-        viewModel.onSearchQueryChanged("")
+        viewModel.searchGameList("")
 
         binding.upNavigationImageButton.setOnClickListener {
             viewModel.onPopBackStack()

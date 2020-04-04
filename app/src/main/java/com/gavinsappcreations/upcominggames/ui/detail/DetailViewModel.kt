@@ -74,7 +74,6 @@ class DetailViewModel(application: Application, val guid: String) :
                 _gameDetail.value = gameRepository.downloadGameDetailData(guid)
                 _networkState.value = DetailNetworkState.Success
             } catch (e: Exception) {
-                Log.d("LOG", "Error: ${e.message ?: "No message"}")
                 _networkState.value = DetailNetworkState.Failure
             }
         }

@@ -1,5 +1,6 @@
 package com.gavinsappcreations.upcominggames.ui.sort
 
+import android.annotation.SuppressLint
 import android.text.Editable
 import android.text.TextWatcher
 import com.google.android.material.textfield.TextInputEditText
@@ -7,7 +8,9 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.regex.Pattern
 
-
+/**
+ * Checks the date as it's being typed, and provides feedback if it's typed in the wrong format.
+ */
 class DateInputTextWatcher(val editText: TextInputEditText) {
 
     fun listen() {
@@ -16,8 +19,8 @@ class DateInputTextWatcher(val editText: TextInputEditText) {
 
     private val dateEntryWatcher = object : TextWatcher {
 
+        @SuppressLint("SimpleDateFormat")
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-
             if (s.length in 1..9) {
                 editText.error = "Incomplete date. Use MM/DD/YYYY format."
             } else if (s.length == 10) {
