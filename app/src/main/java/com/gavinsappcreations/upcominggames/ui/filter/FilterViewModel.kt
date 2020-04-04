@@ -1,4 +1,4 @@
-package com.gavinsappcreations.upcominggames.ui.sort
+package com.gavinsappcreations.upcominggames.ui.filter
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import com.gavinsappcreations.upcominggames.domain.ReleaseDateType
-import com.gavinsappcreations.upcominggames.domain.SortOptions
+import com.gavinsappcreations.upcominggames.domain.FilterOptions
 import com.gavinsappcreations.upcominggames.repository.GameRepository
 import com.gavinsappcreations.upcominggames.utilities.Event
 import com.gavinsappcreations.upcominggames.utilities.KEY_SAVED_STATE_PLATFORM_INDICES
@@ -15,26 +15,26 @@ import com.gavinsappcreations.upcominggames.utilities.PropertyAwareMutableLiveDa
 // TODO: move API key to a file that isn’t committed to Github
 // TODO: clean up code to make it more readable and add comments for everything
 
-class SortViewModel(application: Application, val state: SavedStateHandle) :
+class FilterViewModel(application: Application, val state: SavedStateHandle) :
     AndroidViewModel(application) {
 
     private val gameRepository = GameRepository.getInstance(application)
-    private val originalSortOptions = gameRepository.sortOptions.value!!
+    private val originalFilterOptions = gameRepository.filterOptions.value!!
 
     private val savedStatePlatformIndices = state.get<MutableSet<Int>>(
         KEY_SAVED_STATE_PLATFORM_INDICES
     )
 
-    val unsavedSortOptions = PropertyAwareMutableLiveData(
-        SortOptions(
-            originalSortOptions.releaseDateType,
-            originalSortOptions.sortDirection,
-            originalSortOptions.customDateStart,
-            originalSortOptions.customDateEnd,
-            originalSortOptions.platformType,
+    val unsavedFilterOptions = PropertyAwareMutableLiveData(
+        FilterOptions(
+            originalFilterOptions.releaseDateType,
+            originalFilterOptions.sortDirection,
+            originalFilterOptions.customDateStart,
+            originalFilterOptions.customDateEnd,
+            originalFilterOptions.platformType,
             // Use SavedStateHandle version if not null. Otherwise create a new set from original.
             savedStatePlatformIndices
-                ?: mutableSetOf<Int>().apply { addAll(originalSortOptions.platformIndices) }
+                ?: mutableSetOf<Int>().apply { addAll(originalFilterOptions.platformIndices) }
         )
     )
 
@@ -43,12 +43,12 @@ class SortViewModel(application: Application, val state: SavedStateHandle) :
     val popBackStack: LiveData<Event<Boolean>>
         get() = _popBackStack
 
-    private val _updateSortOptions = MutableLiveData<Event<Boolean>>()
-    val updateSortOptions: LiveData<Event<Boolean>>
-        get() = _updateSortOptions
+    private val _updateFilterOptions = MutableLiveData<Event<Boolean>>()
+    val updateFilterOptions: LiveData<Event<Boolean>>
+        get() = _updateFilterOptions
 
-    fun saveNewSortOptions() {
-        gameRepository.updateSortOptions(unsavedSortOptions.value!!)
+    fun saveNewFilterOptions() {
+        gameRepository.updateFilterOptions(unsavedFilterOptions.value!!)
     }
 
 
@@ -57,7 +57,7 @@ class SortViewModel(application: Application, val state: SavedStateHandle) :
     }
 
     fun onPlatformCheckedChange(platformIndex: Int, isChecked: Boolean) {
-        val platformIndices = unsavedSortOptions.value!!.platformIndices
+        val platformIndices = unsavedFilterOptions.value!!.platformIndices
         if (isChecked) {
             platformIndices.add(platformIndex)
         } else {
@@ -66,22 +66,22 @@ class SortViewModel(application: Application, val state: SavedStateHandle) :
         state.set(KEY_SAVED_STATE_PLATFORM_INDICES, platformIndices)
     }
 
-    fun onUpdateSortOptions(
+    fun onUpdateFilterOptions(
         startDateError: String?,
         startDateText: String?,
         endDateError: String?,
         endDateText: String?
     ) {
-        if (unsavedSortOptions.value!!.releaseDateType == ReleaseDateType.CustomDate) {
+        if (unsavedFilterOptions.value!!.releaseDateType == ReleaseDateType.CustomDate) {
             if (startDateError == null && !startDateText.isNullOrBlank()
                 && endDateError == null && !endDateText.isNullOrBlank()
             ) {
-                _updateSortOptions.value = Event(true)
+                _updateFilterOptions.value = Event(true)
             } else {
-                _updateSortOptions.value = Event(false)
+                _updateFilterOptions.value = Event(false)
             }
         } else {
-            _updateSortOptions.value = Event(true)
+            _updateFilterOptions.value = Event(true)
         }
     }
 

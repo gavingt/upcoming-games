@@ -1,20 +1,18 @@
-package com.gavinsappcreations.upcominggames.ui.sort
+package com.gavinsappcreations.upcominggames.ui.filter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
-import androidx.lifecycle.SavedStateHandle
 import androidx.recyclerview.widget.RecyclerView
 import com.gavinsappcreations.upcominggames.R
 import com.gavinsappcreations.upcominggames.domain.Platform
-import com.gavinsappcreations.upcominggames.domain.SortOptions
-import com.gavinsappcreations.upcominggames.utilities.KEY_SAVED_STATE_PLATFORM_INDICES
+import com.gavinsappcreations.upcominggames.domain.FilterOptions
 import com.gavinsappcreations.upcominggames.utilities.PropertyAwareMutableLiveData
 import com.gavinsappcreations.upcominggames.utilities.allKnownPlatforms
 
 class PlatformAdapter(
-    private val unsavedSortOptions: PropertyAwareMutableLiveData<SortOptions>,
+    private val unsavedFilterOptions: PropertyAwareMutableLiveData<FilterOptions>,
     private val onCheckedChangeListener: OnCheckedChangeListener
 ) :
     RecyclerView.Adapter<PlatformAdapter.ViewHolder>() {
@@ -29,7 +27,7 @@ class PlatformAdapter(
         val checkBox = holder.itemView as CheckBox
 
         // Set the initial checked state of each platform checkBox
-        checkBox.isChecked = unsavedSortOptions.value!!.platformIndices.contains(position)
+        checkBox.isChecked = unsavedFilterOptions.value!!.platformIndices.contains(position)
         checkBox.jumpDrawablesToCurrentState()
 
         checkBox.setOnCheckedChangeListener { _, isChecked ->

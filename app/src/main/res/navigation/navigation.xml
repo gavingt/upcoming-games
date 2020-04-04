@@ -20,8 +20,8 @@
         android:name="com.gavinsappcreations.upcominggames.ui.list.ListFragment"
         android:label="fragment_list">
         <action
-            android:id="@+id/action_listFragment_to_sortFragment"
-            app:destination="@id/sortFragment"
+            android:id="@+id/action_listFragment_to_filterFragment"
+            app:destination="@id/filterFragment"
             app:enterAnim="@anim/fade_in"
             app:popEnterAnim="@anim/fade_in" />
         <action
@@ -41,9 +41,9 @@
             app:popEnterAnim="@anim/fade_in" />
     </fragment>
     <fragment
-        android:id="@+id/sortFragment"
-        android:name="com.gavinsappcreations.upcominggames.ui.sort.SortFragment"
-        android:label="fragment_sort" />
+        android:id="@+id/filterFragment"
+        android:name="com.gavinsappcreations.upcominggames.ui.filter.FilterFragment"
+        android:label="fragment_filter" />
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.gavinsappcreations.upcominggames.ui.detail.DetailFragment"

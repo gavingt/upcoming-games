@@ -21,9 +21,6 @@ import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-// TODO: why does "Updating database" and progressBar come up on real device if we exit app and return later?
-//       do I just need to clear the cache to remove old 15-minute workManager requests?
-
 class GameRepository private constructor(application: Context) {
 
     private val database = getDatabase(application)
@@ -40,10 +37,10 @@ class GameRepository private constructor(application: Context) {
     // Stores the recent games searched for by the user.
     private var recentSearches = fetchRecentSearches()
 
-    // Stores the sorting/filtering options specified by the user in SortFragment.
-    private val _sortOptions = MutableLiveData<SortOptions>()
-    val sortOptions: LiveData<SortOptions>
-        get() = _sortOptions
+    // Stores the filter options specified by the user in FilterFragment.
+    private val _filterOptions = MutableLiveData<FilterOptions>()
+    val filterOptions: LiveData<FilterOptions>
+        get() = _filterOptions
 
     // Stores the state of database operations, allowing us to show a ProgressBar when loading.
     private val _databaseState = MutableLiveData(DatabaseState.Loading)
@@ -59,17 +56,17 @@ class GameRepository private constructor(application: Context) {
         get() = _updateState
 
 
-    // Initialize sortOptions and updateState by reading from SharedPrefs.
+    // Initialize filterOptions and updateState by reading from SharedPrefs.
     init {
-        initializeSortOptions()
+        initializeFilterOptions()
         initializeUpdateState()
     }
 
 
     /**
-     * Fetch [sortOptions] from SharedPrefs.
+     * Fetch [filterOptions] from SharedPrefs.
      */
-    private fun initializeSortOptions() {
+    private fun initializeFilterOptions() {
         val releaseDateType: ReleaseDateType = enumValueOf(
             prefs.getString(KEY_RELEASE_DATE_TYPE, ReleaseDateType.RecentAndUpcoming.name)!!
         )
@@ -88,8 +85,8 @@ class GameRepository private constructor(application: Context) {
                 it.toInt()
             }.toMutableSet()
 
-        // Set all sort options fetched from SharedPrefs to _sortOptions at once.
-        _sortOptions.value = SortOptions(
+        // Set all filter options fetched from SharedPrefs to _filterOptions at once.
+        _filterOptions.value = FilterOptions(
             releaseDateType,
             sortDirection,
             customDateStart,
@@ -125,19 +122,19 @@ class GameRepository private constructor(application: Context) {
 
 
     /**
-     * Update value of [sortOptions] and also save that value to SharedPrefs.
+     * Update value of [filterOptions] and also save that value to SharedPrefs.
      */
-    fun updateSortOptions(newSortOptions: SortOptions) {
-        _databaseState.value = DatabaseState.LoadingSortChange
-        _sortOptions.value = newSortOptions
+    fun updateFilterOptions(newFilterOptions: FilterOptions) {
+        _databaseState.value = DatabaseState.LoadingFilterChange
+        _filterOptions.value = newFilterOptions
 
-        prefs.edit().putString(KEY_RELEASE_DATE_TYPE, newSortOptions.releaseDateType.name)
-            .putString(KEY_SORT_DIRECTION, newSortOptions.sortDirection.name)
-            .putString(KEY_CUSTOM_DATE_START, newSortOptions.customDateStart)
-            .putString(KEY_CUSTOM_DATE_END, newSortOptions.customDateEnd)
-            .putString(KEY_PLATFORM_TYPE, newSortOptions.platformType.name)
+        prefs.edit().putString(KEY_RELEASE_DATE_TYPE, newFilterOptions.releaseDateType.name)
+            .putString(KEY_SORT_DIRECTION, newFilterOptions.sortDirection.name)
+            .putString(KEY_CUSTOM_DATE_START, newFilterOptions.customDateStart)
+            .putString(KEY_CUSTOM_DATE_END, newFilterOptions.customDateEnd)
+            .putString(KEY_PLATFORM_TYPE, newFilterOptions.platformType.name)
             // Convert MutableSet<Int> to Set<String> so we can store it in SharedPrefs
-            .putStringSet(KEY_PLATFORM_INDICES, newSortOptions.platformIndices.map {
+            .putStringSet(KEY_PLATFORM_INDICES, newFilterOptions.platformIndices.map {
                 it.toString()
             }.toSet())
             .apply()
@@ -149,15 +146,15 @@ class GameRepository private constructor(application: Context) {
     }
 
 
-    // Fetch list of games to display in ListFragment, based on sort options specified by user.
-    fun getGameList(newSortOptions: SortOptions): LiveData<PagedList<Game>> {
-        val dateConstraints = fetchDateConstraints(newSortOptions)
+    // Fetch list of games to display in ListFragment, based on filter options specified by user.
+    fun getGameList(newFilterOptions: FilterOptions): LiveData<PagedList<Game>> {
+        val dateConstraints = fetchDateConstraints(newFilterOptions)
 
         val query = buildGameListQuery(
-            newSortOptions.sortDirection.direction,
+            newFilterOptions.sortDirection.direction,
             dateConstraints[0],
             dateConstraints[1],
-            fetchPlatformIndices(newSortOptions)
+            fetchPlatformIndices(newFilterOptions)
         )
 
         val dataSourceFactory: DataSource.Factory<Int, Game> = database.gameDao.getGameList(query)
@@ -281,29 +278,29 @@ class GameRepository private constructor(application: Context) {
 
 
     /**
-     * For the platforms selected by the user in SortFragment, this fetches their corresponding
+     * For the platforms selected by the user in FilterFragment, this fetches their corresponding
      * indices in the @link [allKnownPlatforms] list.
      */
-    private fun fetchPlatformIndices(sortOptions: SortOptions): Set<Int> {
+    private fun fetchPlatformIndices(filterOptions: FilterOptions): Set<Int> {
         val platformIndices = mutableSetOf<Int>()
 
-        return when (sortOptions.platformType) {
+        return when (filterOptions.platformType) {
             PlatformType.CurrentGeneration -> {
                 platformIndices.apply {
                     addAll(currentGenerationPlatformRange)
                 }
             }
             PlatformType.All -> platformIndices.apply { addAll(allKnownPlatforms.indices) }
-            PlatformType.PickFromList -> sortOptions.platformIndices
+            PlatformType.PickFromList -> filterOptions.platformIndices
         }
     }
 
 
     /**
      * Fetch the actual start and end dates to filter the games shown in ListFragment by, based on
-     * the sort options specified by the user in SortFragment.
+     * the filter options specified by the user in FilterFragment.
      */
-    private fun fetchDateConstraints(sortOptions: SortOptions): Array<Long?> {
+    private fun fetchDateConstraints(filterOptions: FilterOptions): Array<Long?> {
         var dateStartMillis: Long?
         var dateEndMillis: Long?
 
@@ -316,7 +313,7 @@ class GameRepository private constructor(application: Context) {
 
         val currentTimeMillis = calendar.timeInMillis
 
-        when (sortOptions.releaseDateType) {
+        when (filterOptions.releaseDateType) {
             ReleaseDateType.RecentAndUpcoming -> {
                 // dateStartMillis is set to one week before current day.
                 calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - 7)
@@ -349,11 +346,11 @@ class GameRepository private constructor(application: Context) {
             ReleaseDateType.CustomDate -> {
                 val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.US)
 
-                val startDateString = sortOptions.customDateStart
+                val startDateString = filterOptions.customDateStart
                 calendar.time = formatter.parse(startDateString)!!
                 dateStartMillis = calendar.timeInMillis
 
-                val endDateString = sortOptions.customDateEnd
+                val endDateString = filterOptions.customDateEnd
                 calendar.time = formatter.parse(endDateString)!!
 
                 // To get the last millisecond of the day, we add a day and subtract a millisecond.

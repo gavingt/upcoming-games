@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -26,7 +25,7 @@ class ListFragment : Fragment() {
 
         binding.viewModel = viewModel
 
-        // Prevents jarring animations from occurring when changing sort options.
+        // Prevents jarring animations from occurring when changing filter options.
         binding.gameRecyclerView.itemAnimator = null
 
         val adapter = GameGridAdapter(GameGridAdapter.OnClickListener {
@@ -51,9 +50,9 @@ class ListFragment : Fragment() {
             }
         })
 
-        viewModel.navigateToSortFragment.observe(viewLifecycleOwner, Observer {
+        viewModel.navigateToFilterFragment.observe(viewLifecycleOwner, Observer {
             it.getContentIfNotHandled()?.let {
-                findNavController(this).navigate(ListFragmentDirections.actionListFragmentToSortFragment())
+                findNavController(this).navigate(ListFragmentDirections.actionListFragmentToFilterFragment())
             }
         })
 

@@ -10,7 +10,7 @@
 
         <variable
             name="viewModel"
-            type="com.gavinsappcreations.upcominggames.ui.sort.SortViewModel" />
+            type="com.gavinsappcreations.upcominggames.ui.filter.FilterViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -42,7 +42,7 @@
             app:layout_constraintBottom_toBottomOf="@id/up_navigation_imageButton"
             app:layout_constraintLeft_toRightOf="@id/up_navigation_imageButton"
             android:layout_weight="1"
-            android:text="@string/sort_options"
+            android:text="@string/filter_options"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
 
         <Button
@@ -100,7 +100,7 @@
 
                         <RadioGroup
                             android:id="@+id/release_date_radioGroup"
-                            releaseDateType="@={viewModel.unsavedSortOptions.releaseDateType}"
+                            releaseDateType="@={viewModel.unsavedFilterOptions.releaseDateType}"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_normal">
@@ -139,7 +139,7 @@
 
                         <com.google.android.material.textfield.TextInputLayout
                             style="@style/TextInputLayoutAppearance"
-                            customDateVisibility="@{viewModel.unsavedSortOptions.releaseDateType}"
+                            customDateVisibility="@{viewModel.unsavedFilterOptions.releaseDateType}"
                             android:layout_width="180dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/margin_large"
@@ -159,13 +159,13 @@
                                 android:imeOptions="actionNext"
                                 android:inputType="date"
                                 android:maxLength="10"
-                                android:text="@={viewModel.unsavedSortOptions.customDateStart}" />
+                                android:text="@={viewModel.unsavedFilterOptions.customDateStart}" />
 
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
                             style="@style/TextInputLayoutAppearance"
-                            customDateVisibility="@{viewModel.unsavedSortOptions.releaseDateType}"
+                            customDateVisibility="@{viewModel.unsavedFilterOptions.releaseDateType}"
                             android:layout_width="180dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/margin_large"
@@ -185,7 +185,7 @@
                                 android:imeOptions="actionDone"
                                 android:inputType="date"
                                 android:maxLength="10"
-                                android:text="@={viewModel.unsavedSortOptions.customDateEnd}" />
+                                android:text="@={viewModel.unsavedFilterOptions.customDateEnd}" />
 
                         </com.google.android.material.textfield.TextInputLayout>
 
@@ -194,7 +194,7 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/sort_order_cardView"
+                    android:id="@+id/sort_direction_cardView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_normal"
@@ -218,7 +218,7 @@
 
                         <RadioGroup
                             android:id="@+id/sort_direction_radioGroup"
-                            sortDirection="@={viewModel.unsavedSortOptions.sortDirection}"
+                            sortDirection="@={viewModel.unsavedFilterOptions.sortDirection}"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_normal">
@@ -264,7 +264,7 @@
 
                         <RadioGroup
                             android:id="@+id/platform_type_radioGroup"
-                            platformType="@={viewModel.unsavedSortOptions.platformType}"
+                            platformType="@={viewModel.unsavedFilterOptions.platformType}"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_normal">
@@ -291,7 +291,7 @@
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/platform_recyclerView"
-                            android:visibility="@{viewModel.unsavedSortOptions.platformType == PlatformType.PickFromList ? View.VISIBLE : View.GONE}"
+                            android:visibility="@{viewModel.unsavedFilterOptions.platformType == PlatformType.PickFromList ? View.VISIBLE : View.GONE}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/margin_large"

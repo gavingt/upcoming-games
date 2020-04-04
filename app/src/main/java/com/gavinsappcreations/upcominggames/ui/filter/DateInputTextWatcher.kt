@@ -1,4 +1,4 @@
-package com.gavinsappcreations.upcominggames.ui.sort
+package com.gavinsappcreations.upcominggames.ui.filter
 
 import android.annotation.SuppressLint
 import android.text.Editable

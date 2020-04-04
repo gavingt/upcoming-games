@@ -65,15 +65,15 @@
                     android:tint="?attr/colorOnBackground" />
 
                 <ImageButton
-                    android:id="@+id/sort_imageButton"
+                    android:id="@+id/filter_imageButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/filter"
-                    android:onClick="@{() -> viewModel.onNavigateToSortFragment()}"
+                    android:onClick="@{() -> viewModel.onNavigateToFilterFragment()}"
                     android:padding="4dp"
-                    android:src="@drawable/sort"
+                    android:src="@drawable/filter"
                     android:tint="?attr/colorOnBackground" />
 
             </LinearLayout>
@@ -134,7 +134,7 @@
             android:layout_height="wrap_content"
             gameList="@{viewModel.gameList}"
             databaseState="@{viewModel.databaseState}"
-            android:text="@string/no_games_match_sort_options"
+            android:text="@string/no_games_match_filter_options"
             android:drawableTop="@drawable/empty_list"
             android:drawablePadding="@dimen/margin_normal"
             android:layout_marginBottom="@dimen/margin_large"

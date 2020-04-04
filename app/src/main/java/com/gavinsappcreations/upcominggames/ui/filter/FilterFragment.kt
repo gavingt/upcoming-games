@@ -1,4 +1,4 @@
-package com.gavinsappcreations.upcominggames.ui.sort
+package com.gavinsappcreations.upcominggames.ui.filter
 
 import android.content.Context.VIBRATOR_SERVICE
 import android.os.Build
@@ -13,20 +13,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.gavinsappcreations.upcominggames.databinding.FragmentSortBinding
+import com.gavinsappcreations.upcominggames.databinding.FragmentFilterBinding
 import com.gavinsappcreations.upcominggames.utilities.hideKeyboard
 
-// TODO: change all instances of "Sort" to "Filter"
+class FilterFragment : Fragment() {
 
-class SortFragment : Fragment() {
-
-    private val viewModel: SortViewModel by viewModels()
+    private val viewModel: FilterViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentSortBinding.inflate(inflater)
+        val binding = FragmentFilterBinding.inflate(inflater)
 
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
         binding.lifecycleOwner = this
@@ -37,7 +35,7 @@ class SortFragment : Fragment() {
 
         binding.platformRecyclerView.adapter =
             PlatformAdapter(
-                viewModel.unsavedSortOptions,
+                viewModel.unsavedFilterOptions,
                 PlatformAdapter.OnCheckedChangeListener { platformIndex, isChecked ->
                     viewModel.onPlatformCheckedChange(platformIndex, isChecked)
                 })
@@ -46,7 +44,7 @@ class SortFragment : Fragment() {
         DateInputTextWatcher(binding.endDateTextInputEditText).listen()
 
         binding.applyButton.setOnClickListener {
-            viewModel.onUpdateSortOptions(
+            viewModel.onUpdateFilterOptions(
                 binding.startDateTextInputEditText.error?.toString(),
                 binding.startDateTextInputEditText.text?.toString(),
                 binding.endDateTextInputEditText.error?.toString(),
@@ -68,11 +66,11 @@ class SortFragment : Fragment() {
             findNavController().popBackStack()
         })
 
-        viewModel.updateSortOptions.observe(viewLifecycleOwner, Observer {
+        viewModel.updateFilterOptions.observe(viewLifecycleOwner, Observer {
 
-            it.getContentIfNotHandled()?.let { updateSortOptions ->
-                if (updateSortOptions) {
-                    viewModel.saveNewSortOptions()
+            it.getContentIfNotHandled()?.let { updateFilterOptions ->
+                if (updateFilterOptions) {
+                    viewModel.saveNewFilterOptions()
                     hideKeyboard(binding.startDateTextInputEditText)
                     findNavController().popBackStack()
                 } else {

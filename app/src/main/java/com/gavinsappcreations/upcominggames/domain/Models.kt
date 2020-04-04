@@ -65,13 +65,13 @@ data class Platform(val abbreviation: String, val fullName: String)
 
 
 /**
- * Represents the user's current sorting/filtering choices, as chosen in SortFragment.
+ * Represents the user's current filtering choices, as chosen in FilterFragment.
  *
  * This class extends BaseObservable, which lets us wrap it in a PropertyAwareMutableLiveData.
- * This means that any time one of the properties in SortOptions changes, the LiveData's
+ * This means that any time one of the properties in FilterOptions changes, the LiveData's
  * observers will by notified.
  */
-class SortOptions(
+class FilterOptions(
     releaseDateType: ReleaseDateType,
     sortDirection: SortDirection,
     customDateStart: String,
@@ -139,18 +139,13 @@ sealed class UpdateState {
     object DataStaleUserInvokedUpdate: UpdateState()
 }
 
-// TODO: what if instead of going from LoadingSortChange to Loading, we add a progress counter for LoadingSortChange?
-//       That way we can keep track of whether a load is the result of a sort change.
-
-//
-
 // Holds the current state of loading data from the SQLite database.
 enum class DatabaseState {
     /**
-     * When the user presses UPDATE button from SortFragment, we return to ListFragment and the
+     * When the user presses UPDATE button from FilterFragment, we return to ListFragment and the
      * Observer observing gameList emits a value containing the old list data. When this emission
-     * occurs, databaseState will change from LoadingSortChange to Loading.*/
-    LoadingSortChange,
+     * occurs, databaseState will change from LoadingFilterChange to Loading.*/
+    LoadingFilterChange,
 
     /**
      * Loading represents the actual loading of the new gameList. When the Observer observing
@@ -172,7 +167,7 @@ enum class DetailNetworkState {
 }
 
 
-// Holds the currently selected release date type, as selected by the user in SortFragment.
+// Holds the currently selected release date type, as selected by the user in FilterFragment.
 enum class ReleaseDateType {
     RecentAndUpcoming,
     PastMonth,
@@ -181,14 +176,14 @@ enum class ReleaseDateType {
     CustomDate
 }
 
-// Holds the currently selected sort direction, as selected by the user in SortFragment.
+// Holds the currently selected sort direction, as selected by the user in FilterFragment.
 enum class SortDirection(val direction: String) {
     Ascending("asc"),
     Descending("desc")
 }
 
 /**
- * Holds the currently selected platform type, as selected by the user in SortFragment. Each of these
+ * Holds the currently selected platform type, as selected by the user in FilterFragment. Each of these
  * values represents a different set of platforms that will be visible to the user in ListFragment.
  */
 enum class PlatformType {

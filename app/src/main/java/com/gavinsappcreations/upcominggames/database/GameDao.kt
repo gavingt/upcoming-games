@@ -15,7 +15,7 @@ import com.gavinsappcreations.upcominggames.utilities.allKnownPlatforms
 @Dao
 interface GameDao {
 
-    // Gets games for ListFragment, according to sort options specified by user.
+    // Gets games for ListFragment, according to filter options specified by user.
     @RawQuery(observedEntities = [Game::class])
     fun getGameList(query: SupportSQLiteQuery): DataSource.Factory<Int, Game>
 
@@ -70,7 +70,7 @@ fun getDatabase(context: Context): GamesDatabase {
  * @param sortDirection direction of sort by release date, can be either ASC or DESC.
  * @param startReleaseDateMillis timestamp of starting release date for which to fetch games.
  * @param endReleaseDateMillis timestamp of ending release date for which to fetch games.
- * @param platformsIndices indices of platforms in [allKnownPlatforms] we're sorting for.
+ * @param platformsIndices indices of platforms in [allKnownPlatforms] we're filtering for.
  * @return The SQLite query we'll use for fetching game list.
  */
 fun buildGameListQuery(
