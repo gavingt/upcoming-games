@@ -15,7 +15,7 @@ import com.gavinsappcreations.upcominggames.utilities.allKnownPlatforms
 
 class PlatformAdapter(
     private val unsavedSortOptions: PropertyAwareMutableLiveData<SortOptions>,
-    private val state: SavedStateHandle
+    private val onCheckedChangeListener: OnCheckedChangeListener
 ) :
     RecyclerView.Adapter<PlatformAdapter.ViewHolder>() {
 
@@ -33,13 +33,7 @@ class PlatformAdapter(
         checkBox.jumpDrawablesToCurrentState()
 
         checkBox.setOnCheckedChangeListener { _, isChecked ->
-            val platformIndices = unsavedSortOptions.value!!.platformIndices
-            if (isChecked) {
-                platformIndices.add(position)
-            } else {
-                platformIndices.remove(position)
-            }
-            state.set(KEY_SAVED_STATE_PLATFORM_INDICES, platformIndices)
+            onCheckedChangeListener.onCheck(position, isChecked)
         }
 
         holder.bind(item)
@@ -66,7 +60,7 @@ class PlatformAdapter(
         }
     }
 
-    class OnCheckedChangeListener(val checkedChangeListener: (platformIndices: MutableSet<Int>) -> Unit) {
-        fun onCheck(platformIndices: MutableSet<Int>) = checkedChangeListener(platformIndices)
+    class OnCheckedChangeListener(val checkedChangeListener: (platformIndex: Int, isChecked: Boolean) -> Unit) {
+        fun onCheck(platformIndex: Int, isChecked: Boolean) = checkedChangeListener(platformIndex, isChecked)
     }
 }

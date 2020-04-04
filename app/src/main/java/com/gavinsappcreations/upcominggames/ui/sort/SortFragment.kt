@@ -5,7 +5,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,7 +35,11 @@ class SortFragment : Fragment() {
         binding.executePendingBindings()
 
         binding.platformRecyclerView.adapter =
-            PlatformAdapter(viewModel.unsavedSortOptions, viewModel.state)
+            PlatformAdapter(
+                viewModel.unsavedSortOptions,
+                PlatformAdapter.OnCheckedChangeListener { platformIndex, isChecked ->
+                    viewModel.onPlatformCheckedChange(platformIndex, isChecked)
+                })
 
         DateInputTextWatcher(binding.startDateTextInputEditText).listen()
         DateInputTextWatcher(binding.endDateTextInputEditText).listen()

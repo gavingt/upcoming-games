@@ -56,6 +56,16 @@ class SortViewModel(application: Application, val state: SavedStateHandle) :
         _popBackStack.value = Event(true)
     }
 
+    fun onPlatformCheckedChange(platformIndex: Int, isChecked: Boolean) {
+        val platformIndices = unsavedSortOptions.value!!.platformIndices
+        if (isChecked) {
+            platformIndices.add(platformIndex)
+        } else {
+            platformIndices.remove(platformIndex)
+        }
+        state.set(KEY_SAVED_STATE_PLATFORM_INDICES, platformIndices)
+    }
+
     fun onUpdateSortOptions(
         startDateError: String?,
         startDateText: String?,
