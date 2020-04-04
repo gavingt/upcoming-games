@@ -3,7 +3,6 @@ package com.gavinsappcreations.upcominggames.utilities
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
@@ -89,8 +88,7 @@ fun TextView.formatReleaseDateString(
     }
 }
 
-// TODO: when we're searching for "Xbox One" with "Ascending" and the list is scrolled down,
-//       switching from "Recent and upcoming" to "Past month" doesn't scroll list up to top.
+
 
 //This BindingAdapter function gets called automatically whenever gameList changes.
 @BindingAdapter("gameListData", "databaseState", "updateState")
@@ -99,30 +97,18 @@ fun RecyclerView.bindGameListRecyclerView(
     databaseState: DatabaseState,
     updateState: UpdateState
 ) {
-    val shouldShowRecyclerView =
-        databaseState == DatabaseState.Success && updateState !is UpdateState.Updating
-
-    if (!shouldShowRecyclerView) {
-        visibility = View.INVISIBLE
-    }
-
     val adapter = adapter as GameGridAdapter
 
-    adapter.submitList(gameList) { // This is a runnable that executes after new list is committed.
-        if (databaseState == DatabaseState.Loading) {
-            /**
-             * We only reach here after a sort change, and in that case we want to scroll the list
-             * back to the top.
-             */
+    val isGameListReady =
+        databaseState == DatabaseState.Success && updateState !is UpdateState.Updating
 
-
-            // TODO: this solves problem, but refactor it because we're submitting a list inside submitting a list!
-            adapter.submitList(null)
-
-            scrollToPosition(0)
-        } else if (shouldShowRecyclerView) {
+    if (isGameListReady) {
+        adapter.submitList(gameList) {
             visibility = View.VISIBLE
         }
+    } else {
+        visibility = View.INVISIBLE
+        adapter.submitList(null)
     }
 }
 
