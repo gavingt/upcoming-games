@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import androidx.recyclerview.widget.RecyclerView
 import com.gavinsappcreations.upcominggames.R
-import com.gavinsappcreations.upcominggames.domain.Platform
 import com.gavinsappcreations.upcominggames.domain.FilterOptions
+import com.gavinsappcreations.upcominggames.domain.Platform
 import com.gavinsappcreations.upcominggames.utilities.PropertyAwareMutableLiveData
 import com.gavinsappcreations.upcominggames.utilities.allKnownPlatforms
 

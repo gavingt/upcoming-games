@@ -3,7 +3,6 @@ package com.gavinsappcreations.upcominggames.utilities
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
@@ -25,7 +24,6 @@ import com.gavinsappcreations.upcominggames.domain.*
 import com.gavinsappcreations.upcominggames.ui.detail.ScreenshotAdapter
 import com.gavinsappcreations.upcominggames.ui.list.GameGridAdapter
 import com.gavinsappcreations.upcominggames.ui.search.SearchAdapter
-import com.google.android.material.textfield.TextInputLayout
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -96,7 +94,7 @@ fun TextView.formatReleaseDateString(
 }
 
 
-//This BindingAdapter function gets called automatically whenever gameList in ListFragment changes.
+//This function gets called automatically whenever gameList in ListFragment changes.
 @BindingAdapter("gameListData", "databaseState", "updateState")
 fun RecyclerView.bindGameListRecyclerView(
     gameList: PagedList<Game>?,
@@ -121,13 +119,23 @@ fun RecyclerView.bindGameListRecyclerView(
 }
 
 
-//This BindingAdapter function gets called automatically whenever favoriteList in FavoriteFragment changes.
+//This function gets called automatically whenever favoriteList in FavoriteFragment changes.
 @BindingAdapter("favoriteListData")
 fun RecyclerView.bindFavoriteListRecyclerView(
     favoriteList: PagedList<Game>?
 ) {
     val adapter = adapter as GameGridAdapter
     adapter.submitList(favoriteList)
+}
+
+
+//This function gets called automatically whenever searchResults in SearchFragment changes.
+@BindingAdapter("searchResults")
+fun RecyclerView.bindSearchRecyclerView(gameList: List<SearchResult>?) {
+    val adapter = adapter as SearchAdapter
+    adapter.submitList(gameList) {
+        scrollToPosition(0)
+    }
 }
 
 
@@ -219,7 +227,7 @@ fun TextView.bindDataStaleDateText(updateState: UpdateState) {
             applicationContext.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
 
         val timeLastUpdatedInMillis =
-            prefs.getLong(KEY_TIME_LAST_UPDATED_IN_MILLIS, ORIGINAL_TIME_LAST_UPDATED_IN_MILLIS)
+            prefs.getLong(KEY_TIME_LAST_UPDATED_IN_MILLIS, ORIGINAL_TIME_DATABASE_RETRIEVED_IN_MILLIS)
 
         val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.US)
         val calendar = Calendar.getInstance()
@@ -274,18 +282,7 @@ fun TextView.bindGameDetailList(items: List<String>?) {
 }
 
 
-// TODO: continue commenting here -
-@BindingAdapter("customDateVisibility")
-fun TextInputLayout.setCustomDateVisibility(releaseDateType: ReleaseDateType) {
-    visibility = if (releaseDateType == ReleaseDateType.CustomDate) {
-        View.VISIBLE
-    } else {
-        View.GONE
-    }
-}
-
-
-// This runs every time the LiveData value changes, and its job is to change the RadioGroup's checkedId.
+// When the releaseDateType LiveData value changes, this changes the RadioGroup's checkedId.
 @BindingAdapter("releaseDateType")
 fun RadioGroup.bindReleaseDateType(type: ReleaseDateType) {
     val newCheckedId = when (type) {
@@ -303,10 +300,9 @@ fun RadioGroup.bindReleaseDateType(type: ReleaseDateType) {
 }
 
 
-// This runs every time a new RadioButton is selected, and its job is to change the LiveData's value.
+// When the user selects a new RadioButton, this sets the value of the releaseDateType LiveData.
 @InverseBindingAdapter(attribute = "releaseDateType")
 fun RadioGroup.setReleaseDateType(): ReleaseDateType {
-
     return when (checkedRadioButtonId) {
         R.id.recent_and_upcoming_releases_radioButton -> ReleaseDateType.RecentAndUpcoming
         R.id.past_month_radioButton -> ReleaseDateType.PastMonth
@@ -319,14 +315,13 @@ fun RadioGroup.setReleaseDateType(): ReleaseDateType {
 // This notifies the data binding system that the attribute value has changed.
 @BindingAdapter("releaseDateTypeAttrChanged")
 fun RadioGroup.setReleaseDateTypeListeners(listener: InverseBindingListener) {
-
     setOnCheckedChangeListener { _, _ ->
         listener.onChange()
     }
 }
 
 
-// This runs every time the LiveData value changes, and its job is to change the RadioGroup's checkedId.
+// When the sortDirection LiveData value changes, this changes the RadioGroup's checkedId.
 @BindingAdapter("sortDirection")
 fun RadioGroup.bindSortDirection(sortDirection: SortDirection) {
     val newCheckedId = when (sortDirection) {
@@ -341,7 +336,7 @@ fun RadioGroup.bindSortDirection(sortDirection: SortDirection) {
 }
 
 
-// This runs every time a new RadioButton is selected, and its job is to change the LiveData's value.
+// When the user selects a new RadioButton, this set the sortDirection LiveData's value.
 @InverseBindingAdapter(attribute = "sortDirection")
 fun RadioGroup.setSortDirection(): SortDirection {
 
@@ -354,14 +349,13 @@ fun RadioGroup.setSortDirection(): SortDirection {
 // This notifies the data binding system that the attribute value has changed.
 @BindingAdapter("sortDirectionAttrChanged")
 fun RadioGroup.setSortDirectionListeners(listener: InverseBindingListener) {
-
     setOnCheckedChangeListener { _, _ ->
         listener.onChange()
     }
 }
 
 
-// This runs every time the LiveData value changes, and its job is to change the RadioGroup's checkedId.
+// When the platformType LiveData value changes, this changes the RadioGroup's checkedId.
 @BindingAdapter("platformType")
 fun RadioGroup.bindPlatformType(platformType: PlatformType) {
     val newCheckedId = when (platformType) {
@@ -377,10 +371,9 @@ fun RadioGroup.bindPlatformType(platformType: PlatformType) {
 }
 
 
-// This runs every time a new RadioButton is selected, and its job is to change the LiveData's value.
+// When the user selects a new RadioButton, this set the platformType LiveData's value.
 @InverseBindingAdapter(attribute = "platformType")
 fun RadioGroup.setPlatformType(): PlatformType {
-
     return when (checkedRadioButtonId) {
         R.id.current_generation_radioButton -> PlatformType.CurrentGeneration
         R.id.all_platforms_radioButton -> PlatformType.All
@@ -394,15 +387,5 @@ fun RadioGroup.setPlatformTypeListeners(listener: InverseBindingListener) {
 
     setOnCheckedChangeListener { _, _ ->
         listener.onChange()
-    }
-}
-
-
-//This BindingAdapter function gets called automatically whenever searchResults changes.
-@BindingAdapter("searchResults")
-fun RecyclerView.bindSearchRecyclerView(gameList: List<SearchResult>?) {
-    val adapter = adapter as SearchAdapter
-    adapter.submitList(gameList) {
-        scrollToPosition(0)
     }
 }

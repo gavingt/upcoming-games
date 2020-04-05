@@ -1,9 +1,7 @@
 package com.gavinsappcreations.upcominggames.ui
 
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.gavinsappcreations.upcominggames.BuildConfig
 import com.gavinsappcreations.upcominggames.R
 
 class MainActivity : AppCompatActivity() {

@@ -1,17 +1,21 @@
 package com.gavinsappcreations.upcominggames.work
 
 import android.content.Context
-import android.util.Log
 import androidx.work.*
 import com.gavinsappcreations.upcominggames.App.Companion.applicationContext
 import com.gavinsappcreations.upcominggames.repository.GameRepository
 import retrofit2.HttpException
 import java.util.concurrent.TimeUnit
 
+/**
+ * Sets up a worker that periodically queries the API in order to update the database.
+ */
+
 class UpdateGameListWorker(appContext: Context, params: WorkerParameters) :
     CoroutineWorker(appContext, params) {
 
     companion object {
+        // Uniquely identifies our worker.
         private const val WORK_NAME = "UpdateGameListWorker"
 
         fun setUpRecurringWork() {
@@ -39,7 +43,6 @@ class UpdateGameListWorker(appContext: Context, params: WorkerParameters) :
         val repository = GameRepository
 
         return try {
-            Log.d("MYLOG", "doWork")
             repository.updateGameListData(false)
             Result.success()
         } catch (e: HttpException) {

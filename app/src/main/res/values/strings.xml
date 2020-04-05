@@ -1,15 +1,8 @@
 <resources>
     <string name="app_name">Upcoming Games</string>
-    <string name="upcoming">Upcoming</string>
-    <string name="recent">Recent</string>
-    <string name="search">Search</string>
-
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="filter">filter</string>
     <string name="search_all_games">Search all games</string>
-    <string name="game_release">game release</string>
     <string name="game_cover">game cover</string>
-    <string name="unknown_date">Unknown date</string>
     <string name="no_release_date">No release date</string>
     <string name="not_available">Not available</string>
     <string name="release_date">Release date</string>
@@ -19,9 +12,7 @@
     <string name="publishers">Publishers</string>
     <string name="genres">Genres</string>
     <string name="summary">Summary</string>
-    <string name="description">Description</string>
     <string name="game_screenshot">Game screenshot</string>
-    <string name="screenshots">Screenshots</string>
     <string name="details">Details</string>
     <string name="ratings">Ratings</string>
     <string name="recent_and_upcoming">Recent and upcoming</string>
@@ -30,7 +21,7 @@
     <string name="custom_range">Custom range…</string>
     <string name="release_date_header">Release date</string>
     <string name="apply">APPLY</string>
-    <string name="filter_options">Filter options</string>
+    <string name="filter_fragment_title">Filter and sort</string>
     <string name="sort_direction">Sort direction</string>
     <string name="current_generation">Current generation</string>
     <string name="pick_platforms_from_list">Pick from list…</string>
@@ -39,11 +30,9 @@
     <string name="end_date">End date</string>
     <string name="start_date">Start date</string>
     <string name="all">All</string>
-    <string name="unknown">Unknown</string>
     <string name="any">Any</string>
     <string name="web_link">web link</string>
     <string name="search_by_game_title">Search by game title</string>
-    <string name="search_item">search item</string>
     <string name="no_network_connection">No network connection.</string>
     <string name="retry">Retry</string>
     <string name="update">update</string>

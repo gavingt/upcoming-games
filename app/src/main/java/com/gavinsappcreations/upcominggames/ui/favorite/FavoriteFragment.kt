@@ -7,12 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.gavinsappcreations.upcominggames.databinding.FragmentFavoriteBinding
 import com.gavinsappcreations.upcominggames.ui.list.GameGridAdapter
-import com.gavinsappcreations.upcominggames.ui.list.ListFragmentDirections
 
 class FavoriteFragment : Fragment() {
 

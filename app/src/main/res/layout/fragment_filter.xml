@@ -5,8 +5,9 @@
 
     <data>
 
-        <import type="android.view.View"/>
-        <import type="com.gavinsappcreations.upcominggames.domain.PlatformType"/>
+        <import type="android.view.View" />
+        <import type="com.gavinsappcreations.upcominggames.domain.PlatformType" />
+        <import type="com.gavinsappcreations.upcominggames.domain.ReleaseDateType" />
 
         <variable
             name="viewModel"
@@ -22,28 +23,28 @@
             android:id="@+id/up_navigation_imageButton"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
+            android:layout_marginStart="@dimen/margin_normal"
             android:layout_marginTop="@dimen/margin_extra_small"
             android:layout_marginBottom="@dimen/margin_extra_small"
-            android:layout_marginStart="@dimen/margin_normal"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:onClick="@{() -> viewModel.onPopBackStack()}"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/nav_app_bar_navigate_up_description"
+            android:onClick="@{() -> viewModel.onPopBackStack()}"
             android:src="@drawable/ic_left_arrow"
-            android:tint="?attr/colorOnBackground" />
+            android:tint="?attr/colorOnBackground"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/toolbar_title_textView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_normal"
-            app:layout_constraintTop_toTopOf="@id/up_navigation_imageButton"
+            android:layout_weight="1"
+            android:text="@string/filter_fragment_title"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
             app:layout_constraintBottom_toBottomOf="@id/up_navigation_imageButton"
             app:layout_constraintLeft_toRightOf="@id/up_navigation_imageButton"
-            android:layout_weight="1"
-            android:text="@string/filter_options"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+            app:layout_constraintTop_toTopOf="@id/up_navigation_imageButton" />
 
         <Button
             android:id="@+id/apply_button"
@@ -51,24 +52,24 @@
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:layout_marginTop="@dimen/margin_extra_small"
-            android:layout_marginBottom="@dimen/margin_extra_small"
             android:layout_marginEnd="@dimen/margin_small"
-            app:layout_constraintTop_toTopOf="@id/up_navigation_imageButton"
-            app:layout_constraintBottom_toBottomOf="@id/up_navigation_imageButton"
-            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginBottom="@dimen/margin_extra_small"
             android:letterSpacing="0.07"
             android:text="@string/apply"
             android:textColor="?attr/colorAccent"
-            android:textSize="@dimen/text_button_size" />
+            android:textSize="@dimen/text_button_size"
+            app:layout_constraintBottom_toBottomOf="@id/up_navigation_imageButton"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/up_navigation_imageButton" />
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView"
-            app:layout_constraintTop_toTopOf="@id/top_horizontal_line_view"
-            app:layout_constraintBottom_toTopOf="@id/bottom_horizontal_line_view"
-            android:scrollbars="vertical"
-            android:overScrollMode="never"
             android:layout_width="match_parent"
-            android:layout_height="0dp">
+            android:layout_height="0dp"
+            android:overScrollMode="never"
+            android:scrollbars="vertical"
+            app:layout_constraintBottom_toTopOf="@id/bottom_horizontal_line_view"
+            app:layout_constraintTop_toTopOf="@id/top_horizontal_line_view">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -139,12 +140,12 @@
 
                         <com.google.android.material.textfield.TextInputLayout
                             style="@style/TextInputLayoutAppearance"
-                            customDateVisibility="@{viewModel.unsavedFilterOptions.releaseDateType}"
                             android:layout_width="180dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/margin_large"
                             android:layout_marginTop="@dimen/margin_normal"
                             android:hint="@string/start_date"
+                            android:visibility="@{viewModel.unsavedFilterOptions.releaseDateType == ReleaseDateType.CustomDate ? View.VISIBLE : View.GONE}"
                             app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
                             app:boxCornerRadiusBottomStart="@dimen/corner_radius"
                             app:boxCornerRadiusTopEnd="@dimen/corner_radius"
@@ -165,12 +166,12 @@
 
                         <com.google.android.material.textfield.TextInputLayout
                             style="@style/TextInputLayoutAppearance"
-                            customDateVisibility="@{viewModel.unsavedFilterOptions.releaseDateType}"
                             android:layout_width="180dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/margin_large"
                             android:layout_marginTop="@dimen/margin_normal"
                             android:hint="@string/end_date"
+                            android:visibility="@{viewModel.unsavedFilterOptions.releaseDateType == ReleaseDateType.CustomDate ? View.VISIBLE : View.GONE}"
                             app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
                             app:boxCornerRadiusBottomStart="@dimen/corner_radius"
                             app:boxCornerRadiusTopEnd="@dimen/corner_radius"
@@ -291,11 +292,11 @@
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/platform_recyclerView"
-                            android:visibility="@{viewModel.unsavedFilterOptions.platformType == PlatformType.PickFromList ? View.VISIBLE : View.GONE}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/margin_large"
                             android:layout_marginTop="@dimen/margin_normal"
+                            android:visibility="@{viewModel.unsavedFilterOptions.platformType == PlatformType.PickFromList ? View.VISIBLE : View.GONE}"
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
                     </LinearLayout>

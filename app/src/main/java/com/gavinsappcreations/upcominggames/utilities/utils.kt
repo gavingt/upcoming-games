@@ -2,14 +2,11 @@ package com.gavinsappcreations.upcominggames.utilities
 
 import android.app.Activity
 import android.content.Context
-import android.content.res.Resources
-import android.util.DisplayMetrics
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.MutableLiveData
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.roundToInt
 
 /**
  * Takes the date returned by the API and turns it into a time in millis

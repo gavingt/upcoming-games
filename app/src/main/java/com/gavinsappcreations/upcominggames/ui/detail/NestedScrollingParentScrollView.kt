@@ -6,6 +6,7 @@ import android.view.MotionEvent
 import android.view.ViewConfiguration
 import android.widget.ScrollView
 import androidx.annotation.Nullable
+import kotlin.math.abs
 
 /**
  * This class is a workaround for when a parent ScrollView with vertical scroll
@@ -90,10 +91,10 @@ class NestedScrollingParentScrollView : ScrollView {
     }
 
     private fun calculateDistanceX(ev: MotionEvent): Int {
-        return Math.abs(mOriginalX - ev.x).toInt()
+        return abs(mOriginalX - ev.x).toInt()
     }
 
     private fun calculateDistanceY(ev: MotionEvent): Int {
-        return Math.abs(mOriginalY - ev.y).toInt()
+        return abs(mOriginalY - ev.y).toInt()
     }
 }

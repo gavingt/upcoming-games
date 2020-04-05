@@ -102,10 +102,10 @@ object GameRepository {
      */
     private fun initializeUpdateState() {
         val timeLastUpdated =
-            prefs.getLong(KEY_TIME_LAST_UPDATED_IN_MILLIS, ORIGINAL_TIME_LAST_UPDATED_IN_MILLIS)
+            prefs.getLong(KEY_TIME_LAST_UPDATED_IN_MILLIS, ORIGINAL_TIME_DATABASE_RETRIEVED_IN_MILLIS)
 
         // If user is running app for the first time, we update the database immediately.
-        if (timeLastUpdated == ORIGINAL_TIME_LAST_UPDATED_IN_MILLIS) {
+        if (timeLastUpdated == ORIGINAL_TIME_DATABASE_RETRIEVED_IN_MILLIS) {
             _updateState.value = UpdateState.Updating(0, 0)
             CoroutineScope(Dispatchers.Default).launch {
                 updateGameListData(false)
@@ -395,7 +395,7 @@ object GameRepository {
         val desiredPatternFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
 
         val timeLastUpdated =
-            prefs.getLong(KEY_TIME_LAST_UPDATED_IN_MILLIS, ORIGINAL_TIME_LAST_UPDATED_IN_MILLIS)
+            prefs.getLong(KEY_TIME_LAST_UPDATED_IN_MILLIS, ORIGINAL_TIME_DATABASE_RETRIEVED_IN_MILLIS)
 
         calendar.timeInMillis = timeLastUpdated
         val startingDateLastUpdated = desiredPatternFormatter.format(calendar.time)
@@ -468,7 +468,7 @@ object GameRepository {
 
         } catch (exception: Exception) {
             val timeLastUpdatedInMillis =
-                prefs.getLong(KEY_TIME_LAST_UPDATED_IN_MILLIS, ORIGINAL_TIME_LAST_UPDATED_IN_MILLIS)
+                prefs.getLong(KEY_TIME_LAST_UPDATED_IN_MILLIS, ORIGINAL_TIME_DATABASE_RETRIEVED_IN_MILLIS)
 
             /**
              * Check how long it's been since database was updated. If it's been over two days,
@@ -497,7 +497,7 @@ object GameRepository {
         endingOriginalReleaseDate: String
     ): NetworkGameContainer {
         val networkGameContainer = GameNetwork.gameData.getGameListData(
-            API_KEY,
+            GIANT_BOMB_API_KEY,
             ApiField.Json.field,
             "${ApiField.DateLastUpdated.field}:${SortDirection.Ascending.direction}",
             "${ApiField.DateLastUpdated.field}:${dateLastUpdated}|${currentDate}," +
@@ -523,7 +523,7 @@ object GameRepository {
     suspend fun downloadGameDetailData(guid: String): GameDetail {
         return GameNetwork.gameData.getGameDetailData(
             guid,
-            API_KEY,
+            GIANT_BOMB_API_KEY,
             ApiField.Json.field,
             "${ApiField.Id.field},${ApiField.Guid.field},${ApiField.Name.field}," +
                     "${ApiField.Image.field},${ApiField.Images.field},${ApiField.Platforms.field}," +

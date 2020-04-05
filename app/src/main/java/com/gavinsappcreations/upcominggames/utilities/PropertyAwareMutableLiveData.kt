@@ -5,7 +5,7 @@ import androidx.databinding.Observable
 import androidx.lifecycle.MutableLiveData
 
 /**
- * This class notifies its observers whenever any of its properties change in value.
+ * This is a MutableLiveData that notifies its observers whenever any of its properties change in value.
  */
 class PropertyAwareMutableLiveData<T: BaseObservable>(): MutableLiveData<T>() {
 

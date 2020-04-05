@@ -1,7 +1,6 @@
 package com.gavinsappcreations.upcominggames.ui.detail
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
 import com.gavinsappcreations.upcominggames.domain.DetailNetworkState
 import com.gavinsappcreations.upcominggames.domain.GameDetail
@@ -10,7 +9,6 @@ import com.gavinsappcreations.upcominggames.utilities.Event
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.sql.SQLDataException
 
 class DetailViewModel(application: Application, val guid: String) :
     AndroidViewModel(application) {
