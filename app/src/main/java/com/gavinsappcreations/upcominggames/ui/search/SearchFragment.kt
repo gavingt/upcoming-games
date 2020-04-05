@@ -61,11 +61,10 @@ class SearchFragment : Fragment() {
 
         // For some reason we need to slightly delay showing the keyboard for it to actually show.
         viewModel.showKeyboard.observe(viewLifecycleOwner, Observer {
-            if (it == true) {
+            it.getContentIfNotHandled()?.let {
                 binding.root.postDelayed({
                     showSoftKeyboard(binding.searchEditText)
                 }, 50)
-                viewModel.onShowKeyboard()
             }
         })
 

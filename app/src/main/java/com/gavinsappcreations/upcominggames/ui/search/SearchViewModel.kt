@@ -18,11 +18,11 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
     val popBackStack: LiveData<Event<Boolean>>
         get() = _popBackStack
 
-    private val _showKeyboard = MutableLiveData<Boolean>()
-    val showKeyboard: LiveData<Boolean>
+    private val _showKeyboard = MutableLiveData<Event<Boolean>>()
+    val showKeyboard: LiveData<Event<Boolean>>
         get() = _showKeyboard
 
-    private val gameRepository = GameRepository.getInstance(application)
+    private val gameRepository = GameRepository
 
     // Holds all the search results corresponding to the current search query typed by the user.
     val searchResults = MutableLiveData<ArrayList<SearchResult>>()
@@ -44,6 +44,6 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun onShowKeyboard() {
-        _showKeyboard.value = _showKeyboard.value == null
+        _showKeyboard.value = Event(true)
     }
 }

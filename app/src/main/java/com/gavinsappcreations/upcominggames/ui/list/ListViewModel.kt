@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 
 class ListViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val gameRepository = GameRepository.getInstance(application)
+    private val gameRepository = GameRepository
 
     val updateState = gameRepository.updateState
     val databaseState = gameRepository.databaseState
@@ -23,6 +23,15 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     init {
         // Fixes a bug involving system-initiated process death.
         checkForProcessDeath()
+
+        /**
+         * By initializing the value of databaseState here rather than in GameRepository, we fix
+         * a bug wherein the indeterminate ProgressBar wouldn't appear when user presses the Back
+         * button from ListFragment and then immediately re-opens the app. This would occur because
+         * GameRepository isn't immediately destroyed when the app process ends, so databaseState
+         * wasn't being reinitialized to DatabaseState.Loading.
+         */
+        gameRepository.updateDatabaseState(DatabaseState.Loading)
     }
 
     // When the filterOptions LiveData changes, re-fetch gameList with new filterOptions.

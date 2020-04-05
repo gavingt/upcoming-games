@@ -210,7 +210,7 @@
 
                         <TextView
                             android:id="@+id/platforms_value_textView"
-                            platformList="@{viewModel.gameDetail.platforms}"
+                            gameDetailList="@{viewModel.gameDetail.platforms}"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:textSize="15sp"

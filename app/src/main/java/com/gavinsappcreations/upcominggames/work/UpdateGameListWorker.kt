@@ -36,7 +36,7 @@ class UpdateGameListWorker(appContext: Context, params: WorkerParameters) :
     }
 
     override suspend fun doWork(): Result {
-        val repository = GameRepository.getInstance(applicationContext)
+        val repository = GameRepository
 
         return try {
             Log.d("MYLOG", "doWork")

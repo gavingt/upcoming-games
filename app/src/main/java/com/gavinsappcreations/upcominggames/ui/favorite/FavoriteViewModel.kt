@@ -8,7 +8,7 @@ import com.gavinsappcreations.upcominggames.utilities.Event
 
 class FavoriteViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val gameRepository = GameRepository.getInstance(application)
+    private val gameRepository = GameRepository
 
     // Stores list of user's favorite games.
     val favoriteList = gameRepository.getFavoriteList()

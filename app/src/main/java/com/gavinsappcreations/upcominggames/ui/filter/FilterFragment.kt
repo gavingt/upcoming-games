@@ -33,6 +33,7 @@ class FilterFragment : Fragment() {
 
         binding.executePendingBindings()
 
+        // Initialize adapter for picking platforms from list, and inject onCheckedChangeListener.
         binding.platformRecyclerView.adapter =
             PlatformAdapter(
                 viewModel.unsavedFilterOptions,
@@ -40,9 +41,11 @@ class FilterFragment : Fragment() {
                     viewModel.onPlatformCheckedChange(platformIndex, isChecked)
                 })
 
+        // Attach DateInputTextWatchers to date editTexts.
         DateInputTextWatcher(binding.startDateTextInputEditText).listen()
         DateInputTextWatcher(binding.endDateTextInputEditText).listen()
 
+        // When applyButton is pressed, save the user's new filter options.
         binding.applyButton.setOnClickListener {
             viewModel.onUpdateFilterOptions(
                 binding.startDateTextInputEditText.error?.toString(),
@@ -52,6 +55,7 @@ class FilterFragment : Fragment() {
             )
         }
 
+        // Sets topHorizontalLineView to visible only if scrollView isn't scrolled to top.
         binding.nestedScrollView.setOnScrollChangeListener { scrollView, _, _, _, _ ->
             binding.topHorizontalLineView.visibility =
                 if (scrollView.canScrollVertically(-1)) {
@@ -66,8 +70,11 @@ class FilterFragment : Fragment() {
             findNavController().popBackStack()
         })
 
+        /**
+         * If updateFilterOptions = true, inputs are valid and we save new filter options.
+         * Otherwise, we display a Toast alerting the user of the invalid date.
+         */
         viewModel.updateFilterOptions.observe(viewLifecycleOwner, Observer {
-
             it.getContentIfNotHandled()?.let { updateFilterOptions ->
                 if (updateFilterOptions) {
                     viewModel.saveNewFilterOptions()
@@ -83,6 +90,7 @@ class FilterFragment : Fragment() {
     }
 
 
+    // Alerts user that they can't apply changes to filter options without entering valid dates.
     private fun displayInvalidDateToast() {
         Toast.makeText(
             requireContext(),

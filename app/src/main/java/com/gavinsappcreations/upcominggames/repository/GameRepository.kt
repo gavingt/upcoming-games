@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
+import com.gavinsappcreations.upcominggames.App
 import com.gavinsappcreations.upcominggames.database.buildGameListQuery
 import com.gavinsappcreations.upcominggames.database.getDatabase
 import com.gavinsappcreations.upcominggames.domain.*
@@ -21,12 +22,12 @@ import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class GameRepository private constructor(application: Context) {
+object GameRepository {
 
-    private val database = getDatabase(application)
+    private val database = getDatabase(App.applicationContext)
 
     private val prefs: SharedPreferences =
-        application.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+        App.applicationContext.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
 
     /**
      * Every time the user changes the search term, we check whether the previous @link [Job] is
@@ -43,7 +44,7 @@ class GameRepository private constructor(application: Context) {
         get() = _filterOptions
 
     // Stores the state of database operations, allowing us to show a ProgressBar when loading.
-    private val _databaseState = MutableLiveData(DatabaseState.Loading)
+    private val _databaseState = MutableLiveData<DatabaseState>()
     val databaseState: LiveData<DatabaseState>
         get() = _databaseState
 
@@ -532,18 +533,6 @@ class GameRepository private constructor(application: Context) {
                     "${ApiField.Developers.field},${ApiField.Publishers.field}," +
                     "${ApiField.Genres.field},${ApiField.Deck.field},${ApiField.DetailUrl.field}"
         ).body()!!.gameDetails.asDomainModel()
-    }
-
-
-    // For Singleton instantiation of GameRepository.
-    companion object {
-        @Volatile
-        private var instance: GameRepository? = null
-
-        fun getInstance(application: Context) =
-            instance ?: synchronized(this) {
-                instance ?: GameRepository(application).also { instance = it }
-            }
     }
 
 }

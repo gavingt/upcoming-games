@@ -11,18 +11,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 
-
-fun dpToPx(dp: Int): Int {
-    return (dp * Resources.getSystem().displayMetrics.density).toInt()
-}
-
-//Converts a px measurement to a dp measurement.
-fun pxToDp(px: Int, context: Context): Int {
-    val displayMetrics = context.resources.displayMetrics
-    return (px / (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)).roundToInt()
-}
-
-
 /**
  * Takes the date returned by the API and turns it into a time in millis
  */

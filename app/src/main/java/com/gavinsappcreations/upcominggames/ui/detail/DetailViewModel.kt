@@ -15,7 +15,7 @@ import java.sql.SQLDataException
 class DetailViewModel(application: Application, val guid: String) :
     AndroidViewModel(application) {
 
-    private val gameRepository = GameRepository.getInstance(application)
+    private val gameRepository = GameRepository
 
     // Stores whether currently displayed game is a favorite.
     private val _isFavorite = MutableLiveData<Boolean>()
@@ -97,7 +97,7 @@ class DetailViewModel(application: Application, val guid: String) :
         _navigateToScreenshotFragment.value = Event(imageIndex)
     }
 
-    //Factory for constructing DetailViewModel with Application parameter and guid parameters.
+    // Factory for constructing DetailViewModel with Application parameter and guid parameters.
     class Factory(
         private val application: Application,
         private val guid: String

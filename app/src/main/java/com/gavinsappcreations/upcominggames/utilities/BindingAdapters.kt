@@ -3,6 +3,7 @@ package com.gavinsappcreations.upcominggames.utilities
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
@@ -28,7 +29,7 @@ import com.google.android.material.textfield.TextInputLayout
 import java.text.SimpleDateFormat
 import java.util.*
 
-
+// Use Glide to load images throughout the app.
 @BindingAdapter("imageUrl")
 fun ImageView.bindImage(imgUrl: String?) {
     imgUrl?.let {
@@ -45,17 +46,23 @@ fun ImageView.bindImage(imgUrl: String?) {
     }
 }
 
-
+/**
+ * Converts date timestamps into human-readable date strings.
+ * @param releaseDateInMillis Unix timestamp representing release date.
+ * @param dateFormat represents the level of precision of the release date (day, month, year, etc...).
+ * @param inGameDetailFragment if we're displaying date in DetailFragment, we show different text
+ *                             when the release date is unknown.
+ */
 @BindingAdapter("releaseDateInMillis", "dateFormat", "inGameDetailFragment")
 fun TextView.formatReleaseDateString(
     releaseDateInMillis: Long?,
     dateFormat: Int,
     inGameDetailFragment: Boolean
 ) {
-
     val calendar: Calendar = Calendar.getInstance()
     calendar.timeInMillis = releaseDateInMillis ?: -1
 
+    // Depending on dateFormat, we format release date string differently.
     when (dateFormat) {
         DateFormat.Exact.formatCode -> {
             val desiredPatternFormatter = SimpleDateFormat("MMMM d, yyyy", Locale.US)
@@ -89,8 +96,7 @@ fun TextView.formatReleaseDateString(
 }
 
 
-
-//This BindingAdapter function gets called automatically whenever gameList changes.
+//This BindingAdapter function gets called automatically whenever gameList in ListFragment changes.
 @BindingAdapter("gameListData", "databaseState", "updateState")
 fun RecyclerView.bindGameListRecyclerView(
     gameList: PagedList<Game>?,
@@ -99,11 +105,13 @@ fun RecyclerView.bindGameListRecyclerView(
 ) {
     val adapter = adapter as GameGridAdapter
 
+    // True if we should show the games, false if database is loading or updating.
     val isGameListReady =
         databaseState == DatabaseState.Success && updateState !is UpdateState.Updating
 
     if (isGameListReady) {
         adapter.submitList(gameList) {
+            // Once the submitted list is committed, this callback executes.
             visibility = View.VISIBLE
         }
     } else {
@@ -113,7 +121,7 @@ fun RecyclerView.bindGameListRecyclerView(
 }
 
 
-//This BindingAdapter function gets called automatically whenever favoriteList changes.
+//This BindingAdapter function gets called automatically whenever favoriteList in FavoriteFragment changes.
 @BindingAdapter("favoriteListData")
 fun RecyclerView.bindFavoriteListRecyclerView(
     favoriteList: PagedList<Game>?
@@ -121,6 +129,7 @@ fun RecyclerView.bindFavoriteListRecyclerView(
     val adapter = adapter as GameGridAdapter
     adapter.submitList(favoriteList)
 }
+
 
 /**
  * We use this BindingAdapter in both ListFragment and FavoriteFragment to set the visibility of
@@ -141,11 +150,16 @@ fun TextView.bindEmptyViewVisibility(gameList: PagedList<Game>?, databaseState: 
 }
 
 
+/**
+ * Sets visibility of indeterminate ProgressBar in ListFragment. This ProgressBar indicates that
+ * data is loading from the database.
+ */
 @BindingAdapter("databaseState", "updateState")
 fun ContentLoadingProgressBar.bindIndeterminateProgressBarVisibility(
     databaseState: DatabaseState,
     updateState: UpdateState
 ) {
+    // Show indeterminate ProgressBar if database isn't finished loading and we're not updating.
     if (updateState is UpdateState.Updating) {
         hide()
     } else {
@@ -157,6 +171,10 @@ fun ContentLoadingProgressBar.bindIndeterminateProgressBarVisibility(
 }
 
 
+/**
+ * Sets visibility of determinate ProgressBar. This ProgressBar indicates that we're updating
+ * the database from the API.
+ */
 @BindingAdapter("determinateProgressBarVisibility")
 fun ProgressBar.bindDeterminateProgressBarVisibility(updateState: UpdateState) {
     when (updateState) {
@@ -178,6 +196,10 @@ fun ProgressBar.bindDeterminateProgressBarVisibility(updateState: UpdateState) {
 }
 
 
+/**
+ * This controls the visibility of Views in ListFragment that show when the data in the database
+ * is stale and needs to be updated.
+ */
 @BindingAdapter("dataStaleViewVisibility")
 fun View.bindDataStaleViewVisibility(updateState: UpdateState) {
     visibility = when (updateState) {
@@ -187,6 +209,9 @@ fun View.bindDataStaleViewVisibility(updateState: UpdateState) {
 }
 
 
+/**
+ * This formats the dateStaleTextView text in ListFragment.
+ */
 @BindingAdapter("dataStaleDateText")
 fun TextView.bindDataStaleDateText(updateState: UpdateState) {
     if (updateState == UpdateState.DataStale || updateState == UpdateState.DataStaleUserInvokedUpdate) {
@@ -203,6 +228,10 @@ fun TextView.bindDataStaleDateText(updateState: UpdateState) {
         text = if (updateState == UpdateState.DataStale) {
             resources.getString(R.string.last_updated_data_stale, formatter.format(calendar.time))
         } else {
+            /**
+             * This branch is only relevant if updateState == UpdateState.DataStaleUserInvokedUpdate,
+             * since otherwise this TextView isn't visible.
+             */
             resources.getString(
                 R.string.last_updated_data_stale_user_invoked_update,
                 formatter.format(calendar.time)
@@ -212,6 +241,7 @@ fun TextView.bindDataStaleDateText(updateState: UpdateState) {
 }
 
 
+// Binds screenshot data to views in DetailFragment.
 @BindingAdapter("screenshotData")
 fun RecyclerView.bindScreenshotRecyclerView(data: List<String>?) {
     val adapter = adapter as ScreenshotAdapter
@@ -219,6 +249,7 @@ fun RecyclerView.bindScreenshotRecyclerView(data: List<String>?) {
 }
 
 
+// Controls visibility of indeterminate ProgressBar in DetailFragment.
 @BindingAdapter("gameDetailProgressBarVisibility")
 fun ContentLoadingProgressBar.bindGameDetailProgressBarVisibility(detailNetworkState: DetailNetworkState) {
     when (detailNetworkState) {
@@ -228,20 +259,7 @@ fun ContentLoadingProgressBar.bindGameDetailProgressBarVisibility(detailNetworkS
 }
 
 
-@BindingAdapter("platformList")
-fun TextView.bindPlatformList(platforms: List<String>?) {
-    text = if (platforms != null) {
-        val builder = StringBuilder()
-        for (platformName in platforms) {
-            builder.append(platformName).append("\n")
-        }
-        builder.trim()
-    } else {
-        context.getString(R.string.not_available)
-    }
-}
-
-
+// Formats text showing the list of platforms in DetailFragment.
 @BindingAdapter("gameDetailList")
 fun TextView.bindGameDetailList(items: List<String>?) {
     text = if (items != null) {
@@ -256,6 +274,7 @@ fun TextView.bindGameDetailList(items: List<String>?) {
 }
 
 
+// TODO: continue commenting here -
 @BindingAdapter("customDateVisibility")
 fun TextInputLayout.setCustomDateVisibility(releaseDateType: ReleaseDateType) {
     visibility = if (releaseDateType == ReleaseDateType.CustomDate) {

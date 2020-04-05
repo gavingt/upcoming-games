@@ -42,7 +42,7 @@ class GameGridAdapter(private val onClickListener: OnClickListener) :
 
             val flexboxLayout = binding.platformFlexboxLayout
 
-            //Since ViewHolders are reused, we need to remove the previously added ones first.
+            //Since ViewHolders are reused, we need to remove the previously added Views first.
             flexboxLayout.removeAllViews()
 
             // Generate a TextView for each platform the game is on.

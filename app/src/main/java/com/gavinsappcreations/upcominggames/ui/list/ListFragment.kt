@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -68,7 +70,7 @@ class ListFragment : Fragment() {
             }
         })
 
-        // When user requests a manual update of the databas, process that request.
+        // When user requests a manual update of the database, process that request.
         viewModel.requestUpdateDatabase.observe(viewLifecycleOwner, Observer {
             it.getContentIfNotHandled()?.let {
                 viewModel.updateDatabaseManually()
@@ -77,6 +79,8 @@ class ListFragment : Fragment() {
 
         return binding.root
     }
+
 }
+
 
 
