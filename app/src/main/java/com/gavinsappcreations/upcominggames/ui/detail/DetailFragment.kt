@@ -32,15 +32,6 @@ class DetailFragment : Fragment() {
 
         binding.viewModel = viewModel
 
-        binding.gameLinkImageButton.setOnClickListener {
-            val url = viewModel.gameDetail.value?.detailUrl
-            url?.let {
-                val intent = Intent(Intent.ACTION_VIEW)
-                intent.data = Uri.parse(url)
-                startActivity(intent)
-            }
-        }
-
         binding.screenshotRecyclerView.adapter =
             ScreenshotAdapter(ScreenshotAdapter.OnClickListener { currentImageIndex ->
                 viewModel.onNavigateToScreenshotFragment(currentImageIndex)
@@ -59,6 +50,15 @@ class DetailFragment : Fragment() {
         viewModel.popBackStack.observe(viewLifecycleOwner, Observer {
             if (it.getContentIfNotHandled() == true) {
                 findNavController().popBackStack()
+            }
+        })
+
+        viewModel.viewGameLink.observe(viewLifecycleOwner, Observer {
+            val url = viewModel.gameDetail.value?.detailUrl
+            url?.let {
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.data = Uri.parse(url)
+                startActivity(intent)
             }
         })
 

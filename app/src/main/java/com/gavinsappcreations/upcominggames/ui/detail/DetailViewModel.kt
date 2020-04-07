@@ -35,6 +35,10 @@ class DetailViewModel(application: Application, val guid: String) :
     val popBackStack: LiveData<Event<Boolean>>
         get() = _popBackStack
 
+    private val _viewGameLink = MutableLiveData<Event<Boolean>>()
+    val viewGameLink: LiveData<Event<Boolean>>
+        get() = _viewGameLink
+
     // Holds an event for navigating to ScreenshotFragment.
     private val _navigateToScreenshotFragment = MutableLiveData<Event<Int>>()
     val navigateToScreenshotFragment: LiveData<Event<Int>>
@@ -89,6 +93,10 @@ class DetailViewModel(application: Application, val guid: String) :
 
     fun onPopBackStack() {
         _popBackStack.value = Event(true)
+    }
+
+    fun onViewGameLink() {
+        _viewGameLink.value = Event(true)
     }
 
     fun onNavigateToScreenshotFragment(imageIndex: Int) {

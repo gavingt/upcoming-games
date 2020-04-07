@@ -46,9 +46,9 @@
             android:textAllCaps="false"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:visibility="@{viewModel.detailNetworkState == DetailNetworkState.Failure ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/error_textView" />
 
         <ImageButton
@@ -58,9 +58,9 @@
             android:layout_marginStart="@dimen/margin_normal"
             android:layout_marginTop="@dimen/margin_extra_small"
             android:layout_marginBottom="@dimen/margin_extra_small"
-            android:onClick="@{() -> viewModel.onPopBackStack()}"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/nav_app_bar_navigate_up_description"
+            android:onClick="@{() -> viewModel.onPopBackStack()}"
             android:src="@drawable/ic_left_arrow"
             android:tint="?attr/colorOnBackground"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -74,16 +74,16 @@
             android:layout_marginEnd="@dimen/margin_extra_small"
             android:layout_marginBottom="@dimen/margin_extra_small"
             android:background="?selectableItemBackgroundBorderless"
-            android:onClick="@{() -> viewModel.updateFavorite()}"
             android:contentDescription="@string/favorites"
+            android:onClick="@{() -> viewModel.updateFavorite()}"
             android:padding="@dimen/margin_extra_small"
             android:src="@{viewModel.isFavorite == true ? @drawable/ic_star : @drawable/ic_star_border}"
             android:tint="?attr/colorOnBackground"
-            tools:src="@drawable/ic_star_border"
             android:visibility="@{viewModel.detailNetworkState == DetailNetworkState.Success ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@id/up_navigation_imageButton"
             app:layout_constraintRight_toLeftOf="@id/game_link_imageButton"
-            app:layout_constraintTop_toTopOf="@id/up_navigation_imageButton" />
+            app:layout_constraintTop_toTopOf="@id/up_navigation_imageButton"
+            tools:src="@drawable/ic_star_border" />
 
         <ImageButton
             android:id="@+id/game_link_imageButton"
@@ -92,9 +92,10 @@
             android:layout_marginTop="@dimen/margin_extra_small"
             android:layout_marginEnd="@dimen/margin_normal"
             android:layout_marginBottom="@dimen/margin_extra_small"
-            android:padding="@dimen/margin_extra_small"
             android:background="?selectableItemBackgroundBorderless"
             android:contentDescription="@string/web_link"
+            android:onClick="@{() -> viewModel.onViewGameLink()}"
+            android:padding="@dimen/margin_extra_small"
             android:src="@drawable/ic_link"
             android:tint="?attr/colorOnBackground"
             android:visibility="@{viewModel.detailNetworkState == DetailNetworkState.Success ? View.VISIBLE : View.GONE}"
