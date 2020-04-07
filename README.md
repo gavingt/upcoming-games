@@ -32,4 +32,4 @@ See the app in action: https://youtu.be/RS_684kyOEk
 
 ## Acknowledgments
 
-* Thanks to GiantBomb.com for the free use of their API. 
+Thanks to GiantBomb.com for the free use of their API. 
