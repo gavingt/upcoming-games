@@ -10,7 +10,7 @@ Note that the app will still work without an API key, but the database will neve
 
 ## Built With
 
-* Kotlin, MVVM, Room, Retrofit, Paging Library, WorkManager, Navigation Component, Kotlin Coroutines, Moshi, Glide, Guava
+Kotlin, MVVM, Room, Retrofit, Paging Library, WorkManager, Navigation Component, Kotlin Coroutines, Moshi, Glide, Guava
 
 ## Media
 
