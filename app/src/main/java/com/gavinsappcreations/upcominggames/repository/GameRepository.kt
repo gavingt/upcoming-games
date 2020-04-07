@@ -87,13 +87,15 @@ object GameRepository {
             }.toMutableSet()
 
         // Set all filter options fetched from SharedPrefs to _filterOptions at once.
-        _filterOptions.value = FilterOptions(
-            releaseDateType,
-            sortDirection,
-            customDateStart,
-            customDateEnd,
-            platformType,
-            platformIndices
+        _filterOptions.postValue(
+            FilterOptions(
+                releaseDateType,
+                sortDirection,
+                customDateStart,
+                customDateEnd,
+                platformType,
+                platformIndices
+            )
         )
     }
 
@@ -102,21 +104,24 @@ object GameRepository {
      */
     private fun initializeUpdateState() {
         val timeLastUpdated =
-            prefs.getLong(KEY_TIME_LAST_UPDATED_IN_MILLIS, ORIGINAL_TIME_DATABASE_RETRIEVED_IN_MILLIS)
+            prefs.getLong(
+                KEY_TIME_LAST_UPDATED_IN_MILLIS,
+                ORIGINAL_TIME_DATABASE_RETRIEVED_IN_MILLIS
+            )
 
         // If user is running app for the first time, we update the database immediately.
         if (timeLastUpdated == ORIGINAL_TIME_DATABASE_RETRIEVED_IN_MILLIS) {
-            _updateState.value = UpdateState.Updating(0, 0)
+            _updateState.postValue(UpdateState.Updating(0, 0))
             CoroutineScope(Dispatchers.Default).launch {
                 updateGameListData(false)
             }
         } else {
             if (isDataStale(timeLastUpdated)) {
                 // If database hasn't been updated in over 2 days, this will alert the user.
-                _updateState.value = UpdateState.DataStale
+                _updateState.postValue(UpdateState.DataStale)
             } else {
                 // If database is recently updated, this will show the ProgressBar.
-                _updateState.value = UpdateState.Updated
+                _updateState.postValue(UpdateState.Updated)
             }
         }
     }
@@ -395,7 +400,10 @@ object GameRepository {
         val desiredPatternFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
 
         val timeLastUpdated =
-            prefs.getLong(KEY_TIME_LAST_UPDATED_IN_MILLIS, ORIGINAL_TIME_DATABASE_RETRIEVED_IN_MILLIS)
+            prefs.getLong(
+                KEY_TIME_LAST_UPDATED_IN_MILLIS,
+                ORIGINAL_TIME_DATABASE_RETRIEVED_IN_MILLIS
+            )
 
         calendar.timeInMillis = timeLastUpdated
         val startingDateLastUpdated = desiredPatternFormatter.format(calendar.time)
@@ -468,7 +476,10 @@ object GameRepository {
 
         } catch (exception: Exception) {
             val timeLastUpdatedInMillis =
-                prefs.getLong(KEY_TIME_LAST_UPDATED_IN_MILLIS, ORIGINAL_TIME_DATABASE_RETRIEVED_IN_MILLIS)
+                prefs.getLong(
+                    KEY_TIME_LAST_UPDATED_IN_MILLIS,
+                    ORIGINAL_TIME_DATABASE_RETRIEVED_IN_MILLIS
+                )
 
             /**
              * Check how long it's been since database was updated. If it's been over two days,

@@ -52,10 +52,6 @@ class SearchFragment : Fragment() {
         // We need to call this immediately to show recent search results before user has typed anything.
         viewModel.searchGameList("")
 
-        binding.upNavigationImageButton.setOnClickListener {
-            viewModel.onPopBackStack()
-        }
-
         // Tell ViewModel to show keyboard immediately upon entering Fragment.
         viewModel.onShowKeyboard()
 
@@ -65,6 +61,12 @@ class SearchFragment : Fragment() {
                 binding.root.postDelayed({
                     showSoftKeyboard(binding.searchEditText)
                 }, 50)
+            }
+        })
+
+        viewModel.clearSearchText.observe(viewLifecycleOwner, Observer {
+            it.getContentIfNotHandled()?.let {
+                binding.searchEditText.setText("")
             }
         })
 

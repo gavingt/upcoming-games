@@ -42,6 +42,21 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageButton
+            android:id="@+id/clear_search_text_imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginEnd="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_extra_small"
+            android:layout_marginBottom="@dimen/margin_extra_small"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/nav_app_bar_navigate_up_description"
+            android:onClick="@{() -> viewModel.onClearSearchText()}"
+            android:src="@drawable/ic_close"
+            android:tint="?attr/colorOnBackground"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <View
             android:id="@+id/top_horizontal_line_view"
             android:layout_width="match_parent"

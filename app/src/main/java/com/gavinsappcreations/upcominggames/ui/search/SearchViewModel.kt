@@ -21,6 +21,10 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
     val popBackStack: LiveData<Event<Boolean>>
         get() = _popBackStack
 
+    private val _clearSearchText = MutableLiveData<Event<Boolean>>()
+    val clearSearchText: LiveData<Event<Boolean>>
+        get() = _clearSearchText
+
     private val _showKeyboard = MutableLiveData<Event<Boolean>>()
     val showKeyboard: LiveData<Event<Boolean>>
         get() = _showKeyboard
@@ -44,6 +48,10 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
 
     fun onPopBackStack() {
         _popBackStack.value = Event(true)
+    }
+
+    fun onClearSearchText() {
+        _clearSearchText.value = Event(true)
     }
 
     fun onShowKeyboard() {

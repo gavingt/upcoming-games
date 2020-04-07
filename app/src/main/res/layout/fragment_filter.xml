@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -77,6 +76,63 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/sort_direction_cardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_normal"
+                    android:layout_marginTop="@dimen/margin_normal"
+                    android:layout_marginRight="@dimen/margin_normal"
+                    app:cardBackgroundColor="?attr/colorBackgroundVariant">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="@dimen/margin_normal"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/sort_direction_header_textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/sort_direction"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/sort_direction_subheader_textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_small"
+                            android:text="@string/sort_release_dates_in_this_direction"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textSize="12sp" />
+
+                        <RadioGroup
+                            android:id="@+id/sort_direction_radioGroup"
+                            sortDirection="@={viewModel.unsavedFilterOptions.sortDirection}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_normal">
+
+                            <RadioButton
+                                android:id="@+id/sort_ascending_radioButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/radio_button_height"
+                                android:text="@string/ascending" />
+
+                            <RadioButton
+                                android:id="@+id/sort_descending_radioButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/radio_button_height"
+                                android:text="@string/descending" />
+
+                        </RadioGroup>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/release_date_cardView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -99,6 +155,15 @@
                             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                             android:textSize="18sp" />
 
+                        <TextView
+                            android:id="@+id/release_date_subheader_textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_small"
+                            android:text="@string/filter_results_by_release_date"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textSize="12sp" />
+
                         <RadioGroup
                             android:id="@+id/release_date_radioGroup"
                             releaseDateType="@={viewModel.unsavedFilterOptions.releaseDateType}"
@@ -107,28 +172,28 @@
                             android:layout_marginTop="@dimen/margin_normal">
 
                             <RadioButton
-                                android:id="@+id/recent_and_upcoming_releases_radioButton"
+                                android:id="@+id/new_and_upcoming_releases_radioButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="@dimen/radio_button_height"
-                                android:text="@string/recent_and_upcoming" />
+                                android:text="@string/new_and_upcoming" />
 
                             <RadioButton
                                 android:id="@+id/past_month_radioButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="@dimen/radio_button_height"
-                                android:text="@string/past_month" />
+                                android:text="@string/this_month" />
 
                             <RadioButton
-                                android:id="@+id/past_year_radioButton"
+                                android:id="@+id/this_year_radioButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="@dimen/radio_button_height"
-                                android:text="@string/past_year" />
+                                android:text="@string/this_year" />
 
                             <RadioButton
                                 android:id="@+id/any_release_date_radioButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="@dimen/radio_button_height"
-                                android:text="@string/any" />
+                                android:text="@string/all_time" />
 
                             <RadioButton
                                 android:id="@+id/custom_date_range_radioButton"
@@ -195,54 +260,6 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/sort_direction_cardView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_normal"
-                    android:layout_marginTop="@dimen/margin_normal"
-                    android:layout_marginRight="@dimen/margin_normal"
-                    app:cardBackgroundColor="?attr/colorBackgroundVariant">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="@dimen/margin_normal"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/sort_direction_header_textView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/sort_direction"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                            android:textSize="18sp" />
-
-                        <RadioGroup
-                            android:id="@+id/sort_direction_radioGroup"
-                            sortDirection="@={viewModel.unsavedFilterOptions.sortDirection}"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_normal">
-
-                            <RadioButton
-                                android:id="@+id/sort_ascending_radioButton"
-                                android:layout_width="wrap_content"
-                                android:layout_height="@dimen/radio_button_height"
-                                android:text="@string/ascending" />
-
-                            <RadioButton
-                                android:id="@+id/sort_descending_radioButton"
-                                android:layout_width="wrap_content"
-                                android:layout_height="@dimen/radio_button_height"
-                                android:text="@string/descending" />
-
-                        </RadioGroup>
-
-                    </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/platform_cardView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -262,6 +279,15 @@
                             android:text="@string/platforms"
                             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                             android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/platform_subheader_textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_small"
+                            android:text="@string/filter_results_by_game_platform"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textSize="12sp" />
 
                         <RadioGroup
                             android:id="@+id/platform_type_radioGroup"

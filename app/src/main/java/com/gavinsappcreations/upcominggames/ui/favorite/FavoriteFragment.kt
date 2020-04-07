@@ -27,10 +27,6 @@ class FavoriteFragment : Fragment() {
 
         binding.viewModel = viewModel
 
-        binding.upNavigationImageButton.setOnClickListener {
-            viewModel.onPopBackStack()
-        }
-
         // Sets topHorizontalLineView to visible only if scrollView isn't scrolled to top.
         binding.gameRecyclerView.setOnScrollChangeListener { scrollView, _, _, _, _ ->
             binding.topHorizontalLineView.visibility =

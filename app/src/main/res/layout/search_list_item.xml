@@ -17,7 +17,7 @@
         android:layout_marginStart="@dimen/margin_normal"
         android:layout_marginEnd="@dimen/margin_normal"
         android:background="?android:attr/selectableItemBackground"
-        android:drawableStart="@{searchResult.recentSearch ? @drawable/history : @drawable/search}"
+        android:drawableStart="@{searchResult.recentSearch ? @drawable/ic_history : @drawable/ic_search}"
         android:drawablePadding="@dimen/margin_normal"
         android:drawableTint="?attr/colorOnBackgroundHighContrast"
         android:ellipsize="end"

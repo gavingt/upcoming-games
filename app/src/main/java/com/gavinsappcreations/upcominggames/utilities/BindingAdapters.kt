@@ -99,7 +99,7 @@ fun TextView.formatReleaseDateString(
 fun RecyclerView.bindGameListRecyclerView(
     gameList: PagedList<Game>?,
     databaseState: DatabaseState,
-    updateState: UpdateState
+    updateState: UpdateState?
 ) {
     val adapter = adapter as GameGridAdapter
 
@@ -165,7 +165,7 @@ fun TextView.bindEmptyViewVisibility(gameList: PagedList<Game>?, databaseState: 
 @BindingAdapter("databaseState", "updateState")
 fun ContentLoadingProgressBar.bindIndeterminateProgressBarVisibility(
     databaseState: DatabaseState,
-    updateState: UpdateState
+    updateState: UpdateState?
 ) {
     // Show indeterminate ProgressBar if database isn't finished loading and we're not updating.
     if (updateState is UpdateState.Updating) {
@@ -184,7 +184,7 @@ fun ContentLoadingProgressBar.bindIndeterminateProgressBarVisibility(
  * the database from the API.
  */
 @BindingAdapter("determinateProgressBarVisibility")
-fun ProgressBar.bindDeterminateProgressBarVisibility(updateState: UpdateState) {
+fun ProgressBar.bindDeterminateProgressBarVisibility(updateState: UpdateState?) {
     when (updateState) {
         is UpdateState.Updating -> {
             progress = updateState.currentProgress
@@ -209,7 +209,7 @@ fun ProgressBar.bindDeterminateProgressBarVisibility(updateState: UpdateState) {
  * is stale and needs to be updated.
  */
 @BindingAdapter("dataStaleViewVisibility")
-fun View.bindDataStaleViewVisibility(updateState: UpdateState) {
+fun View.bindDataStaleViewVisibility(updateState: UpdateState?) {
     visibility = when (updateState) {
         UpdateState.DataStale, UpdateState.DataStaleUserInvokedUpdate -> View.VISIBLE
         else -> View.GONE
@@ -221,7 +221,7 @@ fun View.bindDataStaleViewVisibility(updateState: UpdateState) {
  * This formats the dateStaleTextView text in ListFragment.
  */
 @BindingAdapter("dataStaleDateText")
-fun TextView.bindDataStaleDateText(updateState: UpdateState) {
+fun TextView.bindDataStaleDateText(updateState: UpdateState?) {
     if (updateState == UpdateState.DataStale || updateState == UpdateState.DataStaleUserInvokedUpdate) {
         val prefs: SharedPreferences =
             applicationContext.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
@@ -286,9 +286,9 @@ fun TextView.bindGameDetailList(items: List<String>?) {
 @BindingAdapter("releaseDateType")
 fun RadioGroup.bindReleaseDateType(type: ReleaseDateType) {
     val newCheckedId = when (type) {
-        ReleaseDateType.RecentAndUpcoming -> R.id.recent_and_upcoming_releases_radioButton
+        ReleaseDateType.RecentAndUpcoming -> R.id.new_and_upcoming_releases_radioButton
         ReleaseDateType.PastMonth -> R.id.past_month_radioButton
-        ReleaseDateType.PastYear -> R.id.past_year_radioButton
+        ReleaseDateType.PastYear -> R.id.this_year_radioButton
         ReleaseDateType.Any -> R.id.any_release_date_radioButton
         ReleaseDateType.CustomDate -> R.id.custom_date_range_radioButton
     }
@@ -304,9 +304,9 @@ fun RadioGroup.bindReleaseDateType(type: ReleaseDateType) {
 @InverseBindingAdapter(attribute = "releaseDateType")
 fun RadioGroup.setReleaseDateType(): ReleaseDateType {
     return when (checkedRadioButtonId) {
-        R.id.recent_and_upcoming_releases_radioButton -> ReleaseDateType.RecentAndUpcoming
+        R.id.new_and_upcoming_releases_radioButton -> ReleaseDateType.RecentAndUpcoming
         R.id.past_month_radioButton -> ReleaseDateType.PastMonth
-        R.id.past_year_radioButton -> ReleaseDateType.PastYear
+        R.id.this_year_radioButton -> ReleaseDateType.PastYear
         R.id.any_release_date_radioButton -> ReleaseDateType.Any
         else -> ReleaseDateType.CustomDate
     }
@@ -339,7 +339,6 @@ fun RadioGroup.bindSortDirection(sortDirection: SortDirection) {
 // When the user selects a new RadioButton, this set the sortDirection LiveData's value.
 @InverseBindingAdapter(attribute = "sortDirection")
 fun RadioGroup.setSortDirection(): SortDirection {
-
     return when (checkedRadioButtonId) {
         R.id.sort_ascending_radioButton -> SortDirection.Ascending
         else -> SortDirection.Descending
@@ -384,7 +383,6 @@ fun RadioGroup.setPlatformType(): PlatformType {
 // This notifies the data binding system that the attribute value has changed.
 @BindingAdapter("platformTypeAttrChanged")
 fun RadioGroup.setPlatformTypeListeners(listener: InverseBindingListener) {
-
     setOnCheckedChangeListener { _, _ ->
         listener.onChange()
     }

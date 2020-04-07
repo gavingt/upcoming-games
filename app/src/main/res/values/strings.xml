@@ -15,13 +15,13 @@
     <string name="game_screenshot">Game screenshot</string>
     <string name="details">Details</string>
     <string name="ratings">Ratings</string>
-    <string name="recent_and_upcoming">Recent and upcoming</string>
-    <string name="past_month">Past month</string>
-    <string name="past_year">Past year</string>
+    <string name="new_and_upcoming">New and upcoming</string>
+    <string name="this_month">This month</string>
+    <string name="this_year">This year</string>
     <string name="custom_range">Custom range…</string>
     <string name="release_date_header">Release date</string>
     <string name="apply">APPLY</string>
-    <string name="filter_fragment_title">Filter and sort</string>
+    <string name="filter_fragment_title">Sort and filter</string>
     <string name="sort_direction">Sort direction</string>
     <string name="current_generation">Current generation</string>
     <string name="pick_platforms_from_list">Pick from list…</string>
@@ -30,7 +30,7 @@
     <string name="end_date">End date</string>
     <string name="start_date">Start date</string>
     <string name="all">All</string>
-    <string name="any">Any</string>
+    <string name="all_time">All-time</string>
     <string name="web_link">web link</string>
     <string name="search_by_game_title">Search by game title</string>
     <string name="no_network_connection">No network connection.</string>
@@ -42,6 +42,9 @@
     <string name="favorites">Favorites</string>
     <string name="no_favorites_added_yet">Your favorites will show up here</string>
     <string name="no_games_match_filter_options">No games found matching your filter options</string>
+    <string name="filter_results_by_release_date">Filter results by release date</string>
+    <string name="sort_release_dates_in_this_direction">Sort release dates in this direction</string>
+    <string name="filter_results_by_game_platform">Filter results by game platform</string>
 
 
 </resources>
