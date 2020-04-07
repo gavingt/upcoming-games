@@ -1,6 +1,6 @@
 # Upcoming Games
 
-View release dates and other info for every video game ever made. Keep track of your favorite and most anticipated games easily. Database updates itself periodically using WorkManager.
+View release dates and other info for every video game ever made. Keep track of your favorite and most anticipated games easily. Contains full sorting and search capabilities. Database updates itself periodically using WorkManager.
 
 ## Getting Started
 
