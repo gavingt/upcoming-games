@@ -54,11 +54,13 @@ class DetailFragment : Fragment() {
         })
 
         viewModel.viewGameLink.observe(viewLifecycleOwner, Observer {
-            val url = viewModel.gameDetail.value?.detailUrl
-            url?.let {
-                val intent = Intent(Intent.ACTION_VIEW)
-                intent.data = Uri.parse(url)
-                startActivity(intent)
+            if (it.getContentIfNotHandled() == true) {
+                val url = viewModel.gameDetail.value?.detailUrl
+                url?.let {
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(url)
+                    startActivity(intent)
+                }
             }
         })
 
