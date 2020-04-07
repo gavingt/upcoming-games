@@ -39,7 +39,7 @@ object GameRepository {
     private var recentSearches = fetchRecentSearches()
 
     // Stores the filter options specified by the user in FilterFragment.
-    private val _filterOptions = MutableLiveData<FilterOptions>()
+    private val _filterOptions = MutableLiveData(initializeFilterOptions())
     val filterOptions: LiveData<FilterOptions>
         get() = _filterOptions
 
@@ -57,9 +57,8 @@ object GameRepository {
         get() = _updateState
 
 
-    // Initialize filterOptions and updateState by reading from SharedPrefs.
+    // Initialize updateState by reading from SharedPrefs.
     init {
-        initializeFilterOptions()
         initializeUpdateState()
     }
 
@@ -67,7 +66,7 @@ object GameRepository {
     /**
      * Fetch [filterOptions] from SharedPrefs.
      */
-    private fun initializeFilterOptions() {
+    private fun initializeFilterOptions(): FilterOptions {
         val releaseDateType: ReleaseDateType = enumValueOf(
             prefs.getString(KEY_RELEASE_DATE_TYPE, ReleaseDateType.RecentAndUpcoming.name)!!
         )
@@ -87,17 +86,16 @@ object GameRepository {
             }.toMutableSet()
 
         // Set all filter options fetched from SharedPrefs to _filterOptions at once.
-        _filterOptions.postValue(
-            FilterOptions(
-                releaseDateType,
-                sortDirection,
-                customDateStart,
-                customDateEnd,
-                platformType,
-                platformIndices
-            )
+        return FilterOptions(
+            releaseDateType,
+            sortDirection,
+            customDateStart,
+            customDateEnd,
+            platformType,
+            platformIndices
         )
     }
+
 
     /**
      * Fetch [updateState] from SharedPrefs.
@@ -227,7 +225,6 @@ object GameRepository {
      * Gets games for SearchFragment, based on the search query typed by the user.
      */
     suspend fun searchGameList(searchString: String): ArrayList<SearchResult> {
-
         // Clean up search string and prepare it for use in SQLite query.
         val query = if (searchString.trim().isEmpty()) {
             searchString
@@ -280,101 +277,6 @@ object GameRepository {
         }
 
         return searchResults
-    }
-
-
-    /**
-     * For the platforms selected by the user in FilterFragment, this fetches their corresponding
-     * indices in the @link [allKnownPlatforms] list.
-     */
-    private fun fetchPlatformIndices(filterOptions: FilterOptions): Set<Int> {
-        val platformIndices = mutableSetOf<Int>()
-
-        return when (filterOptions.platformType) {
-            PlatformType.CurrentGeneration -> {
-                platformIndices.apply {
-                    addAll(currentGenerationPlatformRange)
-                }
-            }
-            PlatformType.All -> platformIndices.apply { addAll(allKnownPlatforms.indices) }
-            PlatformType.PickFromList -> filterOptions.platformIndices
-        }
-    }
-
-
-    /**
-     * Fetch the actual start and end dates to filter the games shown in ListFragment by, based on
-     * the filter options specified by the user in FilterFragment.
-     */
-    private fun fetchDateConstraints(filterOptions: FilterOptions): Array<Long?> {
-        var dateStartMillis: Long?
-        var dateEndMillis: Long?
-
-        val calendar: Calendar = Calendar.getInstance()
-        // Make it so hour, minute, second, and millisecond don't affect the timeInMillis returned.
-        calendar.set(Calendar.HOUR_OF_DAY, 0)
-        calendar.set(Calendar.MINUTE, 0)
-        calendar.set(Calendar.SECOND, 0)
-        calendar.set(Calendar.MILLISECOND, 0)
-
-        val currentTimeMillis = calendar.timeInMillis
-
-        when (filterOptions.releaseDateType) {
-            ReleaseDateType.RecentAndUpcoming -> {
-                // dateStartMillis is set to one week before current day.
-                calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - 7)
-                dateStartMillis = calendar.timeInMillis
-
-                // dateEndMillis is set to a far-off date so that every future game will be listed.
-                calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + 100)
-                dateEndMillis = calendar.timeInMillis
-            }
-            ReleaseDateType.Any -> {
-                dateStartMillis = null
-                dateEndMillis = null
-            }
-            ReleaseDateType.PastMonth -> {
-                // dateStartMillis is set to one month before current day.
-                calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1)
-                dateStartMillis = calendar.timeInMillis
-
-                // dateEndMillis is set to current time.
-                dateEndMillis = currentTimeMillis
-            }
-            ReleaseDateType.PastYear -> {
-                // dateStartMillis is set to one year before current day.
-                calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) - 1)
-                dateStartMillis = calendar.timeInMillis
-
-                // dateEndMillis is set to current time.
-                dateEndMillis = currentTimeMillis
-            }
-            ReleaseDateType.CustomDate -> {
-                val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.US)
-
-                val startDateString = filterOptions.customDateStart
-                calendar.time = formatter.parse(startDateString)!!
-                dateStartMillis = calendar.timeInMillis
-
-                val endDateString = filterOptions.customDateEnd
-                calendar.time = formatter.parse(endDateString)!!
-
-                // To get the last millisecond of the day, we add a day and subtract a millisecond.
-                calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1)
-                calendar.set(Calendar.MILLISECOND, calendar.get(Calendar.MILLISECOND) - 1)
-
-                dateEndMillis = calendar.timeInMillis
-
-                // If the end date is before the start date, just flip them.
-                if (dateEndMillis < dateStartMillis) {
-                    val temp = dateStartMillis
-                    dateStartMillis = dateEndMillis
-                    dateEndMillis = temp
-                }
-            }
-        }
-
-        return arrayOf(dateStartMillis, dateEndMillis)
     }
 
 

@@ -16,8 +16,8 @@
     <string name="details">Details</string>
     <string name="ratings">Ratings</string>
     <string name="new_and_upcoming">New and upcoming</string>
-    <string name="this_month">This month</string>
-    <string name="this_year">This year</string>
+    <string name="past_month">Past month</string>
+    <string name="past_year">Past year</string>
     <string name="custom_range">Custom range…</string>
     <string name="release_date_header">Release date</string>
     <string name="apply">APPLY</string>
@@ -43,7 +43,7 @@
     <string name="no_favorites_added_yet">Your favorites will show up here</string>
     <string name="no_games_match_filter_options">No games found matching your filter options</string>
     <string name="filter_results_by_release_date">Filter results by release date</string>
-    <string name="sort_release_dates_in_this_direction">Sort release dates in this direction</string>
+    <string name="sort_release_dates_in_this_direction">Sort in this direction by release date</string>
     <string name="filter_results_by_game_platform">Filter results by game platform</string>
 
 

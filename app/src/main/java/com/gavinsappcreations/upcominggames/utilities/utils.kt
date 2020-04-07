@@ -5,6 +5,9 @@ import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.MutableLiveData
+import com.gavinsappcreations.upcominggames.domain.FilterOptions
+import com.gavinsappcreations.upcominggames.domain.PlatformType
+import com.gavinsappcreations.upcominggames.domain.ReleaseDateType
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -89,6 +92,100 @@ fun isDataStale(timeLastUpdatedInMillis: Long): Boolean {
     return twoDaysAgoInMillis > timeLastUpdatedInMillis
 }
 
+
+/**
+ * For the platforms selected by the user in FilterFragment, this fetches their corresponding
+ * indices in the @link [allKnownPlatforms] list.
+ */
+fun fetchPlatformIndices(filterOptions: FilterOptions): Set<Int> {
+    val platformIndices = mutableSetOf<Int>()
+
+    return when (filterOptions.platformType) {
+        PlatformType.CurrentGeneration -> {
+            platformIndices.apply {
+                addAll(currentGenerationPlatformRange)
+            }
+        }
+        PlatformType.All -> platformIndices.apply { addAll(allKnownPlatforms.indices) }
+        PlatformType.PickFromList -> filterOptions.platformIndices
+    }
+}
+
+
+/**
+ * Fetch the actual start and end dates to filter the games shown in ListFragment by, based on
+ * the filter options specified by the user in FilterFragment.
+ */
+fun fetchDateConstraints(filterOptions: FilterOptions): Array<Long?> {
+    var dateStartMillis: Long?
+    var dateEndMillis: Long?
+
+    val calendar: Calendar = Calendar.getInstance()
+    // Make it so hour, minute, second, and millisecond don't affect the timeInMillis returned.
+    calendar.set(Calendar.HOUR_OF_DAY, 0)
+    calendar.set(Calendar.MINUTE, 0)
+    calendar.set(Calendar.SECOND, 0)
+    calendar.set(Calendar.MILLISECOND, 0)
+
+    val currentTimeMillis = calendar.timeInMillis
+
+    when (filterOptions.releaseDateType) {
+        ReleaseDateType.RecentAndUpcoming -> {
+            // dateStartMillis is set to one week before current day.
+            calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - 7)
+            dateStartMillis = calendar.timeInMillis
+
+            // dateEndMillis is set to a far-off date so that every future game will be listed.
+            calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + 100)
+            dateEndMillis = calendar.timeInMillis
+        }
+        ReleaseDateType.Any -> {
+            dateStartMillis = null
+            dateEndMillis = null
+        }
+        ReleaseDateType.PastMonth -> {
+            // dateStartMillis is set to one month before current day.
+            calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1)
+            dateStartMillis = calendar.timeInMillis
+
+            // dateEndMillis is set to current time.
+            dateEndMillis = currentTimeMillis
+        }
+        ReleaseDateType.PastYear -> {
+            // dateStartMillis is set to one year before current day.
+            calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) - 1)
+            dateStartMillis = calendar.timeInMillis
+
+            // dateEndMillis is set to current time.
+            dateEndMillis = currentTimeMillis
+        }
+        ReleaseDateType.CustomDate -> {
+            val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.US)
+
+            val startDateString = filterOptions.customDateStart
+            calendar.time = formatter.parse(startDateString)!!
+            dateStartMillis = calendar.timeInMillis
+
+            val endDateString = filterOptions.customDateEnd
+            calendar.time = formatter.parse(endDateString)!!
+
+            // To get the last millisecond of the day, we add a day and subtract a millisecond.
+            calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1)
+            calendar.set(Calendar.MILLISECOND, calendar.get(Calendar.MILLISECOND) - 1)
+
+            dateEndMillis = calendar.timeInMillis
+
+            // If the end date is before the start date, just flip them.
+            if (dateEndMillis < dateStartMillis) {
+                val temp = dateStartMillis
+                dateStartMillis = dateEndMillis
+                dateEndMillis = temp
+            }
+        }
+    }
+
+    return arrayOf(dateStartMillis, dateEndMillis)
+}
 
 
 // We can call this to notify observers after we've changed, for example, a single item in a MutableLiveData<List<T>>

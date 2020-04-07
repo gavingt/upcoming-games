@@ -181,13 +181,13 @@
                                 android:id="@+id/past_month_radioButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="@dimen/radio_button_height"
-                                android:text="@string/this_month" />
+                                android:text="@string/past_month" />
 
                             <RadioButton
                                 android:id="@+id/this_year_radioButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="@dimen/radio_button_height"
-                                android:text="@string/this_year" />
+                                android:text="@string/past_year" />
 
                             <RadioButton
                                 android:id="@+id/any_release_date_radioButton"
