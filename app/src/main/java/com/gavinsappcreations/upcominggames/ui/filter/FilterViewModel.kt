@@ -12,10 +12,6 @@ import com.gavinsappcreations.upcominggames.utilities.Event
 import com.gavinsappcreations.upcominggames.utilities.KEY_SAVED_STATE_PLATFORM_INDICES
 import com.gavinsappcreations.upcominggames.utilities.PropertyAwareMutableLiveData
 
-// TODO: post app to Reddit
-// TODO: move API key to a file that isn’t committed to Github
-// TODO: test app on different SDK versions and devices.
-
 class FilterViewModel(application: Application, private val state: SavedStateHandle) :
     AndroidViewModel(application) {
 
