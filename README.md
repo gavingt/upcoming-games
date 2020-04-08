@@ -30,7 +30,7 @@ See the app in action: https://youtu.be/RS_684kyOEk
 
 ## Author
 
-**Gavin Wright**
+[Gavin Wright](https://gavingt.github.io/)
 
 ## Acknowledgments
 
