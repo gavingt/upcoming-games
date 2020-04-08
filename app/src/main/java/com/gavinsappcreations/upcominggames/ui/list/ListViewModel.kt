@@ -22,15 +22,15 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     val databaseState = gameRepository.databaseState
 
     init {
-        // Fixes a bug involving system-initiated process death.
-        checkForProcessDeath()
-
         /**
          * By initializing the value of databaseState here rather than in GameRepository, we fix
          * a bug wherein the indeterminate ProgressBar wouldn't appear when user presses the Back
          * button from ListFragment and then immediately re-opens the app. This would occur because
          * GameRepository isn't immediately destroyed when the app process ends, so databaseState
          * wasn't being reinitialized to DatabaseState.Loading.
+         *
+         * This also solves a problem wherein system-initiated process death occurring in
+         * FilterFragment would prevent gameList from appearing in ListFragment.
          */
         gameRepository.updateDatabaseState(DatabaseState.Loading)
     }
@@ -98,30 +98,6 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
             DatabaseState.LoadingFilterChange -> gameRepository.updateDatabaseState(DatabaseState.Loading)
             DatabaseState.Loading -> gameRepository.updateDatabaseState(DatabaseState.Success)
             DatabaseState.Success -> return
-        }
-    }
-
-
-    // This fixes a bug that would prevent gameList from showing on system-initiated process death.
-    private fun checkForProcessDeath() {
-        /**
-         * This condition indicates process death, because the value of @link [databaseState] would not
-         * normally be @link [DatabaseState.LoadingFilterChange] upon initialization of ListViewModel
-         * (since ListFragment should be on the back stack, and hence already initialized, any
-         * time a user changes the filter options).
-         */
-        val systemInitiatedProcessDeathOccurred =
-            databaseState.value == DatabaseState.LoadingFilterChange
-
-        if (systemInitiatedProcessDeathOccurred) {
-            /**
-             * If system-initiated process death occurs while in FilterFragment and the user then presses
-             * APPLY, this ensures that the ProgressBar and RecyclerView visibilities are still set
-             * correctly. This is required because @link [gameList] will be null in this case, so the
-             * @link [DatabaseState.LoadingFilterChange] state needs to be bypassed (as the observer
-             * observing @link [gameList] won't emit a value).
-             */
-            updateDatabaseState()
         }
     }
 }

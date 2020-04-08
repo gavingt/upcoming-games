@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 /**
  * Class that holds all the info for a single game. Holds data from the "games" endpoint of the API.
  *
- * This class also defines the Room "game" table. We couldn't define a separate DatabaseGame
+ * This class also defines the Room "Game" table. We couldn't define a separate DatabaseGame
  * class, because Android's paging library requires that the UI consume the same class that is
  * being retrieved from the data source (in this case the Room database).
  */

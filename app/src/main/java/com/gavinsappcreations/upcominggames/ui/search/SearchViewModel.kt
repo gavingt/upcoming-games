@@ -33,7 +33,7 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
         get() = _showKeyboard
 
     // Holds all the search results corresponding to the current search query typed by the user.
-    val searchResults = MutableLiveData<ArrayList<SearchResult>>()
+    val searchResults = MutableLiveData<List<SearchResult>>()
 
     // Search the database for games matching the search query.
     fun searchGameList(searchQuery: String) {

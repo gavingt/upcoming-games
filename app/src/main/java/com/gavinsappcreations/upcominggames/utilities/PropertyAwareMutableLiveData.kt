@@ -19,8 +19,12 @@ class PropertyAwareMutableLiveData<T: BaseObservable>(): MutableLiveData<T>() {
         }
     }
     override fun setValue(value: T?) {
+        // Remove callback from previous value
+        this.value?.removeOnPropertyChangedCallback(callback)
+
         super.setValue(value)
 
+        // Add callback to new value
         value?.addOnPropertyChangedCallback(callback)
     }
 }

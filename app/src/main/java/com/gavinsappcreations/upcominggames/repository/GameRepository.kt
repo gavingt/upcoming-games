@@ -57,8 +57,8 @@ object GameRepository {
         get() = _updateState
 
 
-    // Initialize updateState by reading from SharedPrefs.
     init {
+        // Initialize updateState by reading from SharedPrefs.
         initializeUpdateState()
     }
 
@@ -224,9 +224,37 @@ object GameRepository {
     /**
      * Gets games for SearchFragment, based on the search query typed by the user.
      */
-    suspend fun searchGameList(searchString: String): ArrayList<SearchResult> {
-        // Clean up search string and prepare it for use in SQLite query.
-        val query = if (searchString.trim().isEmpty()) {
+    suspend fun searchGameList(searchString: String): List<SearchResult> {
+
+        // Check if recent searches should be displayed in results, and add them if so.
+        fun checkForRecentSearches(searchResults: ArrayList<SearchResult>): List<SearchResult> {
+            // Fetch user's recent search results.
+            val recentSearchResults = fetchRecentSearches()
+            recentSearchResults.reverse()
+            // if searchString is empty, just show recentSearchResults in reverse order.
+            if (searchString.isEmpty()) {
+                searchResults.addAll(recentSearchResults)
+            } else {
+                /**
+                 * If searchString not empty, check if results contain games in recent searches. If
+                 * they do, change their isRecentSearch properties to true so the correct drawable
+                 * will appear to indicate they were recently searched for.
+                 */
+                for (recentResult in recentSearchResults) {
+                    if (recentResult.game.gameName.contains(searchString, true)) {
+                        val matchingSearchResult = searchResults.find {
+                            it.game == recentResult.game
+                        }
+                        matchingSearchResult?.isRecentSearch = true
+                    }
+                }
+            }
+            return searchResults
+        }
+
+
+        // Transform the searchString into a searchQuery that can be used to search the database.
+        val searchQuery = if (searchString.trim().isEmpty()) {
             searchString
         } else {
             "%${searchString.replace(' ', '%')}%"
@@ -243,40 +271,18 @@ object GameRepository {
             searchJob = Job()
         }
 
-        // Create a new CoroutineScope from Job.
+        // Create a new CoroutineScope from searchJob.
         val searchCoroutineScope = CoroutineScope(searchJob + Dispatchers.IO)
 
         // Perform SQLite query.
         val searchResults =
             withContext(searchCoroutineScope.coroutineContext) {
-                database.gameDao.searchGameList(query).map {
+                database.gameDao.searchGameList(searchQuery).map {
                     SearchResult(it, false)
                 } as ArrayList<SearchResult>
             }
 
-        // Fetch user's recent search results.
-        val recentSearchResults = fetchRecentSearches()
-        recentSearchResults.reverse()
-        // if searchString is empty, just show recentSearchResults in reverse order.
-        if (searchString.isEmpty()) {
-            searchResults.addAll(recentSearchResults)
-        } else {
-            /**
-             * If searchString not empty, check if results contain games in recent searches. If
-             * they do, change their isRecentSearch properties to true so the correct drawable
-             * will appear to indicate they were recently searched for.
-             */
-            for (recentResult in recentSearchResults) {
-                if (recentResult.game.gameName.contains(searchString, true)) {
-                    val matchingSearchResult = searchResults.find {
-                        it.game == recentResult.game
-                    }
-                    matchingSearchResult?.isRecentSearch = true
-                }
-            }
-        }
-
-        return searchResults
+        return Collections.unmodifiableList(checkForRecentSearches(searchResults))
     }
 
 
@@ -287,17 +293,6 @@ object GameRepository {
      * any game that's been out for at least two months already has its release date set correctly
      * in the API). */
     suspend fun updateGameListData(userInvokedUpdate: Boolean) {
-        _updateState.postValue(UpdateState.Updating(0, 0))
-
-        var offset = 0
-
-        /**
-         * First we assemble the starting and ending dates for the "date_last_updated" filter
-         * field of the API. We select the date range starting from the date we last updated our
-         * local database and ending on the current date plus two days (to account for any time zone
-         * weirdness or possible edge cases).
-         */
-
         val calendar: Calendar = Calendar.getInstance()
         val desiredPatternFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
 
@@ -307,33 +302,77 @@ object GameRepository {
                 ORIGINAL_TIME_DATABASE_RETRIEVED_IN_MILLIS
             )
 
-        calendar.timeInMillis = timeLastUpdated
-        val startingDateLastUpdated = desiredPatternFormatter.format(calendar.time)
-
-        // Set calendar to current time in order to calculate endingDateLastUpdated.
-        calendar.timeInMillis = System.currentTimeMillis()
-        // Add two days to current day, just to ensure we're getting all the newest data.
-        calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + 2)
-        val endingDateLastUpdated = desiredPatternFormatter.format(calendar.time)
+        /**
+         * Fetch the starting date for "date_last_updated" filter field of API. We set this to the
+         * date we last updated our local database.
+         */
+        fun fetchStartingDateLastUpdated(): String {
+            calendar.timeInMillis = timeLastUpdated
+            return desiredPatternFormatter.format(calendar.time)
+        }
 
         /**
-         * Next we assemble the starting and ending dates for the "original_release_date" filter
-         * field of the API. We somewhat arbitrarily select this range to start at the date we last
-         * updated the database minus 2 months, and the ending day to be 100 years in the future
-         * (to account for all unreleased games).
+         * Fetch the ending date for "date_last_updated" filter field of API. We set this to the
+         * current date plus two days (to account for any time zone weirdness or edge cases).
          */
-        calendar.timeInMillis = timeLastUpdated
-        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 2)
-        val startingOriginalReleaseDate = desiredPatternFormatter.format(calendar.time)
+        fun fetchEndingDateLastUpdated(): String {
+            // Set calendar to current time in order to calculate endingDateLastUpdated.
+            calendar.timeInMillis = System.currentTimeMillis()
+            // Add two days to current day, just to ensure we're getting all the newest data.
+            calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + 2)
+            return desiredPatternFormatter.format(calendar.time)
+        }
 
-        // endingOriginalReleaseDate is set to a far-off date so that every future game will be returned.
-        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + 100)
-        val endingOriginalReleaseDate = desiredPatternFormatter.format(calendar.time)
+        /**
+         * Fetch the starting date for the "original_release_date" filter field of the API. We
+         * somewhat arbitrarily select this range to start at the date we last updated the database
+         * minus 2 months.
+         */
+        fun fetchStartingReleaseDate(): String {
+            calendar.timeInMillis = timeLastUpdated
+            calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 2)
+            return desiredPatternFormatter.format(calendar.time)
+        }
+
+        /**
+         * Fetch the ending date for the "original_release_date" filter field of the API. We set
+         * this to 10 years in the future (to account for all unreleased games).
+         */
+        fun fetchEndingReleaseDate(): String {
+            calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + 10)
+            return desiredPatternFormatter.format(calendar.time)
+        }
+
+        /**
+         * Check how long it's been since database was updated. If it's been over two days,
+         * we consider the data stale. Otherwise, we ignore the error and consider the database
+         * to be updated.
+         */
+        fun setNewUpdateState() {
+            val timeLastUpdatedInMillis =
+                prefs.getLong(
+                    KEY_TIME_LAST_UPDATED_IN_MILLIS,
+                    ORIGINAL_TIME_DATABASE_RETRIEVED_IN_MILLIS
+                )
+
+            if (isDataStale(timeLastUpdatedInMillis)) {
+                if (userInvokedUpdate) {
+                    _updateState.postValue(UpdateState.DataStaleUserInvokedUpdate)
+                } else {
+                    _updateState.postValue(UpdateState.DataStale)
+                }
+            } else {
+                _updateState.postValue(UpdateState.Updated)
+            }
+        }
+
 
         // Initially set this to NETWORK_PAGE_SIZE so that the WHILE loop runs at least once.
         var numResultsInCurrentRequest = NETWORK_PAGE_SIZE
         var numTotalResults: Int? = null
         var oldProgress = 0
+        var offset = 0
+        _updateState.postValue(UpdateState.Updating(0, 0))
 
         try {
             while (numResultsInCurrentRequest == NETWORK_PAGE_SIZE) {
@@ -342,10 +381,10 @@ object GameRepository {
 
                 val networkGameContainer = downloadAndSaveGameList(
                     offset,
-                    startingDateLastUpdated,
-                    endingDateLastUpdated,
-                    startingOriginalReleaseDate,
-                    endingOriginalReleaseDate
+                    fetchStartingDateLastUpdated(),
+                    fetchEndingDateLastUpdated(),
+                    fetchStartingReleaseDate(),
+                    fetchEndingReleaseDate()
                 )
 
                 // Set numTotalResults only on first iteration of WHILE loop.
@@ -377,26 +416,7 @@ object GameRepository {
             _updateState.postValue(UpdateState.Updated)
 
         } catch (exception: Exception) {
-            val timeLastUpdatedInMillis =
-                prefs.getLong(
-                    KEY_TIME_LAST_UPDATED_IN_MILLIS,
-                    ORIGINAL_TIME_DATABASE_RETRIEVED_IN_MILLIS
-                )
-
-            /**
-             * Check how long it's been since database was updated. If it's been over two days,
-             * we consider the data stale. Otherwise, we ignore the error and consider the database
-             * to be updated.
-             */
-            if (isDataStale(timeLastUpdatedInMillis)) {
-                if (userInvokedUpdate) {
-                    _updateState.postValue(UpdateState.DataStaleUserInvokedUpdate)
-                } else {
-                    _updateState.postValue(UpdateState.DataStale)
-                }
-            } else {
-                _updateState.postValue(UpdateState.Updated)
-            }
+            setNewUpdateState()
         }
     }
 
@@ -406,8 +426,8 @@ object GameRepository {
         offset: Int,
         dateLastUpdated: String,
         currentDate: String,
-        startingOriginalReleaseDate: String,
-        endingOriginalReleaseDate: String
+        startingReleaseDate: String,
+        endingReleaseDate: String
     ): NetworkGameContainer {
         val networkGameContainer = GameNetwork.gameData.getGameListData(
             GIANT_BOMB_API_KEY,
@@ -415,7 +435,7 @@ object GameRepository {
             "${ApiField.DateLastUpdated.field}:${SortDirection.Ascending.direction}",
             "${ApiField.DateLastUpdated.field}:${dateLastUpdated}|${currentDate}," +
                     "${ApiField.OriginalReleaseDate.field}:" +
-                    "${startingOriginalReleaseDate}|${endingOriginalReleaseDate}",
+                    "${startingReleaseDate}|${endingReleaseDate}",
             "${ApiField.Id.field},${ApiField.Guid.field},${ApiField.Name.field}," +
                     "${ApiField.Image.field},${ApiField.Platforms.field}," +
                     "${ApiField.OriginalReleaseDate.field},${ApiField.ExpectedReleaseDay.field}," +
@@ -447,6 +467,5 @@ object GameRepository {
                     "${ApiField.Genres.field},${ApiField.Deck.field},${ApiField.DetailUrl.field}"
         ).body()!!.gameDetails.asDomainModel()
     }
-
 }
 
