@@ -2,6 +2,7 @@ package com.gavinsappcreations.upcominggames.ui.detail
 
 import android.app.Application
 import androidx.lifecycle.*
+import com.gavinsappcreations.upcominggames.App
 import com.gavinsappcreations.upcominggames.domain.DetailNetworkState
 import com.gavinsappcreations.upcominggames.domain.GameDetail
 import com.gavinsappcreations.upcominggames.repository.GameRepository
@@ -13,7 +14,7 @@ import kotlinx.coroutines.withContext
 class DetailViewModel(application: Application, val guid: String) :
     AndroidViewModel(application) {
 
-    private val gameRepository = GameRepository
+    private val gameRepository = App.gameRepository
 
     // Stores whether currently displayed game is a favorite.
     private val _isFavorite = MutableLiveData<Boolean>()

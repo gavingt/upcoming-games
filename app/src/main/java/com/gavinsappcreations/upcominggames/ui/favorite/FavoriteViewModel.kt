@@ -4,13 +4,14 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.gavinsappcreations.upcominggames.App
 import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.repository.GameRepository
 import com.gavinsappcreations.upcominggames.utilities.Event
 
 class FavoriteViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val gameRepository = GameRepository
+    private val gameRepository = App.gameRepository
 
     // Stores list of user's favorite games.
     val favoriteList = gameRepository.getFavoriteList()

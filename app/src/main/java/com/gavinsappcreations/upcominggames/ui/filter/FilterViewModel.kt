@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import com.gavinsappcreations.upcominggames.App
 import com.gavinsappcreations.upcominggames.domain.FilterOptions
 import com.gavinsappcreations.upcominggames.domain.ReleaseDateType
 import com.gavinsappcreations.upcominggames.repository.GameRepository
@@ -15,7 +16,7 @@ import com.gavinsappcreations.upcominggames.utilities.PropertyAwareMutableLiveDa
 class FilterViewModel(application: Application, private val state: SavedStateHandle) :
     AndroidViewModel(application) {
 
-    private val gameRepository = GameRepository
+    private val gameRepository = App.gameRepository
     private val originalFilterOptions = gameRepository.filterOptions.value!!
 
     // Lets us retrieve the checked platforms after recovering from system initiated process death.

@@ -2,6 +2,7 @@ package com.gavinsappcreations.upcominggames.work
 
 import android.content.Context
 import androidx.work.*
+import com.gavinsappcreations.upcominggames.App
 import com.gavinsappcreations.upcominggames.App.Companion.applicationContext
 import com.gavinsappcreations.upcominggames.repository.GameRepository
 import retrofit2.HttpException
@@ -40,10 +41,10 @@ class UpdateGameListWorker(appContext: Context, params: WorkerParameters) :
     }
 
     override suspend fun doWork(): Result {
-        val repository = GameRepository
+        val gameRepository = App.gameRepository
 
         return try {
-            repository.updateGameListData(false)
+            gameRepository.updateGameListData(false)
             Result.success()
         } catch (e: HttpException) {
             Result.retry()

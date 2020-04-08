@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import com.gavinsappcreations.upcominggames.App
 import com.gavinsappcreations.upcominggames.domain.DatabaseState
 import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.repository.GameRepository
@@ -15,7 +16,7 @@ import kotlinx.coroutines.launch
 
 class ListViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val gameRepository = GameRepository
+    private val gameRepository = App.gameRepository
 
     val updateState = gameRepository.updateState
     val databaseState = gameRepository.databaseState

@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.gavinsappcreations.upcominggames.App
 import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.domain.SearchResult
 import com.gavinsappcreations.upcominggames.repository.GameRepository
@@ -12,6 +13,8 @@ import com.gavinsappcreations.upcominggames.utilities.Event
 import kotlinx.coroutines.launch
 
 class SearchViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val gameRepository = App.gameRepository
 
     private val _navigateToDetailFragment = MutableLiveData<Event<Game>>()
     val navigateToDetailFragment: LiveData<Event<Game>>
@@ -28,8 +31,6 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
     private val _showKeyboard = MutableLiveData<Event<Boolean>>()
     val showKeyboard: LiveData<Event<Boolean>>
         get() = _showKeyboard
-
-    private val gameRepository = GameRepository
 
     // Holds all the search results corresponding to the current search query typed by the user.
     val searchResults = MutableLiveData<ArrayList<SearchResult>>()
