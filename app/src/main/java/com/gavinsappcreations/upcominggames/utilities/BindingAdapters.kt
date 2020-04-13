@@ -1,8 +1,6 @@
 package com.gavinsappcreations.upcominggames.utilities
 
 import android.animation.ObjectAnimator
-import android.content.Context
-import android.content.SharedPreferences
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
@@ -18,7 +16,6 @@ import androidx.paging.PagedList
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.gavinsappcreations.upcominggames.App.Companion.applicationContext
 import com.gavinsappcreations.upcominggames.R
 import com.gavinsappcreations.upcominggames.domain.*
 import com.gavinsappcreations.upcominggames.ui.detail.ScreenshotAdapter
@@ -211,10 +208,11 @@ fun ProgressBar.bindDeterminateProgressBarVisibility(updateState: UpdateState?) 
 @BindingAdapter("dataStaleViewVisibility")
 fun View.bindDataStaleViewVisibility(updateState: UpdateState?) {
     visibility = when (updateState) {
-        UpdateState.DataStale, UpdateState.DataStaleUserInvokedUpdate -> View.VISIBLE
+        is UpdateState.DataStale -> View.VISIBLE
         else -> View.GONE
     }
 }
+
 
 
 /**
@@ -222,28 +220,20 @@ fun View.bindDataStaleViewVisibility(updateState: UpdateState?) {
  */
 @BindingAdapter("dataStaleDateText")
 fun TextView.bindDataStaleDateText(updateState: UpdateState?) {
-    if (updateState == UpdateState.DataStale || updateState == UpdateState.DataStaleUserInvokedUpdate) {
-        val prefs: SharedPreferences =
-            applicationContext.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-
-        val timeLastUpdatedInMillis =
-            prefs.getLong(KEY_TIME_LAST_UPDATED_IN_MILLIS, ORIGINAL_TIME_DATABASE_RETRIEVED_IN_MILLIS)
+    if (updateState is UpdateState.DataStale) {
+        val timeLastUpdatedInMillis = updateState.timeLastUpdatedInMillis
 
         val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.US)
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = timeLastUpdatedInMillis
 
-        text = if (updateState == UpdateState.DataStale) {
-            resources.getString(R.string.last_updated_data_stale, formatter.format(calendar.time))
-        } else {
-            /**
-             * This branch is only relevant if updateState == UpdateState.DataStaleUserInvokedUpdate,
-             * since otherwise this TextView isn't visible.
-             */
+        text = if (updateState.userInvokedUpdate) {
             resources.getString(
                 R.string.last_updated_data_stale_user_invoked_update,
                 formatter.format(calendar.time)
             )
+        } else {
+            resources.getString(R.string.last_updated_data_stale, formatter.format(calendar.time))
         }
     }
 }

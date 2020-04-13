@@ -1,14 +1,10 @@
 package com.gavinsappcreations.upcominggames.ui.list
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.*
 import com.gavinsappcreations.upcominggames.App
 import com.gavinsappcreations.upcominggames.domain.DatabaseState
 import com.gavinsappcreations.upcominggames.domain.Game
-import com.gavinsappcreations.upcominggames.repository.GameRepository
 import com.gavinsappcreations.upcominggames.utilities.Event
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

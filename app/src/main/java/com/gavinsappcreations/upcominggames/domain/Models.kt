@@ -131,15 +131,13 @@ sealed class UpdateState {
     // Database is currently being updated.
     class Updating(val oldProgress: Int, val currentProgress: Int) : UpdateState()
 
-    // Database hasn't been updated in over two days.
-    object DataStale : UpdateState()
-
     /**
-     * Same as DataStale, except user invoked the update manually. This indicates that the user
-     * tried to manually update but it failed due to a network error. Thus it allows us to show
-     * an error message to the user.
+     * Database hasn't been updated in over two days.
+     * [timeLastUpdatedInMillis] Time in millis indicating when database was last updated.
+     * [userInvokedUpdate] True if user invoked the update manually, but it failed due to a
+     * network error. Thus it allows us to show an error message to the user.
      */
-    object DataStaleUserInvokedUpdate : UpdateState()
+    class DataStale(val timeLastUpdatedInMillis: Long, val userInvokedUpdate: Boolean) : UpdateState()
 }
 
 // Holds the current state of loading data from the SQLite database.

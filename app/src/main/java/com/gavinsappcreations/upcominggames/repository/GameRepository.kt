@@ -1,5 +1,6 @@
 package com.gavinsappcreations.upcominggames.repository
 
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
@@ -8,7 +9,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.gavinsappcreations.upcominggames.App
 import com.gavinsappcreations.upcominggames.database.buildGameListQuery
 import com.gavinsappcreations.upcominggames.database.getDatabase
 import com.gavinsappcreations.upcominggames.domain.*
@@ -22,12 +22,12 @@ import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-object GameRepository {
+class GameRepository private constructor(appContext: Context) {
 
-    private val database = getDatabase(App.applicationContext)
+    private val database = getDatabase(appContext)
 
     private val prefs: SharedPreferences =
-        App.applicationContext.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+        appContext.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
 
     /**
      * Every time the user changes the search term, we check whether the previous @link [Job] is
@@ -116,7 +116,7 @@ object GameRepository {
         } else {
             if (isDataStale(timeLastUpdated)) {
                 // If database hasn't been updated in over 2 days, this will alert the user.
-                _updateState.postValue(UpdateState.DataStale)
+                _updateState.postValue(UpdateState.DataStale(timeLastUpdated, false))
             } else {
                 // If database is recently updated, this will show the ProgressBar.
                 _updateState.postValue(UpdateState.Updated)
@@ -357,9 +357,9 @@ object GameRepository {
 
             if (isDataStale(timeLastUpdatedInMillis)) {
                 if (userInvokedUpdate) {
-                    _updateState.postValue(UpdateState.DataStaleUserInvokedUpdate)
+                    _updateState.postValue(UpdateState.DataStale(timeLastUpdatedInMillis, true))
                 } else {
-                    _updateState.postValue(UpdateState.DataStale)
+                    _updateState.postValue(UpdateState.DataStale(timeLastUpdatedInMillis, false))
                 }
             } else {
                 _updateState.postValue(UpdateState.Updated)
@@ -467,5 +467,18 @@ object GameRepository {
                     "${ApiField.Genres.field},${ApiField.Deck.field},${ApiField.DetailUrl.field}"
         ).body()!!.gameDetails.asDomainModel()
     }
+
+
+    companion object {
+        // For Singleton instantiation
+        @Volatile
+        private var instance: GameRepository? = null
+
+        fun getInstance(application: Application) =
+            instance ?: synchronized(this) {
+                instance ?: GameRepository(application).also { instance = it }
+            }
+    }
+
 }
 
