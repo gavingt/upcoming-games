@@ -67,6 +67,12 @@ dependencies {
     implementation "com.squareup.moshi:moshi:$version_moshi"
     implementation "com.squareup.moshi:moshi-kotlin:$version_moshi"
 
+    /**
+     * Moshi codegen (required or else we get "Failed to find the generated JsonAdapter class for
+     * class" when running release version.
+     */
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$version_moshi"
+
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version_kotlin_coroutines"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version_kotlin_coroutines"
@@ -99,7 +105,4 @@ dependencies {
 
     // Gson
     implementation 'com.google.code.gson:gson:2.8.6'
-
-    // debugImplementation because LeakCanary should only run in debug builds.
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
 }

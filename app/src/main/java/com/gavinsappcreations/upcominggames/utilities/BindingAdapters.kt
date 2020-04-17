@@ -106,11 +106,13 @@ fun RecyclerView.bindGameListRecyclerView(
 
     if (isGameListReady) {
         adapter.submitList(gameList) {
-            // Once the submitted list is committed, this callback executes.
+            // This callback is run once the list has submitted.
+            scrollToPosition(0)
             visibility = View.VISIBLE
         }
     } else {
-        visibility = View.INVISIBLE
+        visibility = View.GONE
+        // Submit an empty list so no items are shown.
         adapter.submitList(null)
     }
 }

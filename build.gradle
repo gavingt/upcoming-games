@@ -2,14 +2,14 @@
 
 buildscript {
     ext {
-        kotlin_version = '1.3.71'
+        kotlin_version = '1.3.72'
         version_navigation = "2.3.0-alpha04"
         version_kotlin_coroutines = "1.1.0"
-        version_retrofit = '2.7.1'
+        version_retrofit = '2.8.1'
         version_moshi = '1.9.2'
         version_material = "1.2.0-alpha05"
         version_glide = "4.11.0"
-        version_recyclerview = "1.0.0"
+        version_recyclerview = '1.1.0'
         version_room = "2.2.5"
         version_paging = "2.1.2"
         version_work = "2.3.4"
