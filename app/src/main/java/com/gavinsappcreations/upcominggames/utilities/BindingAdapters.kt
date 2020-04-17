@@ -104,14 +104,22 @@ fun RecyclerView.bindGameListRecyclerView(
     val isGameListReady =
         databaseState == DatabaseState.Success && updateState !is UpdateState.Updating
 
+
+
     if (isGameListReady) {
+        val currentListSize = adapter.currentList?.size
+
+        /**
+         * This fixes a bug in which the list might not be scrolled to the top following a
+         * database update. This occurs because [updateState] is set to Updated before [gameList]
+         * has received the changes from the update.
+         */
         adapter.submitList(gameList) {
-            // This callback is run once the list has submitted.
-            scrollToPosition(0)
-            visibility = View.VISIBLE
+            if (currentListSize != null && gameList != null && (currentListSize != gameList.size)) {
+                scrollToPosition(0)
+            }
         }
     } else {
-        visibility = View.GONE
         // Submit an empty list so no items are shown.
         adapter.submitList(null)
     }
@@ -214,7 +222,6 @@ fun View.bindDataStaleViewVisibility(updateState: UpdateState?) {
         else -> View.GONE
     }
 }
-
 
 
 /**
