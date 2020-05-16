@@ -26,6 +26,24 @@ data class Game(
     val isFavorite: Boolean?
 )
 
+
+/**
+ * Class that holds all the columns we wish to update whenever updating a game in the database.
+ * Note that this contains all the same fields as Game, except for isFavorite (since if we updated
+ * isFavorite we would lose the user's favorites).
+ */
+data class UpdatableGame(
+    val gameId: Long,
+    val gameName: String,
+    val mainImageUrl: String,
+    val platforms: List<String>?,
+    val releaseDateInMillis: Long?,
+    val dateFormat: Int,
+    val guid: String
+)
+
+
+
 /**
  * Holds data for the current game in DetailFragment.
  */

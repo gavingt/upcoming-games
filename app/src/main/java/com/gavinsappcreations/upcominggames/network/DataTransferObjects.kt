@@ -1,7 +1,9 @@
 package com.gavinsappcreations.upcominggames.network
 
+import com.gavinsappcreations.upcominggames.database.GameDao
 import com.gavinsappcreations.upcominggames.domain.Game
 import com.gavinsappcreations.upcominggames.domain.GameDetail
+import com.gavinsappcreations.upcominggames.domain.UpdatableGame
 import com.gavinsappcreations.upcominggames.utilities.DateFormat
 import com.gavinsappcreations.upcominggames.utilities.allKnownPlatforms
 import com.gavinsappcreations.upcominggames.utilities.fetchReleaseDateInMillis
@@ -190,6 +192,22 @@ fun NetworkGameDetail.asDomainModel(): GameDetail {
         deck = this.deck,
         detailUrl = this.detailUrl
     )
+}
+
+
+// Converts a list of Games to a list of UpdatableGames.
+fun List<Game>.asUpdatableGame(): List<UpdatableGame> {
+    return map { game ->
+        UpdatableGame(
+            gameId = game.gameId,
+            gameName = game.gameName,
+            mainImageUrl = game.mainImageUrl,
+            platforms = game.platforms,
+            releaseDateInMillis = game.releaseDateInMillis,
+            dateFormat = game.dateFormat,
+            guid = game.guid
+        )
+    }
 }
 
 

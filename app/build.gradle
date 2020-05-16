@@ -95,7 +95,7 @@ dependencies {
     kapt "androidx.room:room-compiler:$version_room"
 
     // Guava (for RateLimiter)
-    implementation("com.google.guava:guava:28.2-android")
+    implementation('com.google.guava:guava:29.0-jre')
 
     // Paging
     implementation "androidx.paging:paging-runtime:$version_paging"

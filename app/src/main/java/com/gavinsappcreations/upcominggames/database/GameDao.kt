@@ -6,6 +6,8 @@ import androidx.room.*
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.gavinsappcreations.upcominggames.domain.Game
+import com.gavinsappcreations.upcominggames.domain.UpdatableGame
+import com.gavinsappcreations.upcominggames.network.asUpdatableGame
 import com.gavinsappcreations.upcominggames.utilities.allKnownPlatforms
 
 @Dao
@@ -15,9 +17,39 @@ interface GameDao {
     @RawQuery(observedEntities = [Game::class])
     fun getGameList(query: SupportSQLiteQuery): DataSource.Factory<Int, Game>
 
-    // Inserts all games retrieved from the API when updating the database.
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(games: List<Game>)
+    /**
+     * Inserts all games retrieved from the API when updating the database, ignoring ones that
+     * are already in the database.
+     * @return a list of the inserted row ids. A pre-existing game will have -1 as its row id.
+     */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertAll(games: List<Game>): List<Long>
+
+    // Updates the Games in gameList using the partial entity UpdatableGame.
+    @Update(entity = Game::class)
+    fun updateAll(updatableGameList: List<UpdatableGame>)
+
+    /**
+     * Try to insert each game in gameList.
+     * If the Game already exists, transform the Game into an UpdatableGame (which is a partial
+     * entity of Game), and do the update using UpdatableGame. See @link [Update] comments for
+     * more info on how using partial entities works.
+     */
+    @Transaction
+    fun insertOrUpdateAll(gameList: List<Game>) {
+        val insertResult = insertAll(gameList)
+        val updateList = mutableListOf<Game>()
+
+        for (i in insertResult.indices) {
+            if (insertResult[i] == -1L) {
+                updateList.add(gameList[i])
+            }
+        }
+
+        if (updateList.isNotEmpty()) {
+            updateAll(updateList.asUpdatableGame())
+        }
+    }
 
     // Gets games for SearchFragment, based on the search query typed by the user.
     @Query("SELECT * FROM Game WHERE Game.gameName LIKE :query ORDER BY Game.releaseDateInMillis DESC LIMIT 200")

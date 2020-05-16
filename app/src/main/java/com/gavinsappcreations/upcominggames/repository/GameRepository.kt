@@ -445,7 +445,7 @@ class GameRepository private constructor(appContext: Context) {
         ).body()!!
 
         withContext(Dispatchers.IO) {
-            database.gameDao.insertAll(networkGameContainer.games.asDomainModel())
+            database.gameDao.insertOrUpdateAll(networkGameContainer.games.asDomainModel())
         }
 
         return networkGameContainer
