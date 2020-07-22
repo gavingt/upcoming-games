@@ -1,6 +1,7 @@
 package com.gavinsappcreations.upcominggames.ui.list
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.paging.PagedListAdapter
@@ -15,23 +16,35 @@ class GameGridAdapter(private val onClickListener: OnClickListener) :
     PagedListAdapter<Game, GameGridAdapter.GameReleaseViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameReleaseViewHolder {
-        return GameReleaseViewHolder(GridListItemBinding.inflate(LayoutInflater.from(parent.context)))
+        return GameReleaseViewHolder(
+            GridListItemBinding.inflate(LayoutInflater.from(parent.context)),
+            onClickListener
+        )
     }
 
     override fun onBindViewHolder(holder: GameReleaseViewHolder, position: Int) {
         val gameRelease = getItem(position)
 
         gameRelease?.let {
-            holder.itemView.setOnClickListener {
-                onClickListener.onClick(gameRelease)
-            }
             holder.bind(gameRelease)
         }
     }
 
 
-    class GameReleaseViewHolder(private var binding: GridListItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    class GameReleaseViewHolder(
+        private var binding: GridListItemBinding,
+        private val onClickListener: OnClickListener
+    ) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
+
+        init {
+            binding.root.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?) {
+            binding.game?.let { game ->
+                onClickListener.onClick(game)
+            }
+        }
 
         fun bind(game: Game) {
             binding.game = game
