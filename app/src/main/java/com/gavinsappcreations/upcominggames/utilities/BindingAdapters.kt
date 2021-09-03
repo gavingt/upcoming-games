@@ -1,6 +1,8 @@
 package com.gavinsappcreations.upcominggames.utilities
 
 import android.animation.ObjectAnimator
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
@@ -21,6 +23,7 @@ import com.gavinsappcreations.upcominggames.domain.*
 import com.gavinsappcreations.upcominggames.ui.detail.ScreenshotAdapter
 import com.gavinsappcreations.upcominggames.ui.list.GameGridAdapter
 import com.gavinsappcreations.upcominggames.ui.search.SearchAdapter
+import com.google.android.material.textfield.TextInputEditText
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -103,8 +106,6 @@ fun RecyclerView.bindGameListRecyclerView(
     // True if we should show the games, false if database is loading or updating.
     val isGameListReady =
         databaseState == DatabaseState.Success && updateState !is UpdateState.Updating
-
-
 
     if (isGameListReady) {
         val currentListSize = adapter.currentList?.size
@@ -333,7 +334,6 @@ fun RadioGroup.bindSortDirection(sortDirection: SortDirection) {
         check(newCheckedId)
     }
 }
-
 
 // When the user selects a new RadioButton, this set the sortDirection LiveData's value.
 @InverseBindingAdapter(attribute = "sortDirection")

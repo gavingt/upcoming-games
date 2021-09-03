@@ -34,21 +34,17 @@ class GameGridAdapter(private val onClickListener: OnClickListener) :
     class GameReleaseViewHolder(
         private var binding: GridListItemBinding,
         private val onClickListener: OnClickListener
-    ) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
-
-        init {
-            binding.root.setOnClickListener(this)
-        }
-
-        override fun onClick(v: View?) {
-            binding.game?.let { game ->
-                onClickListener.onClick(game)
-            }
-        }
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(game: Game) {
             binding.game = game
             binding.executePendingBindings()
+
+            binding.root.setOnClickListener{
+                binding.game?.let { game ->
+                    onClickListener.onClick(game)
+                }
+            }
 
             val platforms = game.platforms?.sortPlatformAbbreviationsByRelevance() ?: return
 

@@ -29,7 +29,6 @@
             android:layout_marginEnd="@dimen/margin_small"
             app:cardElevation="4dp"
             app:contentPadding="4dp"
-            app:layout_constraintBottom_toTopOf="@id/date_stale_textView"
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
@@ -43,13 +42,13 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:drawableStart="@drawable/ic_search"
                     android:drawablePadding="16dp"
-                    android:drawableTint="?attr/colorOnBackground"
                     android:onClick="@{() -> viewModel.onNavigateToSearchFragment()}"
                     android:text="@string/search_all_games"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                    android:textColor="?attr/colorOnBackgroundVeryHighContrast" />
+                    android:textColor="?attr/colorOnBackgroundVeryHighContrast"
+                    app:drawableStartCompat="@drawable/ic_search"
+                    app:drawableTint="?attr/colorOnBackground" />
 
                 <ImageButton
                     android:id="@+id/favorite_imageButton"
@@ -62,7 +61,7 @@
                     android:padding="4dp"
                     android:layout_marginEnd="@dimen/margin_extra_small"
                     android:src="@drawable/ic_star"
-                    android:tint="?attr/colorOnBackground" />
+                    app:tint="?attr/colorOnBackground" />
 
                 <ImageButton
                     android:id="@+id/filter_imageButton"
@@ -74,7 +73,7 @@
                     android:onClick="@{() -> viewModel.onNavigateToFilterFragment()}"
                     android:padding="4dp"
                     android:src="@drawable/ic_filter"
-                    android:tint="?attr/colorOnBackground" />
+                    app:tint="?attr/colorOnBackground" />
 
             </LinearLayout>
 
@@ -137,7 +136,6 @@
             gameList="@{viewModel.gameList}"
             databaseState="@{viewModel.databaseState}"
             android:text="@string/no_games_match_filter_options"
-            android:drawableTop="@drawable/empty_list"
             android:drawablePadding="@dimen/margin_normal"
             android:layout_marginBottom="@dimen/margin_large"
             app:layout_constraintTop_toBottomOf="@id/search_cardView"
@@ -145,7 +143,8 @@
             android:visibility="gone"
             tools:visibility="visible"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
+            app:layout_constraintRight_toRightOf="parent"
+            app:drawableTopCompat="@drawable/empty_list" />
 
         <ImageView
             android:id="@+id/game_cover_imageView"

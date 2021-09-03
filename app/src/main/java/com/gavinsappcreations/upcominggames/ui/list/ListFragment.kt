@@ -7,8 +7,16 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.gavinsappcreations.upcominggames.databinding.FragmentListBinding
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.launch
+
+// TODO: if connection drops mid-update, the app doesn't notice it and it just shows an endless loading bar
 
 class ListFragment : Fragment() {
 
@@ -17,7 +25,7 @@ class ListFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val binding = FragmentListBinding.inflate(inflater)
 
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
@@ -36,7 +44,7 @@ class ListFragment : Fragment() {
 
         // When gameList changes, we update databaseState to its next state.
         viewModel.gameList.observe(viewLifecycleOwner, Observer {
-            viewModel.updateDatabaseState()
+                viewModel.updateDatabaseState()
         })
 
 
