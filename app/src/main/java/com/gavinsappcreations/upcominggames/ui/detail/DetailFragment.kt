@@ -15,16 +15,10 @@ import com.gavinsappcreations.upcominggames.databinding.FragmentDetailBinding
 class DetailFragment : Fragment() {
 
     private val viewModel: DetailViewModel by viewModels {
-        DetailViewModel.Factory(
-            requireActivity().application,
-            DetailFragmentArgs.fromBundle(arguments!!).guid
-        )
+        DetailViewModel.Factory(requireActivity().application, DetailFragmentArgs.fromBundle(requireArguments()).guid)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding = FragmentDetailBinding.inflate(inflater)
 
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
@@ -47,13 +41,13 @@ class DetailFragment : Fragment() {
                 }
         }
 
-        viewModel.popBackStack.observe(viewLifecycleOwner, Observer {
+        viewModel.popBackStack.observe(viewLifecycleOwner) {
             if (it.getContentIfNotHandled() == true) {
                 findNavController().popBackStack()
             }
-        })
+        }
 
-        viewModel.viewGameLink.observe(viewLifecycleOwner, Observer {
+        viewModel.viewGameLink.observe(viewLifecycleOwner) {
             if (it.getContentIfNotHandled() == true) {
                 val url = viewModel.gameDetail.value?.detailUrl
                 url?.let {
@@ -62,9 +56,9 @@ class DetailFragment : Fragment() {
                     startActivity(intent)
                 }
             }
-        })
+        }
 
-        viewModel.navigateToScreenshotFragment.observe(viewLifecycleOwner, Observer {
+        viewModel.navigateToScreenshotFragment.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { imageIndex ->
                 // We turn our List<String> into an Array<String> here so we can pass it as an arg.
                 val images = viewModel.gameDetail.value!!.images!!.toTypedArray()
@@ -75,7 +69,7 @@ class DetailFragment : Fragment() {
                     )
                 )
             }
-        })
+        }
 
         return binding.root
     }

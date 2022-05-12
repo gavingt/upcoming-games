@@ -22,28 +22,28 @@
             android:id="@+id/up_navigation_imageButton"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
+            android:layout_marginStart="@dimen/margin_normal"
             android:layout_marginTop="@dimen/margin_extra_small"
             android:layout_marginBottom="@dimen/margin_extra_small"
-            android:layout_marginStart="@dimen/margin_normal"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:onClick="@{() -> viewModel.onPopBackStack()}"
-            app:layout_constraintTop_toTopOf="parent"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/nav_app_bar_navigate_up_description"
+            android:contentDescription="@string/navigate_up"
+            android:onClick="@{() -> viewModel.onPopBackStack()}"
             android:src="@drawable/ic_left_arrow"
-            android:tint="?attr/colorOnBackground" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorOnBackground" />
 
         <TextView
             android:id="@+id/toolbar_title_textView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_normal"
-            app:layout_constraintTop_toTopOf="@id/up_navigation_imageButton"
-            app:layout_constraintBottom_toBottomOf="@id/up_navigation_imageButton"
-            app:layout_constraintLeft_toRightOf="@id/up_navigation_imageButton"
             android:layout_weight="1"
             android:text="@string/favorites"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            app:layout_constraintBottom_toBottomOf="@id/up_navigation_imageButton"
+            app:layout_constraintLeft_toRightOf="@id/up_navigation_imageButton"
+            app:layout_constraintTop_toTopOf="@id/up_navigation_imageButton" />
 
         <View
             android:id="@+id/top_horizontal_line_view"
@@ -60,9 +60,12 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/margin_extra_extra_small"
+            android:background="@color/colorBackground"
             android:clipToPadding="false"
             android:overScrollMode="never"
             android:padding="6dp"
+            android:scrollbarStyle="outsideOverlay"
+            android:scrollbars="vertical"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/bottom_horizontal_line_view"
             app:layout_constraintTop_toBottomOf="@id/top_horizontal_line_view"
@@ -72,19 +75,19 @@
 
         <TextView
             android:id="@+id/empty_textView"
+            gameList="@{viewModel.favoriteList}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            gameList="@{viewModel.favoriteList}"
-            android:text="@string/no_favorites_added_yet"
+            android:layout_marginBottom="@dimen/margin_large"
             android:drawableTop="@drawable/empty_list"
             android:drawablePadding="@dimen/margin_normal"
-            android:layout_marginBottom="@dimen/margin_large"
-            app:layout_constraintTop_toBottomOf="@id/top_horizontal_line_view"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@string/no_favorites_added_yet"
             android:visibility="gone"
-            tools:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top_horizontal_line_view"
+            tools:visibility="visible" />
 
         <View
             android:id="@+id/bottom_horizontal_line_view"

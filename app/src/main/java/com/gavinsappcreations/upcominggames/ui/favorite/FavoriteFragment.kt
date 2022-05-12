@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.gavinsappcreations.upcominggames.databinding.FragmentFavoriteBinding
@@ -17,9 +16,10 @@ class FavoriteFragment : Fragment() {
     private val viewModel: FavoriteViewModel by viewModels()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val binding = FragmentFavoriteBinding.inflate(inflater)
 
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
@@ -43,13 +43,13 @@ class FavoriteFragment : Fragment() {
 
         binding.gameRecyclerView.adapter = adapter
 
-        viewModel.popBackStack.observe(viewLifecycleOwner, Observer {
+        viewModel.popBackStack.observe(viewLifecycleOwner) {
             if (it.getContentIfNotHandled() == true) {
                 findNavController().popBackStack()
             }
-        })
+        }
 
-        viewModel.navigateToDetailFragment.observe(viewLifecycleOwner, Observer {
+        viewModel.navigateToDetailFragment.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { game ->
                 NavHostFragment.findNavController(this).navigate(
                     FavoriteFragmentDirections.actionFavoriteFragmentToDetailFragment(
@@ -57,7 +57,7 @@ class FavoriteFragment : Fragment() {
                     )
                 )
             }
-        })
+        }
 
         return binding.root
     }

@@ -11,10 +11,7 @@ import com.ortiz.touchview.TouchImageView
 
 class ScreenshotFragment : Fragment() {
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
 
         val binding = FragmentScreenshotBinding.inflate(inflater)
 
@@ -22,10 +19,10 @@ class ScreenshotFragment : Fragment() {
         binding.lifecycleOwner = this
 
         // Get list of screenshot URLs from arguments, and change URLs to get type of images we want.
-        val images = ScreenshotFragmentArgs.fromBundle(arguments!!).images.map {
+        val images = ScreenshotFragmentArgs.fromBundle(requireArguments()).images.map {
             it.replace("scale_small", "scale_large")
         }
-        val currentImageIndex = ScreenshotFragmentArgs.fromBundle(arguments!!).currentImageIndex
+        val currentImageIndex = ScreenshotFragmentArgs.fromBundle(requireArguments()).currentImageIndex
 
         binding.viewPager.adapter = TouchImageAdapter(images)
 

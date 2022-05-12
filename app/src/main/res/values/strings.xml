@@ -45,6 +45,7 @@
     <string name="filter_results_by_release_date">Filter results by release date</string>
     <string name="sort_release_dates_in_this_direction">Sort in this direction by release date</string>
     <string name="filter_results_by_game_platform">Filter results by game platform</string>
+    <string name="navigate_up">Navigate up</string>
 
 
 </resources>

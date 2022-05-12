@@ -12,8 +12,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <ImageButton
             android:id="@+id/up_navigation_imageButton"
@@ -23,12 +22,12 @@
             android:layout_marginTop="@dimen/margin_extra_small"
             android:layout_marginBottom="@dimen/margin_extra_small"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/nav_app_bar_navigate_up_description"
+            android:contentDescription="@string/navigate_up"
             android:onClick="@{() -> viewModel.onPopBackStack()}"
             android:src="@drawable/ic_left_arrow"
-            android:tint="?attr/colorOnBackground"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorOnBackground" />
 
         <EditText
             android:id="@+id/search_editText"
@@ -54,9 +53,9 @@
             android:contentDescription="@string/nav_app_bar_navigate_up_description"
             android:onClick="@{() -> viewModel.onClearSearchText()}"
             android:src="@drawable/ic_close"
-            android:tint="?attr/colorOnBackground"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorOnBackground" />
 
         <View
             android:id="@+id/top_horizontal_line_view"

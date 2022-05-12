@@ -110,7 +110,8 @@ class DetailViewModel(application: Application, val guid: String) :
         private val guid: String
     ) :
         ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(DetailViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
                 return DetailViewModel(

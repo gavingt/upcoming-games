@@ -20,10 +20,7 @@ class SearchFragment : Fragment() {
 
     private val viewModel: SearchViewModel by viewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding = FragmentSearchBinding.inflate(inflater)
 
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
@@ -56,21 +53,21 @@ class SearchFragment : Fragment() {
         viewModel.onShowKeyboard()
 
         // For some reason we need to slightly delay showing the keyboard for it to actually show.
-        viewModel.showKeyboard.observe(viewLifecycleOwner, Observer {
+        viewModel.showKeyboard.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let {
                 binding.root.postDelayed({
                     showSoftKeyboard(binding.searchEditText)
                 }, 50)
             }
-        })
+        }
 
-        viewModel.clearSearchText.observe(viewLifecycleOwner, Observer {
+        viewModel.clearSearchText.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let {
                 binding.searchEditText.setText("")
             }
-        })
+        }
 
-        viewModel.navigateToDetailFragment.observe(viewLifecycleOwner, Observer {
+        viewModel.navigateToDetailFragment.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { game ->
                 hideKeyboard(binding.searchEditText)
                 NavHostFragment.findNavController(this).navigate(
@@ -79,7 +76,7 @@ class SearchFragment : Fragment() {
                     )
                 )
             }
-        })
+        }
 
         viewModel.popBackStack.observe(viewLifecycleOwner, Observer {
             hideKeyboard(binding.searchEditText)

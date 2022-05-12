@@ -7,6 +7,7 @@
     <data>
 
         <import type="android.view.View" />
+
         <import type="com.gavinsappcreations.upcominggames.domain.UpdateState" />
 
         <variable
@@ -55,11 +56,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
+                    android:layout_marginEnd="@dimen/margin_extra_small"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/favorites"
                     android:onClick="@{() -> viewModel.onNavigateToFavoriteFragment()}"
                     android:padding="4dp"
-                    android:layout_marginEnd="@dimen/margin_extra_small"
                     android:src="@drawable/ic_star"
                     app:tint="?attr/colorOnBackground" />
 
@@ -104,8 +105,8 @@
             android:text="@string/update"
             android:textColor="?attr/colorAccent"
             android:textSize="@dimen/text_button_size"
-            app:layout_constraintLeft_toRightOf="@id/date_stale_textView"
             app:layout_constraintBottom_toBottomOf="@id/date_stale_textView"
+            app:layout_constraintLeft_toRightOf="@id/date_stale_textView"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/date_stale_textView" />
 
@@ -117,11 +118,12 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/margin_extra_extra_small"
-            android:clipToPadding="false"
             android:background="@color/colorBackground"
+            android:clipToPadding="false"
             android:overScrollMode="never"
-            android:scrollbars="vertical"
             android:padding="6dp"
+            android:scrollbarStyle="outsideOverlay"
+            android:scrollbars="vertical"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/bottom_horizontal_line_view"
             app:layout_constraintTop_toBottomOf="@id/date_stale_textView"
@@ -131,20 +133,20 @@
 
         <TextView
             android:id="@+id/empty_textView"
+            databaseState="@{viewModel.databaseState}"
+            gameList="@{viewModel.gameList}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            gameList="@{viewModel.gameList}"
-            databaseState="@{viewModel.databaseState}"
-            android:text="@string/no_games_match_filter_options"
-            android:drawablePadding="@dimen/margin_normal"
             android:layout_marginBottom="@dimen/margin_large"
-            app:layout_constraintTop_toBottomOf="@id/search_cardView"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:drawablePadding="@dimen/margin_normal"
+            android:text="@string/no_games_match_filter_options"
             android:visibility="gone"
-            tools:visibility="visible"
+            app:drawableTopCompat="@drawable/empty_list"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:drawableTopCompat="@drawable/empty_list" />
+            app:layout_constraintTop_toBottomOf="@id/search_cardView"
+            tools:visibility="visible" />
 
         <ImageView
             android:id="@+id/game_cover_imageView"
@@ -184,11 +186,11 @@
             android:id="@+id/updating_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="@{viewModel.updateState instanceof UpdateState.Updating ? View.VISIBLE : View.GONE}"
-            android:text="@string/updating_game_database"
-            android:gravity="center"
             android:layout_marginBottom="@dimen/margin_small"
+            android:gravity="center"
+            android:text="@string/updating_game_database"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:visibility="@{viewModel.updateState instanceof UpdateState.Updating ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toTopOf="@id/determinate_progressBar"
             app:layout_constraintLeft_toLeftOf="@id/determinate_progressBar"
             app:layout_constraintRight_toRightOf="@id/determinate_progressBar"

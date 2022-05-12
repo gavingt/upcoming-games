@@ -16,7 +16,7 @@ const val NETWORK_PAGE_SIZE = 100
 const val LOADING_PROGRESS_ANIMATION_TIME: Long = 350
 
 // The built-in database was retrieved at this time.
-const val ORIGINAL_TIME_DATABASE_RETRIEVED_IN_MILLIS = 1581663600000
+const val ORIGINAL_TIME_DATABASE_RETRIEVED_IN_MILLIS = 1_652_377_726_007
 
 // If the API has no image for a game, this string will be somewhere in the URL.
 const val NO_IMG_FILE_NAME = "gb_default-16_9"

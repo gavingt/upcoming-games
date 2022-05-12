@@ -20,10 +20,7 @@ class FilterFragment : Fragment() {
 
     private val viewModel: FilterViewModel by viewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding = FragmentFilterBinding.inflate(inflater)
 
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
@@ -65,16 +62,16 @@ class FilterFragment : Fragment() {
                 }
         }
 
-        viewModel.popBackStack.observe(viewLifecycleOwner, Observer {
+        viewModel.popBackStack.observe(viewLifecycleOwner) {
             hideKeyboard(binding.startDateTextInputEditText)
             findNavController().popBackStack()
-        })
+        }
 
         /**
          * If updateFilterOptions = true, inputs are valid and we save new filter options.
          * Otherwise, we display a Toast alerting the user of the invalid date.
          */
-        viewModel.updateFilterOptions.observe(viewLifecycleOwner, Observer {
+        viewModel.updateFilterOptions.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { updateFilterOptions ->
                 if (updateFilterOptions) {
                     viewModel.saveNewFilterOptions()
@@ -84,7 +81,7 @@ class FilterFragment : Fragment() {
                     displayInvalidDateToast()
                 }
             }
-        })
+        }
 
         return binding.root
     }

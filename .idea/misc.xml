@@ -8,7 +8,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Android_dev/AndroidProjects/upcoming-games/app/src/main/res/layout/fragment_list.xml" value="0.1" />
+        <entry key="..\:/Android_dev/AndroidProjects/upcoming-games/app/src/main/res/layout/activity_main.xml" value="0.321875" />
+        <entry key="..\:/Android_dev/AndroidProjects/upcoming-games/app/src/main/res/layout/fragment_detail.xml" value="0.2182916307161346" />
+        <entry key="..\:/Android_dev/AndroidProjects/upcoming-games/app/src/main/res/layout/fragment_favorite.xml" value="0.20701754385964913" />
+        <entry key="..\:/Android_dev/AndroidProjects/upcoming-games/app/src/main/res/layout/fragment_filter.xml" value="0.23148148148148148" />
+        <entry key="..\:/Android_dev/AndroidProjects/upcoming-games/app/src/main/res/layout/fragment_list.xml" value="0.31562819203268644" />
+        <entry key="..\:/Android_dev/AndroidProjects/upcoming-games/app/src/main/res/layout/fragment_search.xml" value="0.31562819203268644" />
+        <entry key="..\:/Android_dev/AndroidProjects/upcoming-games/app/src/main/res/layout/grid_list_item.xml" value="0.31562819203268644" />
       </map>
     </option>
   </component>
