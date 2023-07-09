@@ -26,12 +26,12 @@
             android:layout_marginTop="@dimen/margin_extra_small"
             android:layout_marginBottom="@dimen/margin_extra_small"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/nav_app_bar_navigate_up_description"
+            android:contentDescription="@null"
             android:onClick="@{() -> viewModel.onPopBackStack()}"
             android:src="@drawable/ic_left_arrow"
-            android:tint="?attr/colorOnBackground"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorOnBackground" />
 
         <TextView
             android:id="@+id/toolbar_title_textView"

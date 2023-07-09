@@ -11,14 +11,16 @@
         <entry key="..\:/Android_dev/AndroidProjects/upcoming-games/app/src/main/res/layout/activity_main.xml" value="0.321875" />
         <entry key="..\:/Android_dev/AndroidProjects/upcoming-games/app/src/main/res/layout/fragment_detail.xml" value="0.2182916307161346" />
         <entry key="..\:/Android_dev/AndroidProjects/upcoming-games/app/src/main/res/layout/fragment_favorite.xml" value="0.20701754385964913" />
-        <entry key="..\:/Android_dev/AndroidProjects/upcoming-games/app/src/main/res/layout/fragment_filter.xml" value="0.23148148148148148" />
+        <entry key="..\:/Android_dev/AndroidProjects/upcoming-games/app/src/main/res/layout/fragment_filter.xml" value="0.321875" />
         <entry key="..\:/Android_dev/AndroidProjects/upcoming-games/app/src/main/res/layout/fragment_list.xml" value="0.31562819203268644" />
+        <entry key="..\:/Android_dev/AndroidProjects/upcoming-games/app/src/main/res/layout/fragment_screenshot.xml" value="0.321875" />
         <entry key="..\:/Android_dev/AndroidProjects/upcoming-games/app/src/main/res/layout/fragment_search.xml" value="0.31562819203268644" />
-        <entry key="..\:/Android_dev/AndroidProjects/upcoming-games/app/src/main/res/layout/grid_list_item.xml" value="0.31562819203268644" />
+        <entry key="..\:/Android_dev/AndroidProjects/upcoming-games/app/src/main/res/layout/grid_list_item.xml" value="0.4033989266547406" />
+        <entry key="..\:/Android_dev/AndroidProjects/upcoming-games/app/src/main/res/layout/search_list_item.xml" value="0.321875" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" project-jdk-name="jbr-17" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

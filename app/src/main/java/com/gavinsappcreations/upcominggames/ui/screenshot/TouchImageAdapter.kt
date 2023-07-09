@@ -20,22 +20,15 @@ class TouchImageAdapter(val images: List<String>) : PagerAdapter() {
     override fun instantiateItem(container: ViewGroup, position: Int): View {
         return TouchImageView(container.context).apply {
             setImageResource(R.drawable.loading_animation)
-            container.addView(
-                this,
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
-            )
+            container.addView(this, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
 
             val imageToLoad = images[position]
             imageToLoad.let {
                 val imgUri = imageToLoad.toUri().buildUpon().scheme("https").build()
                 Glide.with(context)
                     .load(if (imageToLoad.contains(NO_IMG_FILE_NAME)) R.drawable.broken_image else imgUri)
-                    .apply(
-                        RequestOptions()
-                            .placeholder(R.drawable.loading_animation)
-                            .error(R.drawable.broken_image)
-                    )
+                    .placeholder(R.drawable.loading_animation)
+                    .error(R.drawable.broken_image)
                     .into(this)
                 this.tag = position
             }

@@ -62,9 +62,9 @@
             android:contentDescription="@string/nav_app_bar_navigate_up_description"
             android:onClick="@{() -> viewModel.onPopBackStack()}"
             android:src="@drawable/ic_left_arrow"
-            android:tint="?attr/colorOnBackground"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorOnBackground" />
 
         <ImageButton
             android:id="@+id/favorite_imageButton"
@@ -78,12 +78,12 @@
             android:onClick="@{() -> viewModel.updateFavorite()}"
             android:padding="@dimen/margin_extra_small"
             android:src="@{viewModel.isFavorite == true ? @drawable/ic_star : @drawable/ic_star_border}"
-            android:tint="?attr/colorOnBackground"
             android:visibility="@{viewModel.detailNetworkState == DetailNetworkState.Success ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@id/up_navigation_imageButton"
             app:layout_constraintRight_toLeftOf="@id/game_link_imageButton"
             app:layout_constraintTop_toTopOf="@id/up_navigation_imageButton"
-            tools:src="@drawable/ic_star_border" />
+            tools:src="@drawable/ic_star_border"
+            app:tint="?attr/colorOnBackground" />
 
         <ImageButton
             android:id="@+id/game_link_imageButton"
@@ -97,11 +97,11 @@
             android:onClick="@{() -> viewModel.onViewGameLink()}"
             android:padding="@dimen/margin_extra_small"
             android:src="@drawable/ic_link"
-            android:tint="?attr/colorOnBackground"
             android:visibility="@{viewModel.detailNetworkState == DetailNetworkState.Success ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@id/up_navigation_imageButton"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/up_navigation_imageButton" />
+            app:layout_constraintTop_toTopOf="@id/up_navigation_imageButton"
+            app:tint="?attr/colorOnBackground" />
 
         <com.gavinsappcreations.upcominggames.ui.detail.NestedScrollingParentScrollView
             android:id="@+id/scrollView"
@@ -183,7 +183,6 @@
                             android:textSize="15sp"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/details_header_textView" />
-
 
                         <TextView
                             android:id="@+id/release_date_value_textView"
